@@ -11,7 +11,6 @@ import { PopularPackages } from "@/components/popular-packages"
 import { Testimonials } from "@/components/testimonials"
 import { Newsletter } from "@/components/newsletter"
 import { Footer } from "@/components/footer"
-import { Header } from "@/components/header"
 import { loadStripe } from '@stripe/stripe-js';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
@@ -103,7 +102,6 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header />
       <main className="flex-1">
 
 

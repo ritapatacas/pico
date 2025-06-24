@@ -27,14 +27,13 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
   const bgClass = isHomePage
     ? scrolled
-      ? "bg-white/90 backdrop-blur-md transition-all opacity-100"
-      : "bg-white/0 backdrop-blur-0 transition-all opacity-80"
+      ? "bg-white/90 backdrop-blur-md"
+      : "bg-white/0 backdrop-blur-0"
     : "bg-white shadow-md";
 
   return (
     <header
-      style={isCartOpen ? { marginLeft: 420 } : undefined}
-      className={`fixed py-4 left-0 right-0 h-20 flex items-center justify-between px-4 md:px-6 z-50 mr-24 transition-all duration-300 ${bgClass}`}
+      className={`sticky top-0 py-4 flex items-center justify-between px-4 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
     >
       {/* Logo */}
       <div className="flex items-center space-x-4">
@@ -62,7 +61,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
       {/* desktop menu*/}
       <nav className="hidden md:block">
-        <VercelTabs tabs={tabs} />{" "}
+        <VercelTabs tabs={tabs} />
       </nav>
 
       {/* cart sidebar*/}

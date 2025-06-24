@@ -3,10 +3,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SettingsStoreProvider } from "@/hooks/use-settings-store";
 import { CartProvider } from "@/contexts/cart-context";
-import HeaderWithPathname from "./HeaderWithPathname";
-import { VerticalHeader } from "@/components/header-vertical";
 import { CartDrawerProvider } from "@/contexts/cart-drawer-context";
-import { Footer } from "@/components/footer";
+import { MainLayout } from "@/components/MainLayout";
 
 export const metadata: Metadata = {
   title: "Pico da Rosa",
@@ -25,10 +23,9 @@ export default function RootLayout({
           <SettingsStoreProvider>
             <CartProvider>
               <CartDrawerProvider>
-                <HeaderWithPathname />
-                <VerticalHeader />
-                <main className="pt-0">{children}</main>
-                <Footer />
+                <MainLayout>
+                  {children}
+                </MainLayout>
               </CartDrawerProvider>
             </CartProvider>
           </SettingsStoreProvider>

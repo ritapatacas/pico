@@ -13,7 +13,7 @@ export default function CartStep({ onNext }: { onNext: () => void }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex-grow overflow-y-auto pr-2">
+      <div className="flex-grow overflow-y-auto -mr-4 pr-4">
         {cartItems.map(item => (
           <div key={item.id} className="flex items-center gap-4 py-4 border-b">
             <Image src={item.image} alt={item.name} width={64} height={64} className="rounded-md object-cover" />

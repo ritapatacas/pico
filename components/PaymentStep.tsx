@@ -36,23 +36,25 @@ export default function PaymentStep({ onBack }: { onBack: () => void }) {
   if (!shipping) return <div>Carregando...</div>;
 
   return (
-    <div className="p-4">
-      <h2 className="font-semibold mb-2">Endereço de Entrega</h2>
-      <div>{shipping.name}</div>
-      <div>{shipping.address}</div>
-      <div>{shipping.city}, {shipping.postal}, {shipping.country}</div>
-      <div>{shipping.email}</div>
-      <div className="my-6 bg-white p-4 rounded shadow">
-        <h2 className="font-semibold mb-2">Resumo do Pedido</h2>
-        {cartItems.map(item => (
-          <div key={item.id} className="flex justify-between mb-2">
-            <span>{item.name} x{item.quantity}</span>
-            <span>{(item.price * item.quantity).toFixed(2).replace('.',',')}€</span>
-          </div>
-        ))}
-        <div className="font-bold mt-2">Total: {cartTotal.toFixed(2)} €</div>
+    <div className="flex flex-col h-full">
+      <div className="flex-grow overflow-y-auto -mr-4 pr-4">
+        <h2 className="font-semibold mb-2">Endereço de Entrega</h2>
+        <div>{shipping.name}</div>
+        <div>{shipping.address}</div>
+        <div>{shipping.city}, {shipping.postal}, {shipping.country}</div>
+        <div>{shipping.email}</div>
+        <div className="my-6 bg-white p-4 rounded shadow">
+          <h2 className="font-semibold mb-2">Resumo do Pedido</h2>
+          {cartItems.map(item => (
+            <div key={item.id} className="flex justify-between mb-2">
+              <span>{item.name} x{item.quantity}</span>
+              <span>{(item.price * item.quantity).toFixed(2).replace('.',',')}€</span>
+            </div>
+          ))}
+          <div className="font-bold mt-2">Total: {cartTotal.toFixed(2)} €</div>
+        </div>
       </div>
-      <div className="flex gap-2 mt-4">
+      <div className="border-t pt-4 flex gap-2 mt-4">
         <Button type="button" variant="outline" className="flex-1" onClick={onBack}>Voltar</Button>
         {/* Stripe Button */}
         <Button
