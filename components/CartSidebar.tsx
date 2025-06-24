@@ -13,7 +13,7 @@ export function CartSidebar({ isOpen, onClose }: { isOpen: boolean, onClose: () 
 
   return (
     <div className="fixed inset-0 bg-opacity-50 bg-black-200 z-50 transition-opacity" onClick={onClose}>
-      <div className="fixed right-0 top-0 h-full w-full max-w-sm bg-white shadow-lg p-6 flex flex-col transform transition-transform" onClick={e => e.stopPropagation()}>
+      <div className="fixed right-0 top-0 h-full w-full max-w-xl bg-white shadow-lg p-6 flex flex-col transform transition-transform" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center border-b pb-4 mb-4">
           <h2 className="text-2xl font-bold">Carrinho</h2>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -38,7 +38,7 @@ export function CartSidebar({ isOpen, onClose }: { isOpen: boolean, onClose: () 
                       <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => updateItemQuantity(item.id, item.quantity - (item.size ? 1 : 0.5))} disabled={item.quantity <= (item.size ? 1 : 0.5)}>
                         <Minus className="h-4 w-4"/>
                       </Button>
-                      <span className="w-10 text-center">{item.quantity}{item.size ? '' : 'kg'}</span>
+                      <span className="w-40 text-center">{item.quantity}{item.size ? '' : 'kg'}</span>
                        <Button size="icon" variant="outline" className="h-8 w-8" onClick={() => updateItemQuantity(item.id, item.quantity + (item.size ? 1 : 0.5))}>
                         <Plus className="h-4 w-4"/>
                       </Button>

@@ -31,12 +31,12 @@ export function VerticalHeader() {
 
   return (
     <header
-      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-40 transition-all duration-300 ease-in-out ${
-        isCartOpen ? 'w-[420px]' : 'w-24'
+      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-80 transition-all duration-300 ease-in-out min-w-0 ${
+        isCartOpen ? 'w-18920' : 'w-24'
       }`}
     >
       {/* Top section with icons and dynamic content */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col min-h-5">
         {/* Always visible icons */}
         <div className="flex flex-col items-center space-y-4 p-6 border-b border-gray-200">
           <Button variant="ghost" size="icon" onClick={toggleDarkMode}>

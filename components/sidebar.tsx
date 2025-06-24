@@ -50,7 +50,7 @@ export function Sidebar({ version }: SidebarProps) {
   }
 
   return (
-    <div className="hidden w-64 border-r bg-background md:block">
+    <div className="hidden w-264 border-r bg-background md:block">
       <div className="flex h-16 items-center border-b px-4">
         <Link href="/" className="flex items-center gap-2">
           <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
