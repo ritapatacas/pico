@@ -5,7 +5,8 @@ import Image from "next/image";
 import { Menu, X, ShoppingCart, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/cart-context";
-import { CartSidebar } from "@/components/CartSidebar";
+import CartDrawer from "@/components/CartDrawer";
+import { useCartDrawer } from "@/contexts/cart-drawer-context";
 
 export function VerticalHeader() {
   const { cartCount } = useCart();
@@ -23,6 +24,8 @@ export function VerticalHeader() {
     { label: "onde", href: "/onde" },
     { label: "comprar", href: "/comprar" },
   ];
+
+  
 
   useEffect(() => {
     if (hoveredIndex !== null) {
@@ -153,7 +156,7 @@ export function VerticalHeader() {
         </div>
       )}
 
-      <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import VercelTabs from "@/components/VercelTabs"
+import { useCartDrawer } from "@/contexts/cart-drawer-context"
 
 export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
+  const { isCartOpen } = useCartDrawer();
 
   const tabs = [
     { label: "o quê", href: "/what" },
@@ -29,11 +31,12 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
       : "bg-white/0 backdrop-blur-0 transition-all opacity-80"
     : "bg-white shadow-md";
 
-
   return (
     <header
+      style={isCartOpen ? { marginLeft: 420 } : undefined}
       className={`fixed py-4 left-0 right-0 h-20 flex items-center justify-between px-4 md:px-6 z-50 mr-24 transition-all duration-300 ${bgClass}`}
-    >      {/* Logo */}
+    >
+      {/* Logo */}
       <div className="flex items-center space-x-4">
         <Link href="/">
           <Image
@@ -61,8 +64,6 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
       <nav className="hidden md:block">
         <VercelTabs tabs={tabs} />{" "}
       </nav>
-
-
 
       {/* cart sidebar*/}
       {/* <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} /> */}

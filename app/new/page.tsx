@@ -264,40 +264,6 @@ export default function Home() {
 
                   {/* Payment Buttons */}
                   <div className="flex gap-2 mt-2 w-full">
-                    {/* Stripe Checkout Button */}
-                    <Button
-                      className="flex-1 bg-blue-600 text-white hover:bg-blue-700 py-2 text-sm font-medium"
-                      onClick={async () => {
-                        const items = [
-                          {
-                            name: packagingType === 'embalado'
-                              ? `Mirtilos (${getSelectedEmbaladoOption(selectedSize).size})`
-                              : 'Mirtilos a Granel',
-                            price: packagingType === 'embalado'
-                              ? getSelectedEmbaladoOption(selectedSize).price
-                              : precoGranelPorKg,
-                            quantity: packagingType === 'embalado' ? quantity : kiloQuantity,
-                            image: packagingType === 'embalado'
-                              ? '/mirtilo_embalagem.jpeg'
-                              : '/milo_granel.jpeg',
-                          }
-                        ];
-                        const res = await fetch('/api/checkout_sessions', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ items }),
-                        });
-                        const data = await res.json();
-                        const stripe = await stripePromise;
-                        if (data.url) {
-                          window.location.href = data.url;
-                        } else if (stripe && data.id) {
-                          stripe.redirectToCheckout({ sessionId: data.id });
-                        }
-                      }}
-                    >
-                      Comprar com Cartão / MB WAY
-                    </Button>
                     {/* PayPal Button */}
                     <div className="flex-1">
                       <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />

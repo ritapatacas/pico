@@ -5,7 +5,7 @@ import { SettingsStoreProvider } from "@/hooks/use-settings-store";
 import { CartProvider } from "@/contexts/cart-context";
 import HeaderWithPathname from "./HeaderWithPathname";
 import { VerticalHeader } from "@/components/header-vertical";
-
+import { CartDrawerProvider } from "@/contexts/cart-drawer-context";
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
@@ -24,10 +24,12 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SettingsStoreProvider>
             <CartProvider>
-              <HeaderWithPathname />
-              <VerticalHeader />
-              <main className="pt-0">{children}</main>
-              <Footer />
+              <CartDrawerProvider>
+                <HeaderWithPathname />
+                <VerticalHeader />
+                <main className="pt-0">{children}</main>
+                <Footer />
+              </CartDrawerProvider>
             </CartProvider>
           </SettingsStoreProvider>
         </ThemeProvider>
