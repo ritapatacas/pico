@@ -71,6 +71,9 @@ h6 {
   text-transform: uppercase;
 }
 
+.title {
+  font-size: 2.5rem;
+}
 
 .textbutton {
   font-family: "Rotunda", sans-serif;
@@ -83,7 +86,7 @@ h6 {
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
+  --color-background: #e1e1f1;
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);

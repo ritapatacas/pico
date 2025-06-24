@@ -4,6 +4,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { SettingsStoreProvider } from "@/hooks/use-settings-store";
 import { CartProvider } from "@/contexts/cart-context";
 import { Header } from "@/components/header";
+import { VerticalHeader } from "@/components/header-vertical";
+
 import { Footer } from "@/components/footer";
 
 export const metadata: Metadata = {
@@ -23,7 +25,8 @@ export default function RootLayout({
           <SettingsStoreProvider>
             <CartProvider>
               <Header />
-              <main>{children}</main>
+              <VerticalHeader />
+              <main className="pt-20">{children}</main>
               <Footer />
             </CartProvider>
           </SettingsStoreProvider>

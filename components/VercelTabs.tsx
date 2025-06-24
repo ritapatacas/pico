@@ -88,7 +88,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
             />
 
             {/* Tabs */}
-            <div className="relative flex space-x-[6px] items-center">
+            <div className="relative flex space-x-[6px] items-">
               {tabs.map((tab, index) => (
                 <div
                   key={tab.label}
@@ -107,19 +107,6 @@ export default function Frame({ tabs }: VercelTabsProps) {
                   </div>
                 </div>
               ))}
-
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-[30px] w-[30px] flex items-center justify-center"
-                onClick={toggleDarkMode}
-              >
-                {isDarkMode ? (
-                  <Sun className="h-[1.2rem] w-[1.2rem]" />
-                ) : (
-                  <Moon className="h-[1.2rem] w-[1.2rem]" />
-                )}
-              </Button>
             </div>
           </div>
         </CardContent>

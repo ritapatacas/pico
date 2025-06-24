@@ -5,14 +5,8 @@ export default function HomePage() {
   return (
     <main>
       <div className="pt-20 p-6">
-        <Image
-          className="dark:invert"
-          src="/rosa.jpeg"
-          alt="PICO DA ROSA text logo"
-          width={1920}
-          height={38}
-          priority
-        />
+        <h1 className="title">PICO DA ROSA</h1>
+
       </div>
     </main>
   );
