@@ -3,9 +3,11 @@ import { useCart } from "@/contexts/cart-context";
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { X, Plus, Minus } from "lucide-react";
+import { useRouter } from 'next/navigation';
 
 export function CartSidebar({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const { cartItems, removeFromCart, updateItemQuantity, cartTotal } = useCart();
+  const router = useRouter();
 
   if (!isOpen) return null;
 
@@ -54,7 +56,13 @@ export function CartSidebar({ isOpen, onClose }: { isOpen: boolean, onClose: () 
                 <span>Total</span>
                 <span>{cartTotal.toFixed(2).replace('.',',')}€</span>
               </div>
-              <Button className="w-full bg-black text-white hover:bg-gray-800 py-3">Finalizar Compra</Button>
+              <Button
+                type="button"
+                className="w-full bg-black text-white hover:bg-gray-800 py-3"
+                onClick={() => router.push('/checkout')}
+              >
+                Finalizar Compra
+              </Button>
             </div>
           </>
         )}

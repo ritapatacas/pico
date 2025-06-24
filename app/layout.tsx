@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SettingsStoreProvider } from "@/hooks/use-settings-store";
 import { CartProvider } from "@/contexts/cart-context";
-import { Header } from "@/components/header";
+import HeaderWithPathname from "./HeaderWithPathname";
 import { VerticalHeader } from "@/components/header-vertical";
 
 import { Footer } from "@/components/footer";
@@ -24,9 +24,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <SettingsStoreProvider>
             <CartProvider>
-              <Header />
+              <HeaderWithPathname />
               <VerticalHeader />
-              <main className="pt-20">{children}</main>
+              <main className="pt-0">{children}</main>
               <Footer />
             </CartProvider>
           </SettingsStoreProvider>
