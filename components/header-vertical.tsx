@@ -31,8 +31,8 @@ export function VerticalHeader() {
 
   return (
     <header
-      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-80 transition-all duration-300 ease-in-out min-w-0 ${
-        isCartOpen ? 'w-18920' : 'w-24'
+      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-80 transition-all duration-300 ease-in-out min-w-20 ${
+        isCartOpen ? 'w-200' : 'w-24'
       }`}
     >
       {/* Top section with icons and dynamic content */}
