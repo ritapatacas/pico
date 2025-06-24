@@ -5,9 +5,11 @@ import { useState, useRef, useEffect } from "react"
 import { Moon, Sun } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
-const tabs = ["quem", "o quê", "como", "onde"]
+interface VercelTabsProps {
+  tabs: { label: string; href: string }[];
+}
 
-export default function Frame() {
+export default function Frame({ tabs }: VercelTabsProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [activeIndex, setActiveIndex] = useState(0)
   const [hoverStyle, setHoverStyle] = useState({})
@@ -58,9 +60,15 @@ export default function Frame() {
   }
 
   return (
-    <div className={`flex justify-center items-center w-full min-h-screen ${isDarkMode ? "dark bg-[#0e0f11]" : ""}`}>
+    <div
+      className={`flex justify-center items-center w-full ${
+        isDarkMode ? "dark bg-[#0e0f11]" : ""
+      }`}
+    >
       <Card
-        className={`w-full max-w-[1200px] h-[100px] border-none shadow-none relative flex items-center justify-center ${isDarkMode ? "bg-transparent" : ""}`}
+        className={`w-full max-w-[1200px] h-[100px] border-none shadow-none relative flex items-center justify-center ${
+          isDarkMode ? "bg-transparent" : ""
+        }`}
       >
         <CardContent className="p-0">
           <div className="relative">
@@ -83,16 +91,19 @@ export default function Frame() {
             <div className="relative flex space-x-[6px] items-center">
               {tabs.map((tab, index) => (
                 <div
-                  key={index}
+                  key={tab.label}
                   ref={(el) => (tabRefs.current[index] = el)}
-                  className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${index === activeIndex ? "text-[#0e0e10] dark:text-white" : "text-[#0e0f1199] dark:text-[#ffffff99]"
-                    }`}
+                  className={`px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px] ${
+                    index === activeIndex
+                      ? "text-[#0e0e10] dark:text-white"
+                      : "text-[#0e0f1199] dark:text-[#ffffff99]"
+                  }`}
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                   onClick={() => setActiveIndex(index)}
                 >
                   <div className="text-sm font-[var(--www-mattmannucci-me-geist-regular-font-family)] leading-5 whitespace-nowrap flex items-center justify-center h-full">
-                    {tab}
+                    {tab.label}
                   </div>
                 </div>
               ))}
@@ -110,10 +121,9 @@ export default function Frame() {
                 )}
               </Button>
             </div>
-
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

@@ -139,8 +139,6 @@ export default function ProductPage() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Header />
-
       <main className="flex-grow flex flex-col justify-between py-12">
         <div className="pt-28 w-[90%] lg:w-[80%] mx-auto">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-16">
@@ -159,7 +157,10 @@ export default function ProductPage() {
                 <div className="relative w-full h-full overflow-hidden rounded-2xl group">
                   <Image
                     src={selectedImage}
-                    alt={imageOptions.find(img => img.src === selectedImage)?.alt || "Mirtilos"}
+                    alt={
+                      imageOptions.find((img) => img.src === selectedImage)
+                        ?.alt || "Mirtilos"
+                    }
                     fill
                     className="object-cover transition-all duration-300 group-hover:scale-110"
                   />
@@ -181,7 +182,11 @@ export default function ProductPage() {
                     key={img.src}
                     onClick={() => setSelectedImage(img.src)}
                     className={`relative w-16 h-16 rounded-lg overflow-hidden transition-all border-2
-                      ${selectedImage === img.src ? "ring-2 ring-black border-black" : "hover:ring-1 hover:ring-gray-200 border-gray-200"}
+                      ${
+                        selectedImage === img.src
+                          ? "ring-2 ring-black border-black"
+                          : "hover:ring-1 hover:ring-gray-200 border-gray-200"
+                      }
                     `}
                   >
                     <Image
@@ -198,7 +203,9 @@ export default function ProductPage() {
             {/* Product Info */}
             <div className="lg:w-1/2 space-y-8 order-2 lg:order-2">
               <div>
-                <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">Mirtilos</h1>
+                <h1 className="text-4xl sm:text-4xl font-bold tracking-tight mb-4">
+                  Mirtilos
+                </h1>
                 {/*                 <div className="flex items-center space-x-2">
                   <div className="flex">
                     {[1, 2, 3, 4, 5].map((star) => (
@@ -212,27 +219,27 @@ export default function ProductPage() {
                 </p>
               </div>
 
-              <div className="text-gray-700 text-lg leading-relaxed">
+              <div className="text-gray-700 text-lg">
                 <b>Mirtilos embalados e a granel</b>
-                <span className="text-gray-700 text-base leading-relaxed">
+                <span className="text-gray-700">
                   <br></br>Variedades: Duke e Emerald
                   <br></br>Localização: Pedrógão Grande
                   <br></br>Modo de Produção: Agricultura Integrada
                   <br></br>Época de colheita: maio a setembro
-
                 </span>
               </div>
 
               {/* formato */}
               <div className="space-y-4">
-                <h2 className="text-xl font-semibold">formato</h2>
+                <h2 className="text-md font-semibold">formato</h2>
                 <div className="flex flex-wrap gap-3">
                   {/* embalado */}
                   <label
-                    className={`cursor-pointer px-4 py-2 rounded-full flex items-center justify-center border-2 text-sm font-medium transition-all ${packagingType === "embalado"
-                      ? "border-black bg-black text-white"
-                      : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`cursor-pointer px-4 py-1 rounded flex items-center justify-center border-2 text-m font-semibold transition-all ${
+                      packagingType === "embalado"
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                   >
                     <input
                       type="radio"
@@ -247,10 +254,11 @@ export default function ProductPage() {
 
                   {/* granel */}
                   <label
-                    className={`cursor-pointer px-4 py-2 rounded-full flex items-center justify-center border-2 text-sm font-medium transition-all ${packagingType === "granel"
-                      ? "border-black bg-black text-white"
-                      : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`cursor-pointer px-4 py-2 rounded flex items-center justify-center border-2 text-m font-semibold transition-all ${
+                      packagingType === "granel"
+                        ? "border-black bg-black text-white"
+                        : "border-gray-200 hover:border-gray-300"
+                    }`}
                   >
                     <input
                       type="radio"
@@ -266,17 +274,18 @@ export default function ProductPage() {
               </div>
               {packagingType === "embalado" && (
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold">Tamanho</h2>
+                  <h2 className="text-md font-semibold">Tamanho</h2>
                   <div className="flex flex-wrap gap-3">
                     {embaladoOptions.map((opt) => (
                       <button
                         key={opt.size}
                         onClick={() => setSelectedSize(opt.size)}
-                        className={`px-4 py-2 rounded-full flex items-center justify-center border-2 text-sm font-medium transition-all
-                        ${selectedSize === opt.size
+                        className={` px-3 py-2 rounded flex items-center justify-center border-2 text-m font-semibold transition-all
+                        ${
+                          selectedSize === opt.size
                             ? "border-black bg-black text-white"
                             : "border-gray-200 hover:border-gray-300"
-                          }`}
+                        }`}
                       >
                         {opt.size}
                       </button>
@@ -285,8 +294,10 @@ export default function ProductPage() {
                   {(() => {
                     const selected = getSelectedEmbaladoOption(selectedSize);
                     return (
-                      <div className="text-sm font-semibold mt-2">
-                        embalagem de {selected.size} - {selected.price.toFixed(2).replace('.', ',')}€ ({selected.kgPrice.toFixed(2).replace('.', ',')}€/kg)
+                      <div className="textbuttontext-sm font-semibold mt-2">
+                        embalagem de {selected.size} -{" "}
+                        {selected.price.toFixed(2).replace(".", ",")}€ (
+                        {selected.kgPrice.toFixed(2).replace(".", ",")}€/kg)
                       </div>
                     );
                   })()}
@@ -294,7 +305,7 @@ export default function ProductPage() {
               )}
               {packagingType === "granel" && (
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold">Peso (kg)</h2>
+                  <h2 className="text-lg font-semibold">Peso (kg)</h2>
                   <div className="flex items-center gap-4">
                     <input
                       type="range"
@@ -305,47 +316,83 @@ export default function ProductPage() {
                       onChange={(e) => setKiloQuantity(Number(e.target.value))}
                       className="w-full h-2 cursor-pointer appearance-none rounded-lg bg-gray-200 accent-black"
                     />
-                    <span className="w-16 text-right font-semibold">{kiloQuantity.toFixed(1)} kg</span>
-                    <span className="ml-4 text-lg font-semibold text-black">{(kiloQuantity * precoGranelPorKg).toFixed(2).replace('.', ',')}€</span>
+                    <span className="w-16 text-right font-semibold">
+                      {kiloQuantity.toFixed(1)}kg
+                    </span>
+                    <span className="ml-4 text-m font-semibold text-black">
+                      {(kiloQuantity * precoGranelPorKg)
+                        .toFixed(2)
+                        .replace(".", ",")}
+                      €
+                    </span>
                   </div>
-                  <div className="text-lg font-semibold mt-2">Preço total: {(kiloQuantity * precoGranelPorKg).toFixed(2).replace('.', ',')}€</div>
+                  <div className="text-lg font-semibold mt-2">
+                    Preço total:{" "}
+                    {(kiloQuantity * precoGranelPorKg)
+                      .toFixed(2)
+                      .replace(".", ",")}
+                    €
+                  </div>
                 </div>
               )}
 
-  
               {/* quantity - add - fav */}
               <div className="flex items-center gap-4">
                 {/* quantity */}
                 <div className="flex items-center border rounded-full">
-                  <Button variant="ghost" size="icon" onClick={decrementQuantity} className="rounded-l-full">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={decrementQuantity}
+                    className="textbutton rounded-l-full"
+                  >
                     <Minus className="w-4 h-4" />
                   </Button>
-                  <span className="w-12 text-center">{quantity}</span>
-                  <Button variant="ghost" size="icon" onClick={incrementQuantity} className="rounded-r-full">
+                  <span className="w-12 text-center text-lg">{quantity}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={incrementQuantity}
+                    className="rounded"
+                  >
                     <Plus className="w-4 h-4" />
                   </Button>
                 </div>
+
                 {/* add to cart */}
                 <Button
-                  className="flex-grow bg-black text-white hover:bg-gray-900 py-6 text-lg font-medium"
+                  className="textbutton flex-grow bg-black text-white hover:bg-gray-900 py-6 text-lg font-medium"
                   onClick={handleAddToCart}
                 >
                   {packagingType === "embalado"
                     ? (() => {
-                        const selected = getSelectedEmbaladoOption(selectedSize);
-                        return `Adicionar (${(selected.price * quantity).toFixed(2).replace('.', ',')}€)`;
+                        const selected =
+                          getSelectedEmbaladoOption(selectedSize);
+                        return `Adicionar (${(selected.price * quantity)
+                          .toFixed(2)
+                          .replace(".", ",")}€)`;
                       })()
-                    : `Adicionar (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace('.', ',')}€)`}
+                    : `Adicionar (${(kiloQuantity * precoGranelPorKg)
+                        .toFixed(2)
+                        .replace(".", ",")}€)`}
                 </Button>
+
                 {/* fav */}
-                <Button variant="outline" className="p-3" onClick={toggleFavorite}>
-                  <Heart className={`w-6 h-6 ${isFavorite ? "fill-red-500 text-red-500" : ""}`} />
+                <Button
+                  variant="outline"
+                  className="p-3"
+                  onClick={toggleFavorite}
+                >
+                  <Heart
+                    className={`w-6 h-6 ${
+                      isFavorite ? "fill-red-500 text-red-500" : ""
+                    }`}
+                  />
                   <span className="sr-only">Add to Favorites</span>
                 </Button>
               </div>
 
-
-              {/* Social */}
+              {/*
               <div className="flex items-center space-x-4">
                 <span className="text-sm font-medium">Share:</span>
                 <button className="text-gray-400 hover:text-gray-500">
@@ -362,7 +409,7 @@ export default function ProductPage() {
                   <Instagram className="w-5 h-5" />
                 </button>
               </div>
-
+              */}
             </div>
           </div>
 
@@ -382,9 +429,11 @@ export default function ProductPage() {
               </TabsList>
               <TabsContent value="details" className="mt-4">
                 <p className="text-gray-700">
-                  Our Premium Drink Bottle is designed with both style and functionality in mind. The double-wall vacuum
-                  insulation keeps your drinks cold for up to 24 hours or hot for up to 12 hours. The sleek, modern
-                  design fits comfortably in your hand and looks great on your desk or in your gym bag.
+                  Our Premium Drink Bottle is designed with both style and
+                  functionality in mind. The double-wall vacuum insulation keeps
+                  your drinks cold for up to 24 hours or hot for up to 12 hours.
+                  The sleek, modern design fits comfortably in your hand and
+                  looks great on your desk or in your gym bag.
                 </p>
                 <ul className="list-disc pl-5 mt-4 space-y-2 text-gray-700">
                   <li>Made from high-quality, BPA-free stainless steel</li>
@@ -414,7 +463,9 @@ export default function ProductPage() {
                       <td className="py-2">Screw-top with carry loop</td>
                     </tr>
                     <tr className="border-b">
-                      <th className="py-2 pr-4 font-semibold">Cold Retention</th>
+                      <th className="py-2 pr-4 font-semibold">
+                        Cold Retention
+                      </th>
                       <td className="py-2">Up to 24 hours</td>
                     </tr>
                     <tr>
@@ -429,36 +480,50 @@ export default function ProductPage() {
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-xl font-semibold text-gray-600">JD</span>
+                        <span className="text-xl font-semibold text-gray-600">
+                          JD
+                        </span>
                       </div>
                     </div>
                     <div className="flex-grow">
                       <h3 className="text-lg font-semibold">John Doe</h3>
                       <div className="flex items-center">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="w-4 h-4 text-yellow-400" />
+                          <Star
+                            key={star}
+                            className="w-4 h-4 text-yellow-400"
+                          />
                         ))}
                       </div>
-                      <p className="text-gray-600 mt-1">Great bottle! Keeps my drinks cold all day.</p>
+                      <p className="text-gray-600 mt-1">
+                        Great bottle! Keeps my drinks cold all day.
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
                       <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-xl font-semibold text-gray-600">JS</span>
+                        <span className="text-xl font-semibold text-gray-600">
+                          JS
+                        </span>
                       </div>
                     </div>
                     <div className="flex-grow">
                       <h3 className="text-lg font-semibold">Jane Smith</h3>
                       <div className="flex items-center">
                         {[1, 2, 3, 4].map((star) => (
-                          <Star key={star} className="w-4 h-4 text-yellow-400" />
+                          <Star
+                            key={star}
+                            className="w-4 h-4 text-yellow-400"
+                          />
                         ))}
                         {[5].map((star) => (
                           <Star key={star} className="w-4 h-4 text-gray-300" />
                         ))}
                       </div>
-                      <p className="text-gray-600 mt-1">Stylish design, but a bit heavy when full.</p>
+                      <p className="text-gray-600 mt-1">
+                        Stylish design, but a bit heavy when full.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -487,8 +552,7 @@ export default function ProductPage() {
             </div>
           </div>
         </div>
-        <Footer />
       </main>
     </div>
-  )
+  );
 }

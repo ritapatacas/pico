@@ -10,11 +10,18 @@ import { useLanguageSettings } from "@/hooks/use-settings-store"
 import { useCart } from "@/contexts/cart-context"
 import { CartSidebar } from "@/components/CartSidebar"
 
+
 export function Header() {
   const { cartCount } = useCart()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
 
+  const tabs = [
+    { label: "o quê", href: "/what" },
+    { label: "onde", href: "/onde" },
+    { label: "comprar", href: "/comprar" },
+  ];
+    
   return (
     <header className="fixed py-4 left-0 right-0 h-20 flex items-center justify-between px-4 md:px-6 bg-white shadow-md z-50">
       {/* Logo */}
@@ -37,20 +44,33 @@ export function Header() {
         />
       </div>
 
-      {/* Navegação Desktop */}
+      {/* desktop menu*/}
       <nav className="hidden md:block">
-        <VercelTabs />
+        <VercelTabs tabs={tabs} />{" "}
       </nav>
 
-      {/* Ícones à direita */}
+      {/* right ICOs */}
       <div className="flex items-center gap-4">
         {/* Menu Mobile */}
         <div className="md:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setMenuOpen(!menuOpen)}>
-            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </Button>
         </div>
-        <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => setIsCartOpen(true)}
+        >
           <ShoppingCart className="h-6 w-6" />
           {cartCount > 0 && (
             <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
@@ -61,29 +81,49 @@ export function Header() {
         </Button>
       </div>
 
-      {/* Menu Mobile Dropdown */}
+      {/* mobile menu */}
       {menuOpen && (
-        <div className="absolute top-20 right-4 bg-white shadow-lg rounded-md py-4 px-6 flex flex-col space-y-4 animate-fade-in z-50">
-          <a
-            href="/"
-            className="hover:underline text-gray-700"
-            onClick={() => setMenuOpen(false)}
-          >
-            Quem somos
-          </a>
-          <a
-            href="/onde"
-            className="hover:underline text-gray-700"
-            onClick={() => setMenuOpen(false)}
-          >
-            Onde estamos
-          </a>
+        <div className="absolute top-20 right-4 bg-white shadow-lg rounded-md py-4 px-6 flex flex-col space-y-4 animate-fade-in z-50 md:hidden">
+          {tabs.map((tab) => {
+            // Simples normalização para os links:
+            let href = "/";
+            switch (tab.toLowerCase()) {
+              case "quem":
+                href = "/";
+                break;
+              case "o quê":
+                href = "/what";
+                break;
+              case "como":
+                href = "/how";
+                break;
+              case "onde":
+                href = "/onde";
+                break;
+              case "comprar":
+                href = "/comprar";
+                break;
+              default:
+                href = "/";
+            }
+
+            return (
+              <a
+                key={tab}
+                href={href}
+                className="hover:underline text-gray-700"
+                onClick={() => setMenuOpen(false)}
+              >
+                {tab}
+              </a>
+            );
+          })}
         </div>
       )}
 
-      {/* Sidebar do Carrinho */}
+      {/* cart sidebar*/}
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
-  )
+  );
 }
 

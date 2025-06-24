@@ -1,6 +1,85 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "Burford Rustic Line";
+  src: url("/fonts/BurfordRusticLine-Regular2.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rotunda - Hairline */
+@font-face {
+  font-family: "Rotunda";
+  src: url("/fonts/Rotunda-Hairline.woff2") format("woff2");
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rotunda - Thin */
+@font-face {
+  font-family: "Rotunda";
+  src: url("/fonts/Rotunda-Thin.woff2") format("woff2");
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rotunda - Light */
+@font-face {
+  font-family: "Rotunda";
+  src: url("/fonts/Rotunda-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rotunda - Regular */
+@font-face {
+  font-family: "Rotunda";
+  src: url("/fonts/Rotunda-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Rotunda - Variable (Optional, use only if needed) */
+@font-face {
+  font-family: "Rotunda";
+  src: url("/fonts/Rotunda_VariableRegular.woff2") format("woff2");
+  font-weight: 100 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+body {
+  font-family: "Burford Rustic Line", sans-serif !important;
+  text-transform: uppercase;
+  line-height: 0.9;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Rotunda", sans-serif !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+
+.textbutton {
+  font-family: "Rotunda", sans-serif;
+  letter-spacing: 0.8m;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  font-weight: 400;
+  }
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
