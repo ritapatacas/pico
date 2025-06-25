@@ -86,7 +86,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
                 >
                   <Link
                     href={tab.href}
-                    className={`px-3 py-2 cursor-pointer transition-colors duration-300 flex items-center justify-center rounded-md
+                    className={`px-2 py-2 cursor-pointer transition-colors duration-300 flex items-center justify-center rounded-md font-rotunda
                       ${index === activeIndex
                         ? "text-[#0e0e10] dark:text-white font-semibold"
                         : "text-[#0e0f1199] dark:text-[#ffffff99]"}
@@ -94,7 +94,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}
                   >
-                    <span className="text-sm leading-5 whitespace-nowrap">
+                    <span className="text-lg leading-5 whitespace-nowrap font-rotunda">
                       {tab.label}
                     </span>
                   </Link>

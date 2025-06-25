@@ -12,7 +12,6 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
   const tabs = [
     { label: "o quê", href: "/what" },
-    { label: "onde", href: "/onde" },
     { label: "comprar", href: "/comprar" },
   ];
 
@@ -33,7 +32,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
   return (
     <header
-      className={`sticky top-0 py-4 flex items-center justify-between px-4 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
+      className={`sticky top-0 flex items-center justify-between px-2 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
     >
       {/* Logo */}
       <div className="flex items-center space-x-4">

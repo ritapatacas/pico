@@ -38,7 +38,7 @@ export function VerticalHeader() {
       {/* Top section with icons and dynamic content */}
       <div className="flex-1 flex flex-col min-h-5">
         {/* Always visible icons */}
-        <div className="flex flex-col items-center space-y-4 p-6 border-b border-gray-200">
+        <div className="flex flex-col items-start space-y-4 p-6 border-b border-gray-200">
           <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
             {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>

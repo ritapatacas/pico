@@ -3,8 +3,9 @@ import { useEffect, useState, useRef } from "react";
 import { useCart } from "@/contexts/cart-context";
 import { Button } from "./ui/button";
 import Script from "next/script";
+import { loadStripe } from "@stripe/stripe-js";
 
-const stripePromise = typeof window !== 'undefined' ? require('@stripe/stripe-js').loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) : null;
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 function PayPalButton({ amount }: { amount: number }) {
   const paypalRef = useRef<HTMLDivElement>(null);
@@ -27,22 +28,80 @@ function PayPalButton({ amount }: { amount: number }) {
 
 export default function PaymentStep({ onBack }: { onBack: () => void }) {
   const [shipping, setShipping] = useState<any>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { cartItems, cartTotal } = useCart();
 
   useEffect(() => {
     setShipping(JSON.parse(localStorage.getItem("shipping") || "{}"));
   }, []);
 
-  if (!shipping) return <div>Carregando...</div>;
+  const handleStripePayment = async () => {
+    if (cartItems.length === 0) {
+      setError("O carrinho está vazio");
+      return;
+    }
+
+    setIsProcessing(true);
+    setError(null);
+
+    try {
+      const items = cartItems.map((item: any) => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+      }));
+
+      const res = await fetch("/api/checkout_sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Erro ao processar pagamento");
+      }
+
+      const data = await res.json();
+      
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      const stripe = await stripePromise;
+      
+      if (data.url) {
+        window.location.href = data.url;
+      } else if (stripe && data.id) {
+        const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+        if (error) {
+          throw new Error(error.message);
+        }
+      } else {
+        throw new Error("Resposta inválida do servidor");
+      }
+    } catch (err) {
+      console.error("Erro no pagamento:", err);
+      setError(err instanceof Error ? err.message : "Erro desconhecido");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  if (!shipping) return <div className="flex items-center justify-center h-32">Carregando...</div>;
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex-grow overflow-y-auto -mr-4 pr-4">
         <h2 className="font-semibold mb-2">Endereço de Entrega</h2>
-        <div>{shipping.name}</div>
-        <div>{shipping.address}</div>
-        <div>{shipping.city}, {shipping.postal}, {shipping.country}</div>
-        <div>{shipping.email}</div>
+        <div className="bg-gray-50 p-3 rounded mb-4">
+          <div className="font-medium">{shipping.name}</div>
+          <div>{shipping.address}</div>
+          <div>{shipping.city}, {shipping.postal}, {shipping.country}</div>
+          <div className="text-gray-600">{shipping.email}</div>
+        </div>
+        
         <div className="my-6 bg-white p-4 rounded shadow">
           <h2 className="font-semibold mb-2">Resumo do Pedido</h2>
           {cartItems.map(item => (
@@ -51,40 +110,44 @@ export default function PaymentStep({ onBack }: { onBack: () => void }) {
               <span>{(item.price * item.quantity).toFixed(2).replace('.',',')}€</span>
             </div>
           ))}
-          <div className="font-bold mt-2">Total: {cartTotal.toFixed(2)} €</div>
+          <div className="border-t pt-2 mt-2">
+            <div className="font-bold text-lg">Total: {cartTotal.toFixed(2)} €</div>
+          </div>
         </div>
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
       </div>
+      
       <div className="border-t pt-4 flex gap-2 mt-4">
-        <Button type="button" variant="outline" className="flex-1" onClick={onBack}>Voltar</Button>
+        <Button 
+          type="button" 
+          variant="outline" 
+          className="flex-1" 
+          onClick={onBack}
+          disabled={isProcessing}
+        >
+          Voltar
+        </Button>
+        
         {/* Stripe Button */}
         <Button
-          className="flex-1 bg-blue-600 text-white hover:bg-blue-700 py-2 text-sm font-medium"
-          onClick={async () => {
-            const items = cartItems.map((item: any) => ({
-              name: item.name,
-              price: item.price,
-              quantity: item.quantity,
-              image: item.image,
-            }));
-            const res = await fetch("/api/checkout_sessions", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ items }),
-            });
-            const data = await res.json();
-            const stripe = await stripePromise;
-            if (data.url) {
-              window.location.href = data.url;
-            } else if (stripe && data.id) {
-              stripe.redirectToCheckout({ sessionId: data.id });
-            }
-          }}
+          className="flex-1 bg-blue-600 text-white hover:bg-blue-700 py-2 text-sm font-medium disabled:opacity-50"
+          onClick={handleStripePayment}
+          disabled={isProcessing || cartItems.length === 0}
         >
-          Pagar com Cartão / MB WAY
+          {isProcessing ? "Processando..." : "Pagar com Cartão / MB WAY"}
         </Button>
+        
         {/* PayPal Button */}
         <div className="flex-1">
-          <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />
+          <Script 
+            src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" 
+            strategy="afterInteractive" 
+          />
           <PayPalButton amount={cartTotal} />
         </div>
       </div>

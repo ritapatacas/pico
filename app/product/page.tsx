@@ -4,11 +4,9 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 
 import Image from "next/image"
-import { ChevronLeft, ChevronRight, Heart, Star, Minus, Plus, Facebook, Twitter, Instagram } from "lucide-react"
+import { ChevronLeft, ChevronRight, Heart, Star, Minus, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Header } from "@/components/header"
-import { Footer } from "@/components/footer"
 import { useCart } from "@/contexts/cart-context"
 
 const colors = [

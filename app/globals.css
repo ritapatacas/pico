@@ -81,7 +81,13 @@ h6 {
   font-size: 0.9rem;
   text-transform: uppercase;
   font-weight: 400;
-  }
+}
+
+.font-rotunda {
+  font-family: "Rotunda", sans-serif !important;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 
 @custom-variant dark (&:is(.dark *));
 
