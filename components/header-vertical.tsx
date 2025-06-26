@@ -31,9 +31,7 @@ export function VerticalHeader() {
 
   return (
     <header
-      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-80 transition-all duration-300 ease-in-out min-w-20 ${
-        isCartOpen ? 'w-200' : 'w-24'
-      }`}
+      className={`h-screen sticky top-0 flex flex-col justify-between bg-white shadow-lg z-80 transition-all duration-300 ease-in-out w-full`}
     >
       {/* Top section with icons and dynamic content */}
       <div className="flex-1 flex flex-col min-h-5">
@@ -67,16 +65,15 @@ export function VerticalHeader() {
         )}
       </div>
 
-      {/* Always visible logo at the bottom */}
-      <div className="flex justify-center items-end p-6 mt-auto">
+      <div className="flex justify-start items-end pl-2 pb-6 mt-auto">
         <Image
           className="dark:invert"
           src="/PICODAROSA_logo.png"
           alt="PICO DA ROSA logo"
-          width={100}
-          height={30}
+          width={72}
+          height={22}
           priority
-          style={{ transform: "rotate(-90deg)" }}
+          style={{ transform: "rotate(-90deg)", minWidth: 72, maxWidth: 72 }}
         />
       </div>
     </header>

@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <main className="p-0 relative">
       <Image
-        className="dark:invert w-full h-screen object-cover object-top"
+        className="w-full h-screen object-cover object-top"
         src="/PR-01.jpeg"
         alt="PICO DA ROSA logo"
         width={1920}
