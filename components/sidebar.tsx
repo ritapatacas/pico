@@ -3,20 +3,24 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { GalleryVerticalEnd, Home, Menu, Settings, X } from "lucide-react"
+import { GalleryVerticalEnd, Home, Menu, Settings, ShoppingCart, X, Users, Store, Mail } from "lucide-react"
 import { useLanguageSettings } from "@/hooks/use-settings-store"
 import { SettingsPanel } from "@/components/settings/settings-panel"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import "@/app/globals.css"
 
 interface SidebarProps {
   version: string
 }
+
+const burfordFontClass = "font-burford text-2xl text-left font-bold";
 
 export function Sidebar({ version }: SidebarProps) {
   const pathname = usePathname()
   const { t } = useLanguageSettings()
   const [isMobile, setIsMobile] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [openSection, setOpenSection] = useState<'home' | 'settings' | null>(null)
+  const [openSection, setOpenSection] = useState<'home' | 'settings' | 'cart' | null>(null)
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -46,9 +50,8 @@ export function Sidebar({ version }: SidebarProps) {
   if (isMobile) {
     return (
       <div
-        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t ${
-          isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
-        } flex flex-col`}
+        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
+          } flex flex-col`}
         style={{ willChange: 'height' }}
       >
         {/* Header and Content (only when open) */}
@@ -60,8 +63,7 @@ export function Sidebar({ version }: SidebarProps) {
                   <GalleryVerticalEnd className="size-5" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="text-base font-semibold">Boilerplate</span>
-                  <span className="text-xs text-muted-foreground">v{version}</span>
+                  <span className="text-base font-semibold">PICO DA ROSA</span>
                 </div>
               </div>
               <button
@@ -71,25 +73,72 @@ export function Sidebar({ version }: SidebarProps) {
                 <X className="h-4 w-4" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              {openSection === 'settings' && (
-                <>
-                  <h1 className="mb-6 text-2xl font-bold">{t("settings")}</h1>
-                  <SettingsPanel />
-                </>
-              )}
-              {openSection === 'home' && (
-                <>
-                  <h1 className="mb-6 text-2xl font-bold">{t("home")}</h1>
-                  {/* Home content goes here. You can customize this section. */}
-                  <p className="text-muted-foreground">Welcome to the home section!</p>
-                </>
-              )}
+            {/* Main navigation styled like accordion triggers */}
+            <div className={`space-y-2 ${burfordFontClass}`}>
+              <Link href="/sobre" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
+                <Users className="h-4 w-4" />
+                Sobre nós
+              </Link>
+              <Link href="/mirtilos" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
+                <Store className="h-4 w-4" />
+                Produtos
+              </Link>
+            </div>
+            <div className="flex-1 overflow-y-auto px-3">
+              <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+                <AccordionItem value="settings">
+                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                    <Settings className="h-4 w-4" />
+                    Configurações
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <SettingsPanel />
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="cart">
+                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                    <ShoppingCart className="h-4 w-4" />
+                    Carrinho
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <p className="text-muted-foreground">
+                      O carrinho está vazio. <br />
+                      Visite a página{' '}
+                      <Link href="/mirtilos" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                        produtos
+                      </Link>{' '}
+                      ou{' '}
+                      <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                        contacte-nos
+                      </Link>{' '}
+                      se encontrar algum problema
+                    </p>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="contactos">
+                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                    <Mail className="h-4 w-4" />
+                    Contactos
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2">
+                      <p className="text-base">Pode contactar-nos através do email <a href="mailto:info@picodarosa.pt" className="underline">info@picodarosa.pt</a> ou pelo telefone <a href="tel:+351912345678" className="underline">+351 912 345 678</a>.</p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </>
         )}
         {/* Bottom Navigation (always visible) */}
         <div className="flex w-full items-center justify-around h-16 border-t bg-background pb-1 pt-2 mt-auto">
+          <Link
+            href="/"
+            className="flex flex-col items-center p-2 text-muted-foreground hover:text-primary"
+          >
+            <Home className="h-5 w-5" />
+            <span className="text-xs">Home</span>
+          </Link>
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -104,23 +153,23 @@ export function Sidebar({ version }: SidebarProps) {
             className={`flex flex-col items-center p-2 ${isSidebarOpen && openSection === 'home' ? "text-primary" : "text-muted-foreground"}`}
           >
             <Menu className="h-5 w-5" />
-            <span className="text-xs">{t("home")}</span>
+            <span className="text-xs">Menu</span>
           </button>
           <button
             onClick={(e) => {
               e.preventDefault();
-              if (isSidebarOpen && openSection === 'settings') {
+              if (isSidebarOpen && openSection === 'cart') {
                 setIsSidebarOpen(false);
                 setOpenSection(null);
               } else {
                 setIsSidebarOpen(true);
-                setOpenSection('settings');
+                setOpenSection('cart');
               }
             }}
-            className={`flex flex-col items-center p-2 ${isSidebarOpen && openSection === 'settings' ? "text-primary" : "text-muted-foreground"}`}
+            className={`flex flex-col items-center p-2 ${isSidebarOpen && openSection === 'cart' ? "text-primary" : "text-muted-foreground"}`}
           >
-            <Settings className="h-5 w-5" />
-            <span className="text-xs">{t("settings")}</span>
+            <ShoppingCart className="h-5 w-5" />
+            <span className="text-xs">{t("cart")}</span>
           </button>
         </div>
       </div>
@@ -147,9 +196,8 @@ export function Sidebar({ version }: SidebarProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${
-                  item.current ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
-                }`}
+                className={`flex items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${item.current ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
+                  }`}
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.name}</span>
@@ -161,11 +209,10 @@ export function Sidebar({ version }: SidebarProps) {
           <nav className="space-y-2">
             <button
               onClick={handleSettingsClick}
-              className={`flex w-full items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${
-                isSidebarOpen ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
-              }`}
+              className={`flex w-full items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${isSidebarOpen ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
+                }`}
             >
-              <Settings className="h-5 w-5" />
+              <Settings className="h-4 w-4" />
               <span>{t("settings")}</span>
             </button>
           </nav>
