@@ -86,9 +86,10 @@ export function VerticalHeader() {
                     {step === 'cart' ? 'Carrinho' : step === 'checkout' ? 'Checkout' : 'Pagamento'}
                   </h2>
                   <div className="flex-1 flex flex-col">
-                    {step === 'cart' && <CartStep onNext={() => setStep('checkout')} />}
-                    {step === 'checkout' && <CheckoutStep onNext={() => setStep('payment')} onBack={() => setStep('cart')} />}
-                    {step === 'payment' && <PaymentStep onBack={() => setStep('checkout')} />}
+                    {/* {step === 'cart' && <CartStep onNext={() => setStep('checkout')} />} */}
+                    {/* {step === 'checkout' && <CheckoutStep onNext={() => setStep('payment')} onBack={() => setStep('cart')} />} */}
+                    {/* {step === 'payment' && <PaymentStep onBack={() => setStep('checkout')} />} */}
+                    <p>Cart content placeholder</p>
                   </div>
                 </>
               )}
@@ -98,10 +99,11 @@ export function VerticalHeader() {
                 <>
                   <h2 className="text-xl font-bold mb-4">Menu</h2>
                   <nav className="flex flex-col gap-4">
-                    <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Início</Link>
-                    <Link href="/product" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Produtos</Link>
-                    <Link href="/sobre" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Sobre</Link>
-                    <Link href="/settings" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Definições</Link>
+                    {/* {step === 'cart' && <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Início</Link>} */}
+                    {/* {step === 'checkout' && <Link href="/product" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Produtos</Link>} */}
+                    {/* {step === 'payment' && <Link href="/sobre" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Sobre</Link>} */}
+                    {/* {step === 'payment' && <Link href="/settings" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Definições</Link>} */}
+                    <p>Menu content placeholder</p>
                   </nav>
                 </>
               )}

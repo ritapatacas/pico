@@ -2,14 +2,15 @@
 
 import HeaderWithPathname from "@/app/HeaderWithPathname";
 import { Footer } from "./footer";
-import { VerticalHeader } from "./header-vertical";
+import { Sidebar } from "./sidebar";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen bg-gray-50/50">
       {/* Sidebar always rendered, width controlled by VerticalHeader */}
       <div className="fixed right-0 top-0 h-full z-40 transition-all duration-300 ease-in-out">
-        <VerticalHeader />
+        <Sidebar />
+
       </div>
 
       {/* Main content area, not pushed by sidebar */}
