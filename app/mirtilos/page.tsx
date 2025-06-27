@@ -6,11 +6,6 @@ import { Heart, Minus, Plus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-import { FeaturedDestinations } from "@/components/featured-destinations"
-import { PopularPackages } from "@/components/popular-packages"
-import { Testimonials } from "@/components/testimonials"
-import { Newsletter } from "@/components/newsletter"
-import { Footer } from "@/components/footer"
 import { loadStripe } from '@stripe/stripe-js';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
@@ -46,6 +41,7 @@ export default function Home() {
   const [packagingType, setPackagingType] = useState("embalado")
   const [kiloQuantity, setKiloQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState("/mirtilo_embalagem.jpeg")
+  const [tab, setTab] = useState("detalhes")
 
   const embaladoOptions = [
     { size: "125g", price: 1.25, kgPrice: 10 },
@@ -106,7 +102,7 @@ export default function Home() {
 
 
 
-        <section className="relative h-[600px] md:h-[700px] overflow-hidden">
+        <section className="relative h-[900px] md:h-[700px] overflow-hidden h-full">
           <Image
             src="/mirtilo.png"
             alt="Mirtilo background"
@@ -117,46 +113,46 @@ export default function Home() {
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/30" />
 
-          <div className="container relative z-10 flex flex-col items-start justify-center h-full mt-10 px-1 mx-auto space-y-6 text-white">
+          <div className="container relative z-10 flex flex-col items-start justify-center h-full mt-10 px-10 mx-auto space-y-6 text-white">
 
-                {/* Product Info */}
-            <div className="bigcard flex justify-center items-center gap-8 w-full p-20">
+            {/* Product Info */}
+            <div className="bigcard flex flex-col md:flex-row justify-center items-center gap-8 w-full p-4 md:p-20">
 
-              <div id="desc" className="w-full lg:w-3/4 xl:w-2/3  pl-20">
+              <div id="desc" className="w-full lg:w-3/4 xl:w-2/3 pl-0 md:pl-20 mb-6 md:mb-0">
 
-                  <div className="lg:w-1/2">
-                    <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                      Mirtilos
-                    </h1>
-                    <span className="text-l text-gray-200 font-semibold">
-                      desde 1,25€
-                    </span>
-                  </div>
-
-                  <div className="text text-lg mt-4">
-                    <p><b>Mirtilos embalados e a granel</b></p>
-                    <p className="mt-2">
-                      <span>
-                        Variedades: Duke e Emerald
-                        <br />
-                        Localização: Pedrógão Grande
-                        <br />
-                        Modo de Produção: Agricultura Integrada
-                        <br />
-                        Época de colheita: maio a setembro
-                      </span>
-                    </p>
-                  </div>
-
+                <div className="lg:w-1/2">
+                  <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
+                    Mirtilos
+                  </h1>
+                  <span className="text-l text-gray-200 font-semibold">
+                    desde 1,25€
+                  </span>
                 </div>
 
-         
+                <div className="text text-lg mt-4">
+                  <p><b>Mirtilos embalados e a granel</b></p>
+                  <p className="mt-2">
+                    <span>
+                      Variedades: Duke e Emerald
+                      <br />
+                      Localização: Pedrógão Grande
+                      <br />
+                      Modo de Produção: Agricultura Integrada
+                      <br />
+                      Época de colheita: maio a setembro
+                    </span>
+                  </p>
+                </div>
+
+              </div>
 
 
-<div>
 
 
-                <Card className="bg-gray-200 opacity-80 text-black overflow-hidden transition-all hover:shadow-lg w-[320px] h-[360px] flex flex-col justify-between mr-40">
+              <div id="product-form" className="pb-10">
+
+
+                <Card className="bg-gray-200 opacity-80 text-black overflow-hidden transition-all hover:shadow-lg w-[70vw] h-auto min-h-[360px] flex flex-col justify-between md:mr-40">
 
                   <CardContent className="flex flex-col flex-grow ">
 
@@ -184,18 +180,20 @@ export default function Home() {
                       {/* Embalado */}
                       {packagingType === "embalado" && (
                         <div className="flex flex-col justify-between h-full mt-4">
-
                           <div>
                             <h2 className="text-md font-semibold mb-2">Tamanho</h2>
-                            <div className="flex flex-wrap gap-2">
-                              {embaladoOptions.map((opt) => (
-                                <button key={opt.size} onClick={() => setSelectedSize(opt.size)} className={`px-3 py-1 rounded flex items-center justify-center border-2 text-sm font-semibold transition-all ${selectedSize === opt.size ? "border-black bg-black text-white" : "border-gray-200 hover:border-gray-300"}`}>
+                            <select
+                              value={selectedSize}
+                              onChange={e => setSelectedSize(e.target.value)}
+                              className="px-3 py-2 rounded border-2 border-gray-200 text-sm font-semibold focus:outline-none focus:border-black transition-all bg-white text-black"
+                            >
+                              {embaladoOptions.map(opt => (
+                                <option key={opt.size} value={opt.size}>
                                   {opt.size}
-                                </button>
+                                </option>
                               ))}
-                            </div>
+                            </select>
                           </div>
-
                           <div className="text-sm font-semibold mt-4">
                             embalagem de {getSelectedEmbaladoOption(selectedSize).size} - {getSelectedEmbaladoOption(selectedSize).price.toFixed(2).replace(".", ",")}€ ({getSelectedEmbaladoOption(selectedSize).kgPrice.toFixed(2).replace(".", ",")}€/kg)
                           </div>
@@ -231,9 +229,9 @@ export default function Home() {
 
                     </div>
                   </CardContent>
-
+                  <div className="mx-6 border-t border border-gray-300" />
                   {/* Secção fixa no fundo */}
-                  <div className="p-3 flex items-center gap-2 border-t border-gray-300">
+                  <div className="px-6 flex items-center gap-2">
 
                     {/* Quantity */}
                     <div className="flex items-center border rounded-md">
@@ -253,34 +251,72 @@ export default function Home() {
                         : `Adicionar (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€)`}
                     </Button>
 
-                    {/* Favorite */}
-                    <Button variant="outline" className="p-2 aspect-square" onClick={toggleFavorite}>
-                      <Heart className={`w-4 h-4 ${isFavorite ? "fill-red-500 text-red-500" : ""}`} />
-                      <span className="sr-only">Add to Favorites</span>
-                    </Button>
-                  </div>
-
-                  {/* Payment Buttons */}
-                  <div className="flex gap-2 mt-2 w-full">
-                    {/* PayPal Button */}
-                    <div className="flex-1">
-                      <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />
-                      <PayPalButton amount={
-                        packagingType === 'embalado'
-                          ? getSelectedEmbaladoOption(selectedSize).price * quantity
-                          : precoGranelPorKg * kiloQuantity
-                      } />
-                    </div>
                   </div>
                 </Card>
 
 
-            </div>
+              </div>
             </div>
           </div>
 
         </section >
-{/*
+        {/* Tabs for "Detalhes" and "Preços" */}
+        <div className="w-full my-4">
+          <div className="flex justify-center md:justify-start border-b border-gray-200">
+            <button
+              className={`px-4 py-2 text-sm font-medium focus:outline-none ${tab === "detalhes"
+                  ? "border-b-2 border-primary text-primary"
+                  : "text-gray-500 hover:text-primary"
+                }`}
+              onClick={() => setTab("detalhes")}
+              type="button"
+            >
+              Detalhes
+            </button>
+            <button
+              className={`ml-4 px-4 py-2 text-sm font-medium focus:outline-none ${tab === "precos"
+                  ? "border-b-2 border-primary text-primary"
+                  : "text-gray-500 hover:text-primary"
+                }`}
+              onClick={() => setTab("precos")}
+              type="button"
+            >
+              Preços
+            </button>
+          </div>
+          <div className="mt-4 px-4 pt-6 pb-30">
+            {tab === "detalhes" && (
+              <div>
+                {/* Conteúdo de detalhes do produto */}
+                <h3 className="text-lg font-semibold mb-2">Sobre os Mirtilos</h3>
+                <p className="text-sm text-muted-foreground">
+                  Os nossos mirtilos são colhidos à mão, frescos e de produção local. Perfeitos para consumo direto, sobremesas ou compotas.
+                </p>
+              </div>
+            )}
+            {tab === "precos" && (
+              <div>
+                {/* Conteúdo de preços */}
+                <h3 className="text-lg font-semibold mb-2">Tabela de Preços</h3>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>
+                    <span className="font-medium">Embalado:</span>{" "}
+                    {embaladoOptions.map(opt => (
+                      <span key={opt.size} className="ml-2">
+                        {opt.size}g - {opt.price.toFixed(2).replace(".", ",")}€
+                      </span>
+                    ))}
+                  </li>
+                  <li>
+                    <span className="font-medium">Granel:</span>{" "}
+                    {precoGranelPorKg.toFixed(2).replace(".", ",")}€/kg
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+        {/*
         <FeaturedDestinations />
         <PopularPackages />
         <Testimonials />
