@@ -63,7 +63,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
           <div className="relative">
             {/* Hover Highlight */}
             <div
-              className="absolute h-[30px] transition-all duration-300 ease-out bg-[#0e0f1114] dark:bg-[#ffffff1a] rounded-[6px] flex items-center"
+              className="absolute h-[30px] transition-all duration-300 ease-out bg-secondary/50 rounded-[6px] flex items-center"
               style={{
                 ...hoverStyle,
                 opacity: hoveredIndex !== null ? 1 : 0,
@@ -72,7 +72,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
 
             {/* Active Indicator */}
             <div
-              className="absolute bottom-[-6px] h-[2px] bg-[#0e0f11] dark:bg-white transition-all duration-300 ease-out"
+              className="absolute bottom-[-6px] h-[2px] bg-primary transition-all duration-300 ease-out"
               style={activeStyle}
             />
 
@@ -88,8 +88,8 @@ export default function Frame({ tabs }: VercelTabsProps) {
                     href={tab.href}
                     className={`px-2 py-2 cursor-pointer transition-colors duration-300 flex items-center justify-center rounded-md font-rotunda
                       ${index === activeIndex
-                        ? "text-[#0e0e10] dark:text-white font-semibold"
-                        : "text-[#0e0f1199] dark:text-[#ffffff99]"}
+                        ? "text-foreground font-semibold"
+                        : "text-muted-foreground"}
                     `}
                     onMouseEnter={() => setHoveredIndex(index)}
                     onMouseLeave={() => setHoveredIndex(null)}

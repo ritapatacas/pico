@@ -11,11 +11,11 @@ export function Footer() {
 
   return (
     <footer className="h-full">
-      <div className="h-10 max-w-screen overflow-hidden">
+      <div className="h-15 max-w-screen overflow-hidden">
 
         <Image
           className="h-full object-cover scale-200"
-          src="/imgs/roza_eyes.png"
+          src="/imgs/roza_eyes.webp"
           alt="Roza eyes"
           width={1920}
           height={38}
@@ -23,12 +23,12 @@ export function Footer() {
         />
       </div>
 
-      <div className="bg-gray px-4 pt-10 w-full">
+      <div className="bg-primary text-primary-foreground px-4 pt-10 w-full">
         <div className="container mx-auto max-w-4xl">
           <div className="mt-2 mb-8">
             <div className="flex items-center space-x-2">
               <Image
-                className=""
+                className="dark:invert"
                 src="/PICODAROSA_logo.png"
                 alt="PICO DA ROSA logo"
                 width={50}
@@ -36,7 +36,7 @@ export function Footer() {
                 priority
               />
               <Image
-                className=""
+                className="dark:invert"
                 src="/PICODAROSA_text-img.png"
                 alt="PICO DA ROSA text logo"
                 width={150}
@@ -48,19 +48,19 @@ export function Footer() {
 
             <div id="footer-text" className="px-2">
               <h2 className="text-2xl font-medium mb-2"></h2>
-              <p className="text-gray-600 max-w-2xl text-md">
+              <p className="text-primary-foreground/90 max-w-2xl text-md">
                 <br></br><b>Rosa Américo - Fruta Miúda</b>
-                <span className="text-gray-600 max-w-2xl text-s">
+                <span className="text-primary-foreground/80 max-w-2xl text-s">
                   <br></br>{t("footer.address")}
                   <br></br>{t("footer.city")}
 
                 </span>
               </p>
-              <p className="text-gray-700 max-w-2xl text-s">
+              <p className="text-primary-foreground max-w-2xl text-s">
                 <br></br><b>{t("footer.email")}</b>
               </p>
               <br></br>
-              <p className="text-gray-700 max-w-2xl text-md">
+              <p className="text-primary-foreground max-w-2xl text-md">
                 {t("footer.nif")}: <b>236 427 660</b><br></br>
                 {t("footer.iban")}: <b>PT50 0035 0085 00097819000 25</b>
               </p>
@@ -73,7 +73,7 @@ export function Footer() {
             {/* Social */}
             <div className="flex items-center space-x-4">
               <button
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 scale-80 hover:scale-90 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
+                className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 scale-80 hover:scale-90 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
                 onClick={() => window.open(
                   'https://reformaagraria.pt/',
                   '_blank',
@@ -84,18 +84,11 @@ export function Footer() {
                 <span className="sr-only">Reforma Agraria</span>
                 <div className="w-5 h-10 flex items-center justify-center">
                   <Image
-                    src="/reforma-agraria-logo-gray.svg"
+                    src="/reforma-agraria-logo-white.png"
                     alt="Reforma Agraria"
                     width={33}
                     height={65}
-                    className="dark:hidden brightness-0 opacity-60 hover:brightness-100 hover:opacity-100 transition-all duration-300"
-                  />
-                  <Image
-                    src="/reforma-agraria-logo-gray.svg"
-                    alt="Reforma Agraria"
-                    width={33}
-                    height={65}
-                    className="hidden dark:block brightness-0 opacity-40 hover:brightness-100 hover:opacity-100 transition-all duration-300"
+                    className="opacity-70 hover:opacity-100 transition-all duration-300"
                   />
                 </div>
               </button>
@@ -103,7 +96,7 @@ export function Footer() {
 
             <div className="flex items-center space-x-4">
               <button
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
+                className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
                 onClick={() => window.open(
                   'https://www.instagram.com/opicodarosa/',
                   '_blank',
@@ -119,7 +112,7 @@ export function Footer() {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
+                className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
                 onClick={() => window.open(
                   'https://maps.app.goo.gl/nVRRADEmNuzbJLsz5',
                   '_blank',
@@ -157,9 +150,9 @@ export function Footer() {
 
 
 
-          <div className="border-t border-gray-300">
-            <div className="text-sm text-gray-600">
-              <div className="mb-4">{t("footer.published")}</div>
+          <div className="border-t border-primary-foreground/20">
+            <div className="text-sm text-primary-foreground/70">
+              <div className="pb-4">{t("footer.published")}</div>
             </div>
           </div>
         </div>

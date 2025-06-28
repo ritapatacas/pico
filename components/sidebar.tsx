@@ -121,7 +121,7 @@ export function Sidebar({ version }: SidebarProps) {
                     ) : (
                       <div className="space-y-4">
                         {cartItems.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                             <div className="flex-1">
                               <h4 className="font-medium text-sm">{item.name}</h4>
                               <p className="text-xs text-muted-foreground">
@@ -149,7 +149,7 @@ export function Sidebar({ version }: SidebarProps) {
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-6 w-6 text-red-500 hover:text-red-700"
+                                className="h-6 w-6 text-destructive hover:text-destructive/80"
                                 onClick={() => removeFromCart(item.id)}
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -157,14 +157,14 @@ export function Sidebar({ version }: SidebarProps) {
                             </div>
                           </div>
                         ))}
-                        <div className="mt-8 border-t border border-gray-300" />
+                        <div className="mt-8 border-t border-border" />
                         <div className="flex justify-between items-center m-4 text-lg ">
                           <span className="font-semibold">{t("sidebar.total")}:</span>
                           <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
                         </div>
                         <div className="mx-10 my-5">
                           <Button 
-                            className="px-8 w-full bg-black text-white hover:bg-gray-900"
+                            className="px-8 w-full bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               setIsSidebarOpen(false);
                               router.push('/checkout');
@@ -232,7 +232,7 @@ export function Sidebar({ version }: SidebarProps) {
           >
             <ShoppingCart className="h-5 w-5" />
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-white">
                 {cartCount}
               </span>
             )}
@@ -251,7 +251,7 @@ export function Sidebar({ version }: SidebarProps) {
             <GalleryVerticalEnd className="size-5" />
           </div>
           <div className="flex flex-col gap-0.5 leading-none">
-            <span className="text-base font-semibold">Boilerplate</span>
+            <span className="text-base font-semibold">PICO DA ROSA</span>
             <span className="text-xs text-muted-foreground">v{version}</span>
           </div>
         </Link>

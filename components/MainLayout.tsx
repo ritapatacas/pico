@@ -10,7 +10,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       {/* Main content area with proper sidebar spacing */}
       <div className="flex flex-col min-h-screen transition-all duration-300 md:pr-64">
         <HeaderWithPathname />
-        <main className="flex-1 pb-16 md:pb-0">{children}</main>
+        <main className="flex-1">{children}</main>
         <Footer />
       </div>
       

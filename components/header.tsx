@@ -34,19 +34,19 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
   const bgClass = isHomePage
     ? scrolled
-      ? "bg-white/90 backdrop-blur-md"
-      : "bg-white/0 backdrop-blur-0"
-    : "bg-white shadow-md";
+      ? "bg-white/95 backdrop-blur-md shadow-sm border-b border-border"
+      : "bg-transparent backdrop-blur-0"
+    : "bg-white shadow-sm border-b border-border";
 
   return (
     <header
       className={`sticky top-0 flex items-center justify-between px-2 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
     >
       {/* Logo */}
-      <div className="flex items-center space-x-1">
+      <div className="flex items-center space-x-1 transition-all duration-300">
         <Link href="/">
           <Image
-            className="dark:invert py-1"
+            className="py-1 transition-all duration-300"
             src="/PICODAROSA_logo.png"
             alt="PICO DA ROSA logo"
             width={100}
@@ -56,7 +56,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
         </Link>
         <Link href="/">
           <Image
-            className="dark:invert pt-2"
+            className="pt-2 transition-all duration-300"
             src="/PICODAROSA_text-img.png"
             alt="PICO DA ROSA text logo"
             width={160}
