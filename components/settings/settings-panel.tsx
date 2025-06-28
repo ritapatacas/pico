@@ -2,7 +2,6 @@
 
 import { useTheme } from "next-themes"
 import { Moon, Sun, Monitor } from "lucide-react"
-import { FlagGB, FlagPT } from "@/components/flags"
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { cn } from "@/lib/utils"
@@ -45,67 +44,33 @@ export function SettingsPanel() {
   ]
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="mb-3 text-lg font-medium">{t("theme")}</h3>
-        <ToggleGroup type="single" value={theme || "system"} onValueChange={handleThemeChange} className="w-full">
-          <ToggleGroupItem value="light" aria-label="Light Mode" title="Light Mode" className="flex-1 px-2">
+    <div className="space-y-6 px-5">
+      <div className="flex items-center justify-between">
+        <h3 className="text-md font-medium">{t("theme")}</h3>
+        <ToggleGroup type="single" value={theme || "system"} onValueChange={handleThemeChange} className="w-auto">
+          <ToggleGroupItem value="light" aria-label="Light Mode" title="Light Mode" className="px-2">
             <Sun className="mr-2 h-4 w-4" />
             <span>{t("light")}</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="dark" aria-label="Dark Mode" title="Dark Mode" className="flex-1 px-2">
+          <ToggleGroupItem value="dark" aria-label="Dark Mode" title="Dark Mode" className="px-2">
             <Moon className="mr-2 h-4 w-4" />
             <span>{t("dark")}</span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="system" aria-label="System Mode" title="System Mode" className="flex-1 px-2">
-            <Monitor className="mr-2 h-4 w-4" />
-            <span>{t("system")}</span>
+        </ToggleGroup>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <h3 className="text-md font-medium">{t("language")}</h3>
+        <ToggleGroup type="single" value={language} onValueChange={handleLanguageChange} className="w-auto">
+          <ToggleGroupItem value="en" aria-label="English" title="English" className="px-4">
+            <span>{t("english")}</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem value="pt" aria-label="Portuguese" title="Portuguese" className="px-4">
+            <span>{t("portuguese")}</span>
           </ToggleGroupItem>
         </ToggleGroup>
       </div>
 
-      <div>
-        <h3 className="mb-3 text-lg font-medium">{t("language")}</h3>
-        <ToggleGroup type="single" value={language} onValueChange={handleLanguageChange} className="w-full">
-          <ToggleGroupItem value="en" aria-label="English" title="English" className="flex-1 px-2">
-            <span className="flex items-center justify-center">
-              <FlagGB className="mr-2" />
-              <span>{t("english")}</span>
-            </span>
-          </ToggleGroupItem>
-          <ToggleGroupItem value="pt" aria-label="Portuguese" title="Portuguese" className="flex-1 px-2">
-            <span className="flex items-center justify-center">
-              <FlagPT className="mr-2" />
-              <span>{t("portuguese")}</span>
-            </span>
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </div>
-
-      <div>
-        <h3 className="mb-3 text-lg font-medium">{t("colorTheme")}</h3>
-        <ColorSelectorDropdown />
-      </div>
-
-      <div>
-        <h3 className="mb-3 text-lg font-medium">{t("borderRadius")}</h3>
-        <div className="flex flex-wrap gap-2">
-          {radiusValues.map((radius) => (
-            <button
-              key={radius.value}
-              className={cn(
-                "flex h-10 min-w-[48px] items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-                radiusValue === radius.value
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-input bg-background hover:bg-accent hover:text-accent-foreground",
-              )}
-              onClick={() => setRadiusValue(radius.value as any)}
-            >
-              {radius.label}
-            </button>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }
