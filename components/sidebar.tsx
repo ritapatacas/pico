@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { GalleryVerticalEnd, Home, Menu, Settings, ShoppingCart, X, Users, Store, Mail } from "lucide-react"
+import { usePathname, useRouter } from "next/navigation"
+import { GalleryVerticalEnd, Home, Menu, Settings, ShoppingCart, X, Users, Store, Mail, Plus, Minus, Trash2 } from "lucide-react"
 import { useLanguageSettings } from "@/hooks/use-settings-store"
+import { useCart } from "@/contexts/cart-context"
 import { SettingsPanel } from "@/components/settings/settings-panel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
 import "@/app/globals.css"
 
 interface SidebarProps {
@@ -17,10 +19,12 @@ const burfordFontClass = "font-burford text-2xl text-left font-bold";
 
 export function Sidebar({ version }: SidebarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const { t } = useLanguageSettings()
   const [isMobile, setIsMobile] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [openSection, setOpenSection] = useState<'home' | 'settings' | 'cart' | null>(null)
+  const { cartItems, cartCount, cartTotal, updateItemQuantity, removeFromCart } = useCart()
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -98,21 +102,79 @@ export function Sidebar({ version }: SidebarProps) {
                 <AccordionItem value="cart">
                   <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                     <ShoppingCart className="h-4 w-4" />
-                    Carrinho
+                    Carrinho ({cartCount})
                   </AccordionTrigger>
                   <AccordionContent>
-                    <p className="text-muted-foreground">
-                      O carrinho está vazio. <br />
-                      Visite a página{' '}
-                      <Link href="/mirtilos" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                        produtos
-                      </Link>{' '}
-                      ou{' '}
-                      <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                        contacte-nos
-                      </Link>{' '}
-                      se encontrar algum problema
-                    </p>
+                    {cartItems.length === 0 ? (
+                      <p className="text-muted-foreground">
+                        O carrinho está vazio. <br />
+                        Visite a página{' '}
+                        <Link href="/mirtilos" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                          produtos
+                        </Link>{' '}
+                        ou{' '}
+                        <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                          contacte-nos
+                        </Link>{' '}
+                        se encontrar algum problema
+                      </p>
+                    ) : (
+                      <div className="space-y-4">
+                        {cartItems.map((item) => (
+                          <div key={item.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                            <div className="flex-1">
+                              <h4 className="font-medium text-sm">{item.name}</h4>
+                              <p className="text-xs text-muted-foreground">
+                                {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
+                              </p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                              >
+                                <Minus className="h-3 w-3" />
+                              </Button>
+                              <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6"
+                                onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                              >
+                                <Plus className="h-3 w-3" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 text-red-500 hover:text-red-700"
+                                onClick={() => removeFromCart(item.id)}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                        <div className="mt-8 border-t border border-gray-300" />
+                        <div className="flex justify-between items-center m-4 text-lg ">
+                          <span className="font-semibold">Total:</span>
+                          <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
+                        </div>
+                        <div className="mx-10 my-5">
+                          <Button 
+                            className="px-8 w-full bg-black text-white hover:bg-gray-900"
+                            onClick={() => {
+                              setIsSidebarOpen(false);
+                              router.push('/checkout');
+                            }}
+                          >
+                            Comprar
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="contactos">
@@ -166,9 +228,14 @@ export function Sidebar({ version }: SidebarProps) {
                 setOpenSection('cart');
               }
             }}
-            className={`flex flex-col items-center p-2 ${isSidebarOpen && openSection === 'cart' ? "text-primary" : "text-muted-foreground"}`}
+            className={`flex flex-col items-center p-2 relative ${isSidebarOpen && openSection === 'cart' ? "text-primary" : "text-muted-foreground"}`}
           >
             <ShoppingCart className="h-5 w-5" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                {cartCount}
+              </span>
+            )}
             <span className="text-xs">{t("cart")}</span>
           </button>
         </div>

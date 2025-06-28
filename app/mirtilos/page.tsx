@@ -42,6 +42,7 @@ export default function Home() {
   const [kiloQuantity, setKiloQuantity] = useState(1)
   const [selectedImage, setSelectedImage] = useState("/mirtilo_embalagem.jpeg")
   const [tab, setTab] = useState("detalhes")
+  const [showSuccess, setShowSuccess] = useState(false)
 
   const embaladoOptions = [
     { size: "125g", price: 1.25, kgPrice: 10 },
@@ -81,9 +82,13 @@ export default function Home() {
         name: 'Mirtilos a Granel',
         price: precoGranelPorKg,
         quantity: kiloQuantity,
-        image: '/milo_granel.jpeg',
+        image: '/mirtilo_granel.jpeg',
       });
     }
+    
+    // Show success message
+    setShowSuccess(true);
+    setTimeout(() => setShowSuccess(false), 2000);
   };
 
   useEffect(() => {
@@ -246,9 +251,9 @@ export default function Home() {
 
                     {/* Add to Cart */}
                     <Button className="flex-grow bg-black text-white hover:bg-gray-900 py-2 text-sm font-medium" onClick={handleAddToCart}>
-                      {packagingType === "embalado"
+                      {showSuccess ? "Adicionado!" : (packagingType === "embalado"
                         ? `Adicionar (${(getSelectedEmbaladoOption(selectedSize).price * quantity).toFixed(2).replace(".", ",")}€)`
-                        : `Adicionar (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€)`}
+                        : `Adicionar (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€)`)}
                     </Button>
 
                   </div>
