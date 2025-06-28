@@ -15,7 +15,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       </div>
       
       {/* Sidebar always rendered, width controlled by VerticalHeader */}
-      <div className="fixed right-0 top-0 h-full z-40 transition-all duration-300 ease-in-out">
+      <div className="fixed right-0 top-0 h-full z-50 transition-all duration-300 ease-in-out">
         <Sidebar version="0.1.0" />
       </div>
     </div>

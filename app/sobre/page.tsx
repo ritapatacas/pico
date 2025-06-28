@@ -9,7 +9,7 @@ export default function About() {
 
         <div className="h-full overflow-hidden">
           <Image
-            className="h-full object-cover scale-11z0"
+            className="h-full object-cover 130"
             src="/imgs/roza.png"
             alt="Roza photo"
             width={1920}

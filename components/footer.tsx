@@ -8,7 +8,7 @@ import { siGooglemaps, siInstagram } from "simple-icons"
 export function Footer() {
   return (
     <footer className="h-full">
-      <div className="h-10 w-full ">
+      <div className="h-10">
 
         <Image
           className="h-full object-cover scale-200"
@@ -70,12 +70,13 @@ export function Footer() {
             {/* Social */}
             <div className="flex items-center space-x-4">
               <button
-                className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 transition-all duration-200 hover:drop-shadow-lg"
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
                 onClick={() => window.open(
                   'https://www.instagram.com/opicodarosa/',
                   '_blank',
                   'noopener,noreferrer'
                 )}
+                title="Follow us on Instagram"
               >
                 <span className="sr-only">Instagram</span>
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -85,12 +86,13 @@ export function Footer() {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                className="text-gray-400 hover:text-gray-500 dark:text-gray-500 dark:hover:text-gray-400 transition-all duration-200 hover:drop-shadow-lg"
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
                 onClick={() => window.open(
                   'https://maps.app.goo.gl/nVRRADEmNuzbJLsz5',
                   '_blank',
                   'noopener,noreferrer'
                 )}
+                title="Find us on Google Maps"
               >
                 <span className="sr-only">Google Maps</span>
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
