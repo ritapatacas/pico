@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes"
 import { Moon, Sun, Monitor } from "lucide-react"
-import { FlagGB, FlagFR } from "@/components/flags"
+import { FlagGB, FlagPT } from "@/components/flags"
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { cn } from "@/lib/utils"
@@ -27,9 +27,9 @@ export function SettingsPanel() {
   }
 
   const handleLanguageChange = (value: string) => {
-    if (value && (value === "en" || value === "fr")) {
+    if (value && (value === "en" || value === "pt")) {
       try {
-        setLanguage(value as "en" | "fr")
+        setLanguage(value as "en" | "pt")
       } catch (error) {
         console.error("Error setting language:", error)
       }
@@ -73,10 +73,10 @@ export function SettingsPanel() {
               <span>{t("english")}</span>
             </span>
           </ToggleGroupItem>
-          <ToggleGroupItem value="fr" aria-label="French" title="French" className="flex-1 px-2">
+          <ToggleGroupItem value="pt" aria-label="Portuguese" title="Portuguese" className="flex-1 px-2">
             <span className="flex items-center justify-center">
-              <FlagFR className="mr-2" />
-              <span>{t("french")}</span>
+              <FlagPT className="mr-2" />
+              <span>{t("portuguese")}</span>
             </span>
           </ToggleGroupItem>
         </ToggleGroup>

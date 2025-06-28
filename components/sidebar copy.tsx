@@ -53,14 +53,24 @@ export function Sidebar({ version }: SidebarProps) {
 
   if (isMobile) {
     return (
-      <div
-        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
-          } flex flex-col`}
-        style={{ willChange: 'height' }}
-      >
-        {/* Header and Content (only when open) */}
+      <>
+        {/* Overlay for when sidebar is open */}
         {isSidebarOpen && (
-          <>
+          <div 
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
+        {/* Expandable content (only when open) */}
+        {isSidebarOpen && (
+          <div
+            className="fixed left-0 right-0 bottom-16 z-50 bg-background border-t transition-all duration-300"
+            style={{ 
+              height: 'calc(100vh - 4rem)',
+              willChange: 'height' 
+            }}
+          >
             <div className="flex h-16 items-center justify-between border-b px-4">
               <div className="flex items-center gap-2">
                 <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
@@ -190,10 +200,11 @@ export function Sidebar({ version }: SidebarProps) {
                 </AccordionItem>
               </Accordion>
             </div>
-          </>
+          </div>
         )}
-        {/* Bottom Navigation (always visible) */}
-        <div className="flex w-full items-center justify-around h-16 border-t bg-background pb-1 pt-2 mt-auto">
+        
+        {/* Bottom Navigation (always visible and fixed at bottom of viewport) */}
+        <div className="bottom-navigation flex w-full items-center justify-around h-16 pb-1 pt-2">
           <Link
             href="/"
             className="flex flex-col items-center p-2 text-muted-foreground hover:text-primary"
@@ -239,7 +250,7 @@ export function Sidebar({ version }: SidebarProps) {
             <span className="text-xs">{t("sidebar.cart")}</span>
           </button>
         </div>
-      </div>
+      </>
     )
   }
 

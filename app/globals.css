@@ -93,6 +93,41 @@ h6 {
   font-family: "Burford Rustic Line", sans-serif;
 }
 
+/* Ensure sidebar is always visible at bottom of viewport */
+.sidebar-mobile {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 50 !important;
+  width: 100vw !important;
+  height: auto !important;
+  max-height: 100vh !important;
+}
+
+.sidebar-mobile .bottom-navigation {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: var(--background) !important;
+  border-top: 1px solid var(--border) !important;
+  z-index: 51 !important;
+  width: 100% !important;
+  height: 4rem !important;
+}
+
+/* Ensure main content doesn't overlap with fixed sidebar */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 4rem !important;
+  }
+  
+  main {
+    padding-bottom: 4rem !important;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

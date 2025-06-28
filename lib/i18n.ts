@@ -1,13 +1,24 @@
 import enTranslations from "@/locales/en.json"
-import frTranslations from "@/locales/fr.json"
+import ptTranslations from "@/locales/pt.json"
 
-export type Language = "en" | "fr"
+export type Language = "en" | "pt"
 
-export const translations: Record<Language, Record<string, string>> = {
+export const translations: Record<Language, Record<string, any>> = {
   en: enTranslations,
-  fr: frTranslations,
+  pt: ptTranslations,
 }
 
 export function getTranslation(language: Language, key: string): string {
-  return translations[language][key] || key
+  const keys = key.split('.')
+  let value: any = translations[language]
+  
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k]
+    } else {
+      return key
+    }
+  }
+  
+  return typeof value === 'string' ? value : key
 }

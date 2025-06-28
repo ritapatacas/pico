@@ -5,15 +5,23 @@ import Image from "next/image"
 import Link from "next/link"
 import VercelTabs from "@/components/VercelTabs"
 import { useCartDrawer } from "@/contexts/cart-drawer-context"
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
   const [scrolled, setScrolled] = useState(false);
   const { isCartOpen } = useCartDrawer();
+  const { t, language } = useLanguageSettings();
 
   const tabs = [
-    { label: "o quê", href: "/what" },
-    { label: "comprar", href: "/comprar" },
+    { label: t("navigation.about"), href: "/sobre" },
+    { label: t("navigation.products"), href: "/mirtilos" },
   ];
+
+  // Debug: log quando as traduções mudam
+  useEffect(() => {
+    console.log('Header - Idioma:', language);
+    console.log('Header - Tabs:', tabs);
+  }, [language, tabs]);
 
   useEffect(() => {
     if (!isHomePage) return;

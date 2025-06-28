@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { cn } from "@/lib/utils"
-import { FlagGB, FlagFR } from "@/components/flags"
+import { FlagGB, FlagPT } from "@/components/flags"
 import { ColorSelectorDropdown } from "@/components/settings/color-selector-dropdown"
 
 export function UserDropdown() {
@@ -39,9 +39,9 @@ export function UserDropdown() {
   }
 
   const handleLanguageChange = (value: string) => {
-    if (value && (value === "en" || value === "fr")) {
+    if (value && (value === "en" || value === "pt")) {
       try {
-        setLanguage(value as "en" | "fr")
+        setLanguage(value as "en" | "pt")
       } catch (error) {
         console.error("Error setting language:", error)
       }
@@ -96,9 +96,9 @@ export function UserDropdown() {
                     <FlagGB className="mr-1" />
                   </span>
                 </ToggleGroupItem>
-                <ToggleGroupItem value="fr" aria-label="French" title="French" className="flex-1 px-2">
+                <ToggleGroupItem value="pt" aria-label="Portuguese" title="Portuguese" className="flex-1 px-2">
                   <span className="flex items-center justify-center">
-                    <FlagFR className="mr-1" />
+                    <FlagPT className="mr-1" />
                   </span>
                 </ToggleGroupItem>
               </ToggleGroup>

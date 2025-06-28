@@ -4,8 +4,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { Facebook } from "lucide-react"
 import { siGooglemaps, siInstagram } from "simple-icons"
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 export function Footer() {
+  const { t } = useLanguageSettings()
+
   return (
     <footer className="h-full">
       <div className="h-10">
@@ -48,18 +51,18 @@ export function Footer() {
               <p className="text-gray-600 max-w-2xl text-md">
                 <br></br><b>Rosa Américo - Fruta Miúda</b>
                 <span className="text-gray-600 max-w-2xl text-s">
-                  <br></br>Rua Américo Pinto da Silva 219
-                  <br></br>3270-154 Troviscais, Pedrógão Grande
+                  <br></br>{t("footer.address")}
+                  <br></br>{t("footer.city")}
 
                 </span>
               </p>
               <p className="text-gray-700 max-w-2xl text-s">
-                <br></br><b>info@picodarosa.pt</b>
+                <br></br><b>{t("footer.email")}</b>
               </p>
               <br></br>
               <p className="text-gray-700 max-w-2xl text-md">
-                NIF: <b>236 427 660</b><br></br>
-                IBAN: <b>PT50 0035 0085 00097819000 25</b>
+                {t("footer.nif")}: <b>236 427 660</b><br></br>
+                {t("footer.iban")}: <b>PT50 0035 0085 00097819000 25</b>
               </p>
             </div>
 
@@ -100,6 +103,35 @@ export function Footer() {
                 </svg>
               </button>
             </div>
+            <div className="flex items-center space-x-4">
+              <button
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
+                onClick={() => window.open(
+                  'https://reformaagraria.pt/',
+                  '_blank',
+                  'noopener,noreferrer'
+                )}
+                title="Visit Reforma Agraria"
+              >
+                <span className="sr-only">Reforma Agraria</span>
+                <div className="w-5 h-10 flex items-center justify-center">
+                  <Image
+                    src="/reforma-agraria-logo-black.svg"
+                    alt="Reforma Agraria"
+                    width={33}
+                    height={65}
+                    className="dark:hidden"
+                  />
+                  <Image
+                    src="/reforma-agraria-logo-white.png"
+                    alt="Reforma Agraria"
+                    width={33}
+                    height={65}
+                    className="hidden dark:block"
+                  />
+                </div>
+              </button>
+            </div>
             {/*           <Link href="/" className="hover:underline">
             Heim
           </Link>
@@ -125,7 +157,7 @@ export function Footer() {
 
           <div className="border-t border-gray-300">
             <div className="text-sm text-gray-600">
-              <div className="mb-9">Published 16/09/2018</div>
+              <div className="mb-9">{t("footer.published")}</div>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { ArrowUpRight } from "lucide-react"
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 interface Card09Props {
   orderDetails?: {
@@ -39,8 +40,10 @@ export default function Card09({
   total = subtotal + tax + shipping - discount.amount,
   currency = "USD",
 }: Card09Props) {
+  const { t, language } = useLanguageSettings()
+
   const formatPrice = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(language === "pt" ? "pt-PT" : "en-US", {
       style: "currency",
       currency: currency,
       minimumFractionDigits: 2,
@@ -61,9 +64,9 @@ export default function Card09({
       <div className="p-6 space-y-6">
         {/* Order Summary Header */}
         <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Order Summary</h3>
+          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{t("cart.orderSummary")}</h3>
           <span className="text-sm text-zinc-500 dark:text-zinc-400">
-            {orderDetails.reduce((acc, item) => acc + item.quantity, 0)} items
+            {orderDetails.reduce((acc, item) => acc + item.quantity, 0)} {t("cart.items")}
           </span>
         </div>
 
@@ -74,7 +77,7 @@ export default function Card09({
               <div className="space-y-1">
                 <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{item.itemName}</p>
                 <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  Qty: {item.quantity} × {formatPrice(item.unitPrice)}
+                  {t("cart.quantity")}: {item.quantity} × {formatPrice(item.unitPrice)}
                 </p>
               </div>
               <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
@@ -87,27 +90,27 @@ export default function Card09({
         {/* Price Breakdown */}
         <div className="space-y-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
           <div className="flex justify-between text-sm">
-            <span className="text-zinc-600 dark:text-zinc-400">Subtotal</span>
+            <span className="text-zinc-600 dark:text-zinc-400">{t("cart.subtotal")}</span>
             <span className="font-medium text-zinc-900 dark:text-zinc-100">{formatPrice(subtotal)}</span>
           </div>
 
           {shipping > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-600 dark:text-zinc-400">Shipping</span>
+              <span className="text-zinc-600 dark:text-zinc-400">{t("cart.shipping")}</span>
               <span className="font-medium text-zinc-900 dark:text-zinc-100">{formatPrice(shipping)}</span>
             </div>
           )}
 
           {tax > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-zinc-600 dark:text-zinc-400">Tax</span>
+              <span className="text-zinc-600 dark:text-zinc-400">{t("cart.tax")}</span>
               <span className="font-medium text-zinc-900 dark:text-zinc-100">{formatPrice(tax)}</span>
             </div>
           )}
 
           {discount && (
             <div className="flex justify-between text-sm text-green-600 dark:text-green-400">
-              <span>Discount ({discount.code})</span>
+              <span>{t("cart.discount")} ({discount.code})</span>
               <span>-{formatPrice(discount.amount)}</span>
             </div>
           )}
@@ -115,7 +118,7 @@ export default function Card09({
 
         {/* Total */}
         <div className="flex justify-between items-center pt-4 border-t border-zinc-200 dark:border-zinc-800">
-          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">Total</span>
+          <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{t("cart.total")}</span>
           <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">{formatPrice(total)}</span>
         </div>
 
@@ -130,7 +133,7 @@ export default function Card09({
             "flex items-center justify-center gap-2",
           )}
         >
-          Proceed to Checkout
+          {t("cart.proceedToCheckout")}
           <ArrowUpRight className="w-4 h-4" />
         </button>
       </div>

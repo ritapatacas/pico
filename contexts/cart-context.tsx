@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useMemo, ReactNode } from "react"
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 export interface CartItem {
   id: string; // e.g., 'mirtilo-125g' or 'mirtilo-granel'
@@ -25,9 +26,20 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const { t } = useLanguageSettings();
 
   const addToCart = (item: Omit<CartItem, 'id'>) => {
     const id = item.size ? `mirtilo-${item.size}` : `mirtilo-granel`;
+    
+    // Translate the product name based on the current language
+    let translatedName = item.name;
+    if (item.name.includes('Mirtilos')) {
+      if (item.size) {
+        translatedName = `${t("product.blueberries")} (${item.size})`;
+      } else {
+        translatedName = `${t("product.blueberries")} ${t("product.bulk")}`;
+      }
+    }
     
     setCartItems(prevItems => {
       const existingItem = prevItems.find(i => i.id === id);
@@ -38,7 +50,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
       }
       // If item doesn't exist, add it to the cart
-      return [...prevItems, { ...item, id }];
+      return [...prevItems, { ...item, id, name: translatedName }];
     });
   };
 

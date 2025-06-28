@@ -9,6 +9,7 @@ import Image from "next/image"
 import { loadStripe } from '@stripe/stripe-js';
 import Script from 'next/script';
 import { useRouter } from 'next/navigation';
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -34,6 +35,7 @@ function PayPalButton({ amount }: { amount: number }) {
 export default function Home() {
   const { addToCart } = useCart()
   const router = useRouter();
+  const { t, language } = useLanguageSettings()
 
   const [selectedSize, setSelectedSize] = useState("250g")
   const [isFavorite, setIsFavorite] = useState(false)
@@ -71,7 +73,7 @@ export default function Home() {
     if (packagingType === 'embalado') {
       const selectedOption = getSelectedEmbaladoOption(selectedSize);
       addToCart({
-        name: `Mirtilos (${selectedOption.size})`,
+        name: `${t("product.blueberries")} (${selectedOption.size})`,
         price: selectedOption.price,
         quantity: quantity,
         image: '/mirtilo_embalagem.jpeg',
@@ -79,7 +81,7 @@ export default function Home() {
       });
     } else { // granel
       addToCart({
-        name: 'Mirtilos a Granel',
+        name: `${t("product.blueberries")} ${t("product.bulk")}`,
         price: precoGranelPorKg,
         quantity: kiloQuantity,
         image: '/mirtilo_granel.jpeg',
@@ -127,24 +129,24 @@ export default function Home() {
 
                 <div className="lg:w-1/2">
                   <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
-                    Mirtilos
+                    {t("product.blueberries")}
                   </h1>
                   <span className="text-l text-gray-200 font-semibold">
-                    desde 1,25€
+                    {t("product.fromPrice")} 1,25€
                   </span>
                 </div>
 
                 <div className="text text-lg mt-4">
-                  <p><b>Mirtilos embalados e a granel</b></p>
+                  <p><b>{t("product.packagedAndBulk")}</b></p>
                   <p className="mt-2">
                     <span>
-                      Variedades: Duke e Emerald
+                      {t("product.varieties")}: {t("product.dukeAndEmerald")}
                       <br />
-                      Localização: Pedrógão Grande
+                      {t("product.location")}: {t("product.pedrogaoGrande")}
                       <br />
-                      Modo de Produção: Agricultura Integrada
+                      {t("product.productionMode")}: {t("product.integratedAgriculture")}
                       <br />
-                      Época de colheita: maio a setembro
+                      {t("product.harvestSeason")}: {t("product.mayToSeptember")}
                     </span>
                   </p>
                 </div>
@@ -166,18 +168,18 @@ export default function Home() {
 
                       {/* Tipo de embalagem */}
                       <div>
-                        <h3 className="text-lg font-semibold mb-2">Formato</h3>
+                        <h3 className="text-lg font-semibold mb-2">{t("product.format")}</h3>
                         <div className="flex flex-wrap gap-2">
                           {/* Embalado */}
                           <label className={`cursor-pointer px-3 py-1 rounded flex items-center justify-center border-2 text-sm font-semibold transition-all ${packagingType === "embalado" ? "border-black bg-black text-white" : "border-gray-200 hover:border-gray-300"}`}>
                             <input type="radio" name="packagingType" value="embalado" checked={packagingType === "embalado"} onChange={(e) => setPackagingType(e.target.value)} className="sr-only" />
-                            embalado
+                            {t("product.packaged")}
                           </label>
 
                           {/* Granel */}
                           <label className={`cursor-pointer px-3 py-1 rounded flex items-center justify-center border-2 text-sm font-semibold transition-all ${packagingType === "granel" ? "border-black bg-black text-white" : "border-gray-200 hover:border-gray-300"}`}>
                             <input type="radio" name="packagingType" value="granel" checked={packagingType === "granel"} onChange={(e) => setPackagingType(e.target.value)} className="sr-only" />
-                            granel
+                            {t("product.bulk")}
                           </label>
                         </div>
                       </div>
@@ -186,7 +188,7 @@ export default function Home() {
                       {packagingType === "embalado" && (
                         <div className="flex flex-col justify-between h-full mt-4">
                           <div>
-                            <h2 className="text-md font-semibold mb-2">Tamanho</h2>
+                            <h2 className="text-md font-semibold mb-2">{t("product.size")}</h2>
                             <select
                               value={selectedSize}
                               onChange={e => setSelectedSize(e.target.value)}
@@ -200,7 +202,7 @@ export default function Home() {
                             </select>
                           </div>
                           <div className="text-sm font-semibold mt-4">
-                            embalagem de {getSelectedEmbaladoOption(selectedSize).size} - {getSelectedEmbaladoOption(selectedSize).price.toFixed(2).replace(".", ",")}€ ({getSelectedEmbaladoOption(selectedSize).kgPrice.toFixed(2).replace(".", ",")}€/kg)
+                            {t("product.package")} {getSelectedEmbaladoOption(selectedSize).size} - {getSelectedEmbaladoOption(selectedSize).price.toFixed(2).replace(".", ",")}€ ({getSelectedEmbaladoOption(selectedSize).kgPrice.toFixed(2).replace(".", ",")}€/kg)
                           </div>
                         </div>
                       )}
@@ -210,7 +212,7 @@ export default function Home() {
                         <div className="flex flex-col justify-between h-full mt-4">
 
                           <div>
-                            <h2 className="text-md font-semibold mb-2">Peso (kg)</h2>
+                            <h2 className="text-md font-semibold mb-2">{t("product.weight")} (kg)</h2>
                             <div className="flex items-center gap-2">
                               <input
                                 type="range"
@@ -227,7 +229,7 @@ export default function Home() {
                           </div>
 
                           <div className="text-sm font-semibold mt-4">
-                            Preço total: {(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€
+                            {t("product.totalPrice")}: {(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€
                           </div>
                         </div>
                       )}
@@ -251,9 +253,9 @@ export default function Home() {
 
                     {/* Add to Cart */}
                     <Button className="flex-grow bg-black text-white hover:bg-gray-900 py-2 text-sm font-medium" onClick={handleAddToCart}>
-                      {showSuccess ? "Adicionado!" : (packagingType === "embalado"
-                        ? `Adicionar (${(getSelectedEmbaladoOption(selectedSize).price * quantity).toFixed(2).replace(".", ",")}€)`
-                        : `Adicionar (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€)`)}
+                      {showSuccess ? t("product.added") : (packagingType === "embalado"
+                        ? `${t("product.addToCart")} (${(getSelectedEmbaladoOption(selectedSize).price * quantity).toFixed(2).replace(".", ",")}€)`
+                        : `${t("product.addToCart")} (${(kiloQuantity * precoGranelPorKg).toFixed(2).replace(".", ",")}€)`)}
                     </Button>
 
                   </div>
@@ -276,7 +278,7 @@ export default function Home() {
               onClick={() => setTab("detalhes")}
               type="button"
             >
-              Detalhes
+              {t("product.details")}
             </button>
             <button
               className={`ml-4 px-4 py-2 text-sm font-medium focus:outline-none ${tab === "precos"
@@ -286,26 +288,26 @@ export default function Home() {
               onClick={() => setTab("precos")}
               type="button"
             >
-              Preços
+              {t("product.prices")}
             </button>
           </div>
           <div className="mt-4 px-4 pt-6 pb-30">
             {tab === "detalhes" && (
               <div>
                 {/* Conteúdo de detalhes do produto */}
-                <h3 className="text-lg font-semibold mb-2">Sobre os Mirtilos</h3>
+                <h3 className="text-lg font-semibold mb-2">{t("product.aboutBlueberries")}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Os nossos mirtilos são colhidos à mão, frescos e de produção local. Perfeitos para consumo direto, sobremesas ou compotas.
+                  {t("product.blueberriesDescription")}
                 </p>
               </div>
             )}
             {tab === "precos" && (
               <div>
                 {/* Conteúdo de preços */}
-                <h3 className="text-lg font-semibold mb-2">Tabela de Preços</h3>
+                <h3 className="text-lg font-semibold mb-2">{t("product.priceTable")}</h3>
                 <ul className="text-sm text-muted-foreground space-y-1">
                   <li>
-                    <span className="font-medium">Embalado:</span>{" "}
+                    <span className="font-medium">{t("product.packaged")}:</span>{" "}
                     {embaladoOptions.map(opt => (
                       <span key={opt.size} className="ml-2">
                         {opt.size}g - {opt.price.toFixed(2).replace(".", ",")}€
@@ -313,7 +315,7 @@ export default function Home() {
                     ))}
                   </li>
                   <li>
-                    <span className="font-medium">Granel:</span>{" "}
+                    <span className="font-medium">{t("product.bulk")}:</span>{" "}
                     {precoGranelPorKg.toFixed(2).replace(".", ",")}€/kg
                   </li>
                 </ul>

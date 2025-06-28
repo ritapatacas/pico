@@ -5,11 +5,13 @@ import Script from "next/script";
 import { useCart } from "@/contexts/cart-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
+import { useLanguageSettings } from "@/hooks/use-settings-store";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 function PayPalButton({ amount }: { amount: number }) {
   const paypalRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguageSettings();
 
   useEffect(() => {
     if (typeof window !== "undefined" && (window as any).paypal && paypalRef.current) {
@@ -18,11 +20,11 @@ function PayPalButton({ amount }: { amount: number }) {
           purchase_units: [{ amount: { value: amount.toFixed(2) } }],
         }),
         onApprove: (data: any, actions: any) => actions.order.capture().then((details: any) => {
-          alert("Pagamento concluído por " + details.payer.name.given_name);
+          alert(t("payment.completedBy") + " " + details.payer.name.given_name);
         }),
       }).render(paypalRef.current);
     }
-  }, [amount]);
+  }, [amount, t]);
 
   return <div ref={paypalRef}></div>;
 }
@@ -30,6 +32,7 @@ function PayPalButton({ amount }: { amount: number }) {
 export default function PaymentPage() {
   const router = useRouter();
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { t } = useLanguageSettings();
   const [shipping, setShipping] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [paymentLoading, setPaymentLoading] = useState(false);
@@ -54,7 +57,7 @@ export default function PaymentPage() {
       <div className="max-w-xl mx-auto py-12 px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Carregando...</p>
+          <p>{t("payment.loading")}</p>
         </div>
       </div>
     );
@@ -66,7 +69,7 @@ export default function PaymentPage() {
     return (
       <div className="max-w-xl mx-auto py-12 px-4">
         <div className="text-center">
-          <p>Redirecionando para produtos...</p>
+          <p>{t("payment.redirectingToProducts")}</p>
         </div>
       </div>
     );
@@ -77,7 +80,7 @@ export default function PaymentPage() {
     return (
       <div className="max-w-xl mx-auto py-12 px-4">
         <div className="text-center">
-          <p>Redirecionando para checkout...</p>
+          <p>{t("payment.redirectingToCheckout")}</p>
         </div>
       </div>
     );
@@ -85,12 +88,12 @@ export default function PaymentPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-2xl font-bold mb-6">Pagamento</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("payment.title")}</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Payment Methods */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Método de Pagamento</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("payment.paymentMethod")}</h2>
           <div className="space-y-4">
             {/* Stripe Button */}
             <Card>
@@ -130,7 +133,7 @@ export default function PaymentPage() {
                       console.log('Response data:', data);
                       
                       if (!res.ok) {
-                        throw new Error(data.error || 'Erro ao processar pagamento');
+                        throw new Error(data.error || t("payment.paymentError"));
                       }
                       
                       const stripe = await stripePromise;
@@ -140,17 +143,17 @@ export default function PaymentPage() {
                       } else if (stripe && data.id) {
                         stripe.redirectToCheckout({ sessionId: data.id });
                       } else {
-                        throw new Error('Resposta inválida do servidor');
+                        throw new Error(t("payment.invalidServerResponse"));
                       }
                     } catch (error) {
                       console.error('Payment error:', error);
-                      setPaymentError(error instanceof Error ? error.message : 'Erro desconhecido');
+                      setPaymentError(error instanceof Error ? error.message : t("payment.unknownError"));
                     } finally {
                       setPaymentLoading(false);
                     }
                   }}
                 >
-                  {paymentLoading ? "A processar..." : "Pagar com Cartão / MB WAY"}
+                  {paymentLoading ? t("payment.processing") : t("payment.payWithCard")}
                 </button>
               </CardContent>
             </Card>
@@ -167,12 +170,12 @@ export default function PaymentPage() {
 
         {/* Order Summary */}
         <div>
-          <h2 className="text-xl font-semibold mb-4">Resumo do Pedido</h2>
+          <h2 className="text-xl font-semibold mb-4">{t("payment.orderSummary")}</h2>
           
           {/* Shipping Info */}
           <Card className="mb-4">
             <CardContent className="p-6">
-              <h3 className="font-semibold mb-2">Endereço de Entrega</h3>
+              <h3 className="font-semibold mb-2">{t("payment.shippingAddress")}</h3>
               <div className="text-sm space-y-1">
                 <div>{shipping.name}</div>
                 <div>{shipping.address}</div>
@@ -185,7 +188,7 @@ export default function PaymentPage() {
           {/* Cart Items */}
           <Card>
             <CardContent className="p-6">
-              <h3 className="font-semibold mb-4">Itens do Pedido</h3>
+              <h3 className="font-semibold mb-4">{t("payment.orderItems")}</h3>
               <div className="space-y-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex justify-between items-center">
@@ -202,7 +205,7 @@ export default function PaymentPage() {
                 ))}
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center text-lg font-bold">
-                    <span>Total:</span>
+                    <span>{t("payment.total")}:</span>
                     <span>{cartTotal.toFixed(2).replace(".", ",")}€</span>
                   </div>
                 </div>

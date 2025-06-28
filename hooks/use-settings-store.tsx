@@ -32,7 +32,7 @@ export function SettingsStoreProvider({ children }: { children: React.ReactNode 
   const { theme } = useTheme()
 
   // Language settings
-  const [language, setLanguage] = useState<Language>("en")
+  const [language, setLanguage] = useState<Language>("pt")
 
   // Translation function
   const t = (key: string) => {
@@ -54,7 +54,7 @@ export function SettingsStoreProvider({ children }: { children: React.ReactNode 
         setRadiusValue(storedRadiusValue)
       }
 
-      if (storedLanguage && (storedLanguage === "en" || storedLanguage === "fr")) {
+      if (storedLanguage && (storedLanguage === "en" || storedLanguage === "pt")) {
         setLanguage(storedLanguage)
       }
     } catch (error) {

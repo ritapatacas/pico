@@ -1,2 +1,2 @@
 export * from "./flag-gb"
-export * from "./flag-fr"
+export * from "./flag-pt"

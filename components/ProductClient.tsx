@@ -8,6 +8,7 @@ import { ChevronLeft, ChevronRight, Heart, Star, Minus, Plus } from "lucide-reac
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useCart } from "@/contexts/cart-context"
+import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 const colors = [
   { name: "Matte Black", value: "black" },
@@ -53,6 +54,7 @@ export default function ProductClient() {
   const searchParams = useSearchParams()
   const pagina = searchParams.get("p")
   const { addToCart } = useCart()
+  const { t, language } = useLanguageSettings()
 
   const [selectedSize, setSelectedSize] = useState("250g")
   const [selectedColor, setSelectedColor] = useState(colors[0].value)
@@ -221,7 +223,7 @@ export default function ProductClient() {
 
               {/* formato */}
               <div className="space-y-4">
-                <h2 className="text-md font-semibold">formato</h2>
+                <h2 className="text-md font-semibold">{t("product.format")}</h2>
                 <div className="flex flex-wrap gap-3">
                   {/* embalado */}
                   <label
@@ -239,7 +241,7 @@ export default function ProductClient() {
                       onChange={(e) => setPackagingType(e.target.value)}
                       className="sr-only"
                     />
-                    embalado
+                    {t("product.packaged")}
                   </label>
 
                   {/* granel */}
@@ -258,13 +260,13 @@ export default function ProductClient() {
                       onChange={(e) => setPackagingType(e.target.value)}
                       className="sr-only"
                     />
-                    granel
+                    {t("product.bulk")}
                   </label>
                 </div>
               </div>
               {packagingType === "embalado" && (
                 <div className="space-y-4">
-                  <h2 className="text-md font-semibold">Tamanho</h2>
+                  <h2 className="text-md font-semibold">{t("product.size")}</h2>
                   <div className="flex flex-wrap gap-3">
                     {embaladoOptions.map((opt) => (
                       <button
@@ -285,7 +287,7 @@ export default function ProductClient() {
                     const selected = getSelectedEmbaladoOption(selectedSize);
                     return (
                       <div className="textbuttontext-sm font-semibold mt-2">
-                        embalagem de {selected.size} -{" "}
+                        {t("product.package")} {selected.size} -{" "}
                         {selected.price.toFixed(2).replace(".", ",")}€ (
                         {selected.kgPrice.toFixed(2).replace(".", ",")}€/kg)
                       </div>
@@ -295,7 +297,7 @@ export default function ProductClient() {
               )}
               {packagingType === "granel" && (
                 <div className="space-y-4">
-                  <h2 className="text-lg font-semibold">Peso (kg)</h2>
+                  <h2 className="text-lg font-semibold">{t("product.weight")} (kg)</h2>
                   <div className="flex items-center gap-4">
                     <input
                       type="range"
@@ -317,7 +319,7 @@ export default function ProductClient() {
                     </span>
                   </div>
                   <div className="text-lg font-semibold mt-2">
-                    Preço total:{" "}
+                    {t("product.totalPrice")}:{" "}
                     {(kiloQuantity * precoGranelPorKg)
                       .toFixed(2)
                       .replace(".", ",")}
@@ -358,11 +360,11 @@ export default function ProductClient() {
                     ? (() => {
                         const selected =
                           getSelectedEmbaladoOption(selectedSize);
-                        return `Adicionar (${(selected.price * quantity)
+                        return `${t("product.addToCart")} (${(selected.price * quantity)
                           .toFixed(2)
                           .replace(".", ",")}€)`;
                       })()
-                    : `Adicionar (${(kiloQuantity * precoGranelPorKg)
+                    : `${t("product.addToCart")} (${(kiloQuantity * precoGranelPorKg)
                         .toFixed(2)
                         .replace(".", ",")}€)`}
                 </Button>
@@ -389,13 +391,13 @@ export default function ProductClient() {
             <Tabs defaultValue="details">
               <TabsList className="w-full justify-start border-b">
                 <TabsTrigger value="details" className="text-lg">
-                  Product Details
+                  {t("product.details")}
                 </TabsTrigger>
                 <TabsTrigger value="specs" className="text-lg">
-                  Specifications
+                  {t("product.specifications")}
                 </TabsTrigger>
                 <TabsTrigger value="reviews" className="text-lg">
-                  Reviews
+                  {t("product.reviews")}
                 </TabsTrigger>
               </TabsList>
               <TabsContent value="details" className="mt-4">
@@ -504,7 +506,7 @@ export default function ProductClient() {
 
           {/* Related Products */}
           <div className="mt-16">
-            <h2 className="text-2xl font-bold mb-6">You May Also Like</h2>
+            <h2 className="text-2xl font-bold mb-6">{t("product.youMayAlsoLike")}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {relatedProducts.map((product) => (
                 <div key={product.id} className="group">
