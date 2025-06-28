@@ -2,7 +2,7 @@ import type { ColorThemeDefinition } from "./base"
 
 export const defaultTheme: ColorThemeDefinition = {
   light: {
-    background: "0 0% 100%",
+    background: "#e1e1f1",
     foreground: "0 0% 10%",
     card: "0 0% 100%",
     cardForeground: "0 0% 10%",
@@ -23,8 +23,8 @@ export const defaultTheme: ColorThemeDefinition = {
     ring: "0 0% 0%",
   },
   dark: {
-    background: "0 0% 7%",
-    foreground: "0 0% 95%",
+    background: "#00000c",
+    foreground: "0 0% 10%",
     card: "0 0% 9%",
     cardForeground: "0 0% 95%",
     popover: "0 0% 9%",
