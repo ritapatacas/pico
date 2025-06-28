@@ -2,6 +2,9 @@
 import { useEffect, useState, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import Script from "next/script";
+import { useCart } from "@/contexts/cart-context";
+import { Card, CardContent } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -25,69 +28,187 @@ function PayPalButton({ amount }: { amount: number }) {
 }
 
 export default function PaymentPage() {
+  const router = useRouter();
+  const { cartItems, cartTotal, clearCart } = useCart();
   const [shipping, setShipping] = useState<any>(null);
-  const [cart, setCart] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   useEffect(() => {
-    setShipping(JSON.parse(localStorage.getItem("shipping") || "{}"));
-    setCart(JSON.parse(localStorage.getItem("cart") || "{}"));
+    try {
+      const shippingData = localStorage.getItem("shipping");
+      if (shippingData) {
+        setShipping(JSON.parse(shippingData));
+      }
+    } catch (error) {
+      console.error("Error loading shipping data:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  if (!shipping || !cart || !cart.name) return <div>Carregando...</div>;
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="max-w-xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Carregando...</p>
+        </div>
+      </div>
+    );
+  }
 
-  const total = cart.price * cart.quantity;
+  // Redirect if cart is empty or no shipping info
+  if (cartItems.length === 0) {
+    router.push('/mirtilos');
+    return (
+      <div className="max-w-xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <p>Redirecionando para produtos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!shipping || !shipping.name) {
+    router.push('/checkout');
+    return (
+      <div className="max-w-xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <p>Redirecionando para checkout...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-xl mx-auto py-12 px-4">
+    <div className="max-w-4xl mx-auto py-12 px-4">
       <h1 className="text-2xl font-bold mb-6">Pagamento</h1>
-      <div className="mb-6 bg-white p-4 rounded shadow">
-        <h2 className="font-semibold mb-2">Endereço de Entrega</h2>
-        <div>{shipping.name}</div>
-        <div>{shipping.address}</div>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Payment Methods */}
         <div>
-          {shipping.city}, {shipping.postal}, {shipping.country}
+          <h2 className="text-xl font-semibold mb-4">Método de Pagamento</h2>
+          <div className="space-y-4">
+            {/* Stripe Button */}
+            <Card>
+              <CardContent className="p-6">
+                {paymentError && (
+                  <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                    {paymentError}
+                  </div>
+                )}
+                <button
+                  className="w-full bg-blue-600 text-white hover:bg-blue-700 py-3 text-sm font-medium rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={paymentLoading}
+                  onClick={async () => {
+                    setPaymentLoading(true);
+                    setPaymentError(null);
+                    
+                    try {
+                      const items = cartItems.map(item => ({
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        image: item.image,
+                      }));
+                      
+                      // Use absolute URL to ensure correct port
+                      const apiUrl = `${window.location.origin}/api/checkout_sessions`;
+                      console.log('Calling API at:', apiUrl);
+                      
+                      const res = await fetch(apiUrl, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ items }),
+                      });
+                      
+                      console.log('Response status:', res.status);
+                      const data = await res.json();
+                      console.log('Response data:', data);
+                      
+                      if (!res.ok) {
+                        throw new Error(data.error || 'Erro ao processar pagamento');
+                      }
+                      
+                      const stripe = await stripePromise;
+                      
+                      if (data.url) {
+                        window.location.href = data.url;
+                      } else if (stripe && data.id) {
+                        stripe.redirectToCheckout({ sessionId: data.id });
+                      } else {
+                        throw new Error('Resposta inválida do servidor');
+                      }
+                    } catch (error) {
+                      console.error('Payment error:', error);
+                      setPaymentError(error instanceof Error ? error.message : 'Erro desconhecido');
+                    } finally {
+                      setPaymentLoading(false);
+                    }
+                  }}
+                >
+                  {paymentLoading ? "A processar..." : "Pagar com Cartão / MB WAY"}
+                </button>
+              </CardContent>
+            </Card>
+
+            {/* PayPal Button */}
+            <Card>
+              <CardContent className="p-6">
+                <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />
+                <PayPalButton amount={cartTotal} />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-        <div>{shipping.email}</div>
-      </div>
-      <div className="mb-6 bg-white p-4 rounded shadow">
-        <h2 className="font-semibold mb-2">Resumo do Pedido</h2>
-        <div>{cart.name}</div>
-        <div>Quantidade: {cart.quantity}</div>
-        <div className="font-bold mt-2">Total: {total.toFixed(2)} €</div>
-      </div>
-      <div className="flex gap-2 mt-4">
-        {/* Stripe Button */}
-        <button
-          className="flex-1 bg-blue-600 text-white hover:bg-blue-700 py-2 text-sm font-medium rounded"
-          onClick={async () => {
-            const items = [
-              {
-                name: cart.name,
-                price: cart.price,
-                quantity: cart.quantity,
-                image: cart.image,
-              },
-            ];
-            const res = await fetch("/api/checkout_sessions", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ items }),
-            });
-            const data = await res.json();
-            const stripe = await stripePromise;
-            if (data.url) {
-              window.location.href = data.url;
-            } else if (stripe && data.id) {
-              stripe.redirectToCheckout({ sessionId: data.id });
-            }
-          }}
-        >
-          Pagar com Cartão / MB WAY
-        </button>
-        {/* PayPal Button */}
-        <div className="flex-1">
-          <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />
-          <PayPalButton amount={total} />
+
+        {/* Order Summary */}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Resumo do Pedido</h2>
+          
+          {/* Shipping Info */}
+          <Card className="mb-4">
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-2">Endereço de Entrega</h3>
+              <div className="text-sm space-y-1">
+                <div>{shipping.name}</div>
+                <div>{shipping.address}</div>
+                <div>{shipping.city}, {shipping.postal}, {shipping.country}</div>
+                <div>{shipping.email}</div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Cart Items */}
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="font-semibold mb-4">Itens do Pedido</h3>
+              <div className="space-y-4">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium">{item.name}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
+                      </p>
+                    </div>
+                    <span className="font-medium">
+                      {(item.price * item.quantity).toFixed(2).replace(".", ",")}€
+                    </span>
+                  </div>
+                ))}
+                <div className="border-t pt-4">
+                  <div className="flex justify-between items-center text-lg font-bold">
+                    <span>Total:</span>
+                    <span>{cartTotal.toFixed(2).replace(".", ",")}€</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>

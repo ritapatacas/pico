@@ -89,6 +89,10 @@ h6 {
   text-transform: uppercase;
 }
 
+.font-burford {
+  font-family: "Burford Rustic Line", sans-serif;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

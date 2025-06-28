@@ -35,14 +35,14 @@ export function Footer() {
             <br></br>3270-154 Troviscais, Pedrógão Grande
           </p>
           <p className="text-gray-400 max-w-2xl text-s">
-          <br></br>opicodarosa@gmail.com
+          <br></br>info@picodarosa.pt
           </p>
         </div>
 
         <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-12">
         {/* Social */}
         
-        <div className="flex pb-5 items-center space-x-4">
+        <div className="flex items-center space-x-4">
           <button
             className="text-gray-400 hover:text-gray-500"
             onClick={() => window.open(
