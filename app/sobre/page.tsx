@@ -10,7 +10,7 @@ export default function About() {
         <div className="h-full overflow-hidden">
           <Image
             className="h-full object-cover 130"
-            src="/imgs/roza.png"
+            src="/imgs/roza.webp"
             alt="Roza photo"
             width={1920}
             height={38}
@@ -41,7 +41,7 @@ export default function About() {
 
         <Image
             className="w-full"
-            src="/imgs/202304.jpeg"
+            src="/imgs/202304.webp"
             alt="Roza photo"
             width={1920}
             height={38}
@@ -54,7 +54,7 @@ export default function About() {
 
         <Image
             className="w-full"
-            src="/imgs/202505_01.jpeg"
+            src="/imgs/202505_01.webp"
             alt="Roza photo"
             width={1920}
             height={38}

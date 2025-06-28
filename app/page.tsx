@@ -5,7 +5,7 @@ export default function HomePage() {
     <main className="p-0 relative">
       <Image
         className="w-full h-screen object-cover object-top"
-        src="/PR-01.jpeg"
+        src="/imgs/PR-01.webp"
         alt="PICO DA ROSA logo"
         width={1920}
         height={1080}

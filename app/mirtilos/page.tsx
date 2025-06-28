@@ -42,7 +42,7 @@ export default function Home() {
   const [quantity, setQuantity] = useState(1)
   const [packagingType, setPackagingType] = useState("embalado")
   const [kiloQuantity, setKiloQuantity] = useState(1)
-  const [selectedImage, setSelectedImage] = useState("/mirtilo_embalagem.jpeg")
+  const [selectedImage, setSelectedImage] = useState("/imgs/mirtilo_embalagem.webp")
   const [tab, setTab] = useState("detalhes")
   const [showSuccess, setShowSuccess] = useState(false)
 
@@ -76,7 +76,7 @@ export default function Home() {
         name: `${t("product.blueberries")} (${selectedOption.size})`,
         price: selectedOption.price,
         quantity: quantity,
-        image: '/mirtilo_embalagem.jpeg',
+        image: '/imgs/mirtilo_embalagem.webp',
         size: selectedOption.size,
       });
     } else { // granel
@@ -84,7 +84,7 @@ export default function Home() {
         name: `${t("product.blueberries")} ${t("product.bulk")}`,
         price: precoGranelPorKg,
         quantity: kiloQuantity,
-        image: '/mirtilo_granel.jpeg',
+        image: '/imgs/mirtilo_granel.webp',
       });
     }
     
@@ -94,10 +94,10 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (packagingType === "embalado" && selectedImage === "/mirtilo_granel.jpeg") {
-      setSelectedImage("/mirtilo_embalagem.jpeg")
-    } else if (packagingType === "granel" && selectedImage === "/mirtilo_embalagem.jpeg") {
-      setSelectedImage("/mirtilo_granel.jpeg")
+    if (packagingType === "embalado" && selectedImage === "/imgs/mirtilo_granel.webp") {
+      setSelectedImage("/imgs/mirtilo_embalagem.webp")
+    } else if (packagingType === "granel" && selectedImage === "/imgs/mirtilo_embalagem.webp") {
+      setSelectedImage("/imgs/mirtilo_granel.webp")
     }
   }, [packagingType])
 
@@ -111,7 +111,7 @@ export default function Home() {
 
         <section className="relative h-[900px] md:h-[700px] overflow-hidden h-full">
           <Image
-            src="/mirtilo.png"
+            src="/imgs/mirtilo.webp"
             alt="Mirtilo background"
             width={1920}
             height={700}

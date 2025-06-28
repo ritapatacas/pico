@@ -64,7 +64,7 @@ export default function ProductClient() {
   const [quantity, setQuantity] = useState(1)
   const [packagingType, setPackagingType] = useState("embalado")
   const [kiloQuantity, setKiloQuantity] = useState(1)
-  const [selectedImage, setSelectedImage] = useState("/mirtilo_embalagem.jpeg")
+  const [selectedImage, setSelectedImage] = useState("/mirtilo_embalagem.webp")
 
   const imageOptions = [
     {
@@ -73,12 +73,12 @@ export default function ProductClient() {
       label: "Genérico",
     },
     {
-      src: "/mirtilo_embalagem.jpeg",
+      src: "/mirtilo_embalagem.wepb",
       alt: "Mirtilos embalados",
       label: "Embalado",
     },
     {
-      src: "/mirtilo_granel.jpeg",
+      src: "/mirtilo_granel.wepb",
       alt: "Mirtilos a granel",
       label: "A granel",
     },
@@ -116,7 +116,7 @@ export default function ProductClient() {
         name: `Mirtilos (${selectedOption.size})`,
         price: selectedOption.price,
         quantity: quantity,
-        image: '/mirtilo_embalagem.jpeg',
+        image: '/mirtilo_embalagem.wepb',
         size: selectedOption.size,
       });
     } else { // granel
@@ -124,16 +124,16 @@ export default function ProductClient() {
         name: 'Mirtilos a Granel',
         price: precoGranelPorKg,
         quantity: kiloQuantity,
-        image: '/milo_granel.jpeg',
+        image: '/milo_granel.wepb',
       });
     }
   };
 
   useEffect(() => {
-    if (packagingType === "embalado" && selectedImage === "/mirtilo_granel.jpeg") {
-      setSelectedImage("/mirtilo_embalagem.jpeg")
-    } else if (packagingType === "granel" && selectedImage === "/mirtilo_embalagem.jpeg") {
-      setSelectedImage("/mirtilo_granel.jpeg")
+    if (packagingType === "embalado" && selectedImage === "/mirtilo_granel.wepb") {
+      setSelectedImage("/mirtilo_embalagem.wepb")
+    } else if (packagingType === "granel" && selectedImage === "/mirtilo_embalagem.wepb") {
+      setSelectedImage("/mirtilo_granel.wepb")
     }
   }, [packagingType])
 
