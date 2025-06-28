@@ -11,7 +11,7 @@ export function Footer() {
 
   return (
     <footer className="h-full">
-      <div className="h-10">
+      <div className="h-10 max-w-screen overflow-hidden">
 
         <Image
           className="h-full object-cover scale-200"

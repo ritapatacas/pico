@@ -43,10 +43,10 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
       className={`sticky top-0 flex items-center justify-between px-2 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
     >
       {/* Logo */}
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-1">
         <Link href="/">
           <Image
-            className="dark:invert"
+            className="dark:invert py-1"
             src="/PICODAROSA_logo.png"
             alt="PICO DA ROSA logo"
             width={100}
@@ -56,7 +56,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
         </Link>
         <Link href="/">
           <Image
-            className="dark:invert hidden sm:block"
+            className="dark:invert pt-2"
             src="/PICODAROSA_text-img.png"
             alt="PICO DA ROSA text logo"
             width={160}
