@@ -23,7 +23,7 @@ export function Footer() {
         />
       </div>
 
-      <div className="bg-gray px-4 py-10 w-full">
+      <div className="bg-gray px-4 pt-10 w-full">
         <div className="container mx-auto max-w-4xl">
           <div className="mt-2 mb-8">
             <div className="flex items-center space-x-2">
@@ -67,10 +67,40 @@ export function Footer() {
             </div>
 
           </div>
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-12 px-2">
+          <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-4 px-2">
 
 
             {/* Social */}
+            <div className="flex items-center space-x-4">
+              <button
+                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 scale-80 hover:scale-90 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
+                onClick={() => window.open(
+                  'https://reformaagraria.pt/',
+                  '_blank',
+                  'noopener,noreferrer'
+                )}
+                title="Visit Reforma Agraria"
+              >
+                <span className="sr-only">Reforma Agraria</span>
+                <div className="w-5 h-10 flex items-center justify-center">
+                  <Image
+                    src="/reforma-agraria-logo-gray.svg"
+                    alt="Reforma Agraria"
+                    width={33}
+                    height={65}
+                    className="dark:hidden brightness-0 opacity-60 hover:brightness-100 hover:opacity-100 transition-all duration-300"
+                  />
+                  <Image
+                    src="/reforma-agraria-logo-gray.svg"
+                    alt="Reforma Agraria"
+                    width={33}
+                    height={65}
+                    className="hidden dark:block brightness-0 opacity-40 hover:brightness-100 hover:opacity-100 transition-all duration-300"
+                  />
+                </div>
+              </button>
+            </div>
+
             <div className="flex items-center space-x-4">
               <button
                 className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
@@ -103,35 +133,7 @@ export function Footer() {
                 </svg>
               </button>
             </div>
-            <div className="flex items-center space-x-4">
-              <button
-                className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200 transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-gray-600 rounded-lg p-1"
-                onClick={() => window.open(
-                  'https://reformaagraria.pt/',
-                  '_blank',
-                  'noopener,noreferrer'
-                )}
-                title="Visit Reforma Agraria"
-              >
-                <span className="sr-only">Reforma Agraria</span>
-                <div className="w-5 h-10 flex items-center justify-center">
-                  <Image
-                    src="/reforma-agraria-logo-black.svg"
-                    alt="Reforma Agraria"
-                    width={33}
-                    height={65}
-                    className="dark:hidden"
-                  />
-                  <Image
-                    src="/reforma-agraria-logo-white.png"
-                    alt="Reforma Agraria"
-                    width={33}
-                    height={65}
-                    className="hidden dark:block"
-                  />
-                </div>
-              </button>
-            </div>
+
             {/*           <Link href="/" className="hover:underline">
             Heim
           </Link>
@@ -157,7 +159,7 @@ export function Footer() {
 
           <div className="border-t border-gray-300">
             <div className="text-sm text-gray-600">
-              <div className="mb-9">{t("footer.published")}</div>
+              <div className="mb-4">{t("footer.published")}</div>
             </div>
           </div>
         </div>
