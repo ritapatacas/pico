@@ -55,14 +55,14 @@ export function Sidebar({ version }: SidebarProps) {
 
   if (isMobile) {
     return (
-      <div
-        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
-          } flex flex-col`}
-        style={{ willChange: 'height' }}
-      >
-        {/* Header and Content (only when open) */}
+      <>
+        {/* Full-screen sidebar drawer for secondary links */}
         {isSidebarOpen && (
-          <>
+          <div
+            className="fixed inset-0 z-50 bg-background flex flex-col transition-all duration-300"
+            onClick={handleSidebarClick} // tap-outside to close
+            style={{ willChange: 'height' }}
+          >
             <div className="flex h-16 items-center justify-between border-b px-4">
               <div className="flex items-center gap-2">
                 {/* Logo */}
@@ -84,165 +84,50 @@ export function Sidebar({ version }: SidebarProps) {
                 <X className="h-4 w-4" />
               </button>
             </div>
-
-            {/* Main navigation styled like accordion triggers */}
+            {/* Secondary navigation links */}
             <div className={`space-y-3 pt-6 px-10 ${burfordFontClass}`}>
               <Link href="/sobre" className="flex items-center gap-2 rounded-md transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
                 <Users className="h-4 w-4" />
                 {t("sidebar.about")}
               </Link>
-
-              <Link href="/products" className="flex items-center gap-2 rounded-md pt-2 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
-                <Store className="h-4 w-4" />
-                {t("sidebar.products")}
+              <Link href="/contactos" className="flex items-center gap-2 rounded-md pt-2 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
+                <Mail className="h-4 w-4" />
+                {t("sidebar.contacts")}
               </Link>
+              {/* Discrete Settings link/section */}
+              <div className="mt-8 pt-4 border-t border-border">
+                <Link href="/settings" className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors" onClick={() => setIsSidebarOpen(false)}>
+                  <Settings className="h-4 w-4" />
+                  {t("settings")}
+                </Link>
+              </div>
             </div>
-            <div className="flex-1 overflow-y-auto px-10">
-              <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
-                <AccordionItem value="cart">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <ShoppingCart className="h-4 w-4" />
-                    {t("sidebar.cart")} ({cartCount})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {cartItems.length === 0 ? (
-                      <p className="text-muted-foreground">
-                        {t("sidebar.emptyCart")} <br />
-                        {t("sidebar.visitProducts")}{' '}
-                        <Link href="/products" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                          {t("sidebar.products")}
-                        </Link>{' '}
-                        {t("sidebar.or")}{' '}
-                        <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                          {t("sidebar.contactUs")}
-                        </Link>{' '}
-                        {t("sidebar.ifProblem")}
-                      </p>
-                    ) : (
-                      <div className="space-y-4">
-                        {cartItems.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                            <div className="flex-1">
-                              <h4 className="font-medium text-sm">{item.name}</h4>
-                              <p className="text-xs text-muted-foreground">
-                                {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                              >
-                                <Minus className="h-3 w-3" />
-                              </Button>
-                              <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                              >
-                                <Plus className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 text-destructive hover:text-destructive/80"
-                                onClick={() => removeFromCart(item.id)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                        <div className="mt-8 border-t border-border" />
-                        <div className="flex justify-between items-center m-4 text-lg ">
-                          <span className="font-semibold">{t("sidebar.total")}:</span>
-                          <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
-                        </div>
-                        <div className="mx-10 my-5">
-                          <Button
-                            className="px-8 w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                            onClick={() => {
-                              setIsSidebarOpen(false);
-                              router.push('/checkout');
-                            }}
-                          >
-                            {t("sidebar.buy")}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="contactos">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <Mail className="h-4 w-4" />
-                    {t("sidebar.contacts")}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2">
-                      <p className="text-base">{t("sidebar.contactInfo")} <a href="mailto:info@picodarosa.pt" className="underline">info@picodarosa.pt</a> {t("sidebar.orPhone")} <a href="tel:+351912345678" className="underline">+351 912 345 678</a>.</p>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-            
-          </>
+          </div>
         )}
-
-        <div className="flex w-full items-center justify-between px-5 h-16 border-t bg-background mt-auto">
-          {/* Logo or placeholder */}
-          {!isSidebarOpen ? (
-            <div className="flex space-x-1 transition-all scale-60 duration-300 pb-3 pt-2">
-              <Image
-                className="transition-all duration-300"
-                src="/PICODAROSA_logo.png"
-                alt="PICO DA ROSA logo"
-                width={100}
-                height={30}
-                priority
-              />
-            </div>
-          ) : (
-            <div className="px-10">
-              <Accordion type="single" value={openSection === 'settings' ? 'settings' : undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
-                <AccordionItem value="settings">
-                  <AccordionTrigger className={burfordFontClass + " text-left text-md flex items-center gap-2"}>
-                    <Settings className="h-4 w-4" />
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <SettingsPanel />
-                  </AccordionContent>
-                </AccordionItem>
-                
-              </Accordion>
-              
-            </div>
-            
-          )}
-
-          {/* menu button */}
+        {/* Menu button always visible at bottom */}
+        <div className="fixed bottom-0 left-0 w-full h-16 flex items-center justify-between px-5 border-t bg-background z-40">
+          <div className="flex space-x-1 transition-all scale-60 duration-300 pb-3 pt-2">
+            <Image
+              className="transition-all duration-300"
+              src="/PICODAROSA_logo.png"
+              alt="PICO DA ROSA logo"
+              width={100}
+              height={30}
+              priority
+            />
+          </div>
           <button
             onClick={(e) => {
               e.preventDefault();
-              if (isSidebarOpen && openSection === 'home') {
-                setIsSidebarOpen(false);
-                setOpenSection(null);
-              } else {
-                setIsSidebarOpen(true);
-                setOpenSection('home');
-              }
+              setIsSidebarOpen(!isSidebarOpen);
             }}
-            className={`flex pr-8 scale-100 items-center ${isSidebarOpen && openSection === 'home' ? "text-primary" : "text-muted-foreground"}`}
+            className={`flex pr-8 scale-100 items-center ${isSidebarOpen ? "text-primary" : "text-muted-foreground"}`}
+            style={{ minWidth: 44, minHeight: 44 }}
           >
             <Menu className="h-5 w-5" />
           </button>
         </div>
-      </div>
+      </>
     )
   }
 
