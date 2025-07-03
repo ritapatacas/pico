@@ -65,7 +65,7 @@ export default function PaymentPage() {
 
   // Redirect if cart is empty or no shipping info
   if (cartItems.length === 0) {
-    router.push('/mirtilos');
+    router.push('/products');
     return (
       <div className="max-w-xl mx-auto py-12 px-4">
         <div className="text-center">

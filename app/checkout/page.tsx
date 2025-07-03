@@ -30,7 +30,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      router.push('/mirtilos');
+      router.push('/products');
     }
   }, [shouldRedirect, router]);
 

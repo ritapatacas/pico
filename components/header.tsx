@@ -14,7 +14,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
 
   const tabs = [
     { label: t("navigation.about"), href: "/sobre" },
-    { label: t("navigation.products"), href: "/mirtilos" },
+    { label: t("navigation.products"), href: "/products" },
   ];
 
   // Debug: log quando as traduções mudam

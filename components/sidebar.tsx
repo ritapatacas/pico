@@ -83,7 +83,7 @@ export function Sidebar({ version }: SidebarProps) {
                 <Users className="h-4 w-4" />
                 {t("sidebar.about")}
               </Link>
-              <Link href="/mirtilos" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
+              <Link href="/products" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
                 <Store className="h-4 w-4" />
                 {t("sidebar.products")}
               </Link>
@@ -109,7 +109,7 @@ export function Sidebar({ version }: SidebarProps) {
                       <p className="text-muted-foreground">
                         {t("sidebar.emptyCart")} <br />
                         {t("sidebar.visitProducts")}{' '}
-                        <Link href="/mirtilos" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                        <Link href="/products" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
                           {t("sidebar.products")}
                         </Link>{' '}
                         {t("sidebar.or")}{' '}

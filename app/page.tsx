@@ -32,9 +32,9 @@ export default function HomePage() {
                 </h3>
               </div>
 
-              <Link href="/mirtilos" passHref>
+              <Link href="/products" passHref>
                 <Button className="absolute text-white text-xl font-bold rounded transition pt-1 z-10 transform transition-transform duration-300 hover:scale-90 hover:shadow-lg active:scale-95" style={{ backgroundColor: 'rgb(25, 19, 39)' }}>
-                  Encomendar Mirtilos
+                  encomendar
                 </Button>
               </Link>
             </div>
