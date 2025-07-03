@@ -90,7 +90,7 @@ h6 {
 }
 
 .font-burford {
-  font-family: "Burford Rustic Line", sans-serif;
+  font-family: "Burford Rustic Line", sans-serif !important;
 }
 
 /* Ensure sidebar is always visible at bottom of viewport */

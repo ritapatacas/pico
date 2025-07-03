@@ -26,9 +26,11 @@ export function Footer() {
       <div className="bg-primary text-primary-foreground px-4 pt-10 w-full">
         <div className="container mx-auto max-w-4xl">
           <div className="mt-2 mb-8">
+
+            { /* logo */}
             <div className="flex items-center space-x-2">
               <Image
-                className="dark:invert"
+                className=""
                 src="/PICODAROSA_logo.png"
                 alt="PICO DA ROSA logo"
                 width={50}
@@ -36,7 +38,7 @@ export function Footer() {
                 priority
               />
               <Image
-                className="dark:invert"
+                className=""
                 src="/PICODAROSA_text-img.png"
                 alt="PICO DA ROSA text logo"
                 width={150}
@@ -46,6 +48,7 @@ export function Footer() {
 
             </div>
 
+            { /* contact info */}
             <div id="footer-text" className="px-2">
               <h2 className="text-2xl font-medium mb-2"></h2>
               <p className="text-primary-foreground/90 max-w-2xl text-md">
@@ -67,10 +70,9 @@ export function Footer() {
             </div>
 
           </div>
+
+          {/* social */}
           <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-4 px-2">
-
-
-            {/* Social */}
             <div className="flex items-center space-x-4">
               <button
                 className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 scale-80 hover:scale-90 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
@@ -83,12 +85,21 @@ export function Footer() {
               >
                 <span className="sr-only">Reforma Agraria</span>
                 <div className="w-5 h-10 flex items-center justify-center">
+                  {/* Black logo for light theme */}
+                  <Image
+                    src="/reforma-agraria-logo-black.svg"
+                    alt="Reforma Agraria"
+                    width={33}
+                    height={65}
+                    className="block dark:hidden opacity-70 hover:opacity-100 transition-all duration-300"
+                  />
+                  {/* White logo for dark theme */}
                   <Image
                     src="/reforma-agraria-logo-white.png"
                     alt="Reforma Agraria"
                     width={33}
                     height={65}
-                    className="opacity-70 hover:opacity-100 transition-all duration-300"
+                    className="hidden dark:block opacity-70 hover:opacity-100 transition-all duration-300"
                   />
                 </div>
               </button>
@@ -127,33 +138,15 @@ export function Footer() {
               </button>
             </div>
 
-            {/*           <Link href="/" className="hover:underline">
-            Heim
-          </Link>
-          <Link href="/om-smio" className="hover:underline">
-            Om SmiO
-          </Link>
-          <Link href="#" className="hover:underline">
-            +
-          </Link>
-          <Link href="/meld-deg-inn" className="hover:underline">
-            Meld deg inn!
-          </Link>
-          <Link href="/klassiske-bokverk" className="hover:underline">
-            Klassiske bokverk
-          </Link>
-          <Link href="/bibelen" className="hover:underline">
-            Bibelen
-          </Link> */}
-
           </nav>
 
+          { /* divider */}
+          <div className="border-t border-primary-foreground/20" />
 
+          { /* copyright */ }
+          <div className="text-sm text-primary-foreground/70">
+            <div className="pb-4">{t("footer.published")}</div>
 
-          <div className="border-t border-primary-foreground/20">
-            <div className="text-sm text-primary-foreground/70">
-              <div className="pb-4">{t("footer.published")}</div>
-            </div>
           </div>
         </div>
       </div>
