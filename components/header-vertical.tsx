@@ -110,6 +110,7 @@ export function VerticalHeader() {
             </div>
           )}
         </div>
+        
         {/* Logo */}
         <div className="flex justify-start items-end pl-2 pt-10 pb-6 mt-auto md:pt-0">
           <Image
