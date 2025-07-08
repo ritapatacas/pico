@@ -4,108 +4,183 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
+import AboutSection from "@/components/AboutSection";
 
 export default function HomePage() {
-  const logoStickyRef = useRef<HTMLDivElement>(null);
-  const [isStuck, setIsStuck] = useState(false);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
 
   useEffect(() => {
-    const ref = logoStickyRef.current;
-    if (!ref) return;
-    const handleScroll = () => {
-      const rect = ref.getBoundingClientRect();
-      setIsStuck(rect.top <= 0);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(entry.intersectionRatio < 1); // sticky quando cola ao topo
+      },
+      {
+        threshold: [1],
+      }
+    );
+
+    if (logoRef.current) {
+      observer.observe(logoRef.current);
+    }
+
+    return () => {
+      if (logoRef.current) observer.unobserve(logoRef.current);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="relative">
-      <main className="relative">
-        <div className="relative m-0 p-0">
-          {/* Hero Image with Responsive Height */}
-          <div className="relative w-screen  h-screen md:h-screen">
-            <Image
-              className="w-full h-full object-cover object-top"
-              src="/imgs/f.jpeg"
-              alt="Fruta Miúda a crescer em Pedrógão Grande - PICO DA ROSA logo"
-              fill
-              priority
-              style={{ objectFit: 'cover', objectPosition: 'top' }}
-            />
-            {/* Overlay for readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
-            {/* Radial gradient overlay to darken area around text */}
-            <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10 pb-55">
-              <div className="w-[100vw] h-[100vw] max-w-300 max-h-300 rounded-full"
-                style={{
-                  background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 3%, rgba(0,0,0,0.0) 100%)',
-                  filter: 'blur(30px)',
-                }}
-              />
-            </div>
-            {/* Hero Content: logo column left, text column right */}
-            <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center w-full h-full z-20 animate-fadein">
-              {/* Logo column (top on mobile, left on desktop) - sticky, conditional bg/filter */}
-              <div
-                ref={logoStickyRef}
-                className={`flex flex-col items-start justify-center font-burford min-w-[270px] w-full md:w-auto mb-6 md:mb-0 sticky top-0 z-50 px-3 pt-1 transition-all duration-300 ${isStuck ? 'bg-white/80 dark:bg-black/80 backdrop-blur shadow-sm' : ''}`}
-              >
-                <div className="flex items-center mb-2">
-                  <Link href="/">
-                    <Image
-                      className={`transition-all duration-300 scale-135 pr-2 ${isStuck ? 'dark:invert' : 'filter invert brightness-200'}`}
-                      src="/PICODAROSA_logo-img.svg"
-                      alt="PICO DA ROSA logo"
-                      width={100}
-                      height={30}
-                      priority
-                    />
-                  </Link>
-                  <Link href="/">
-                    <Image
-                      className={`transition-all duration-300 scale-130 ${isStuck ? 'dark:invert' : 'filter invert brightness-200'}`}
-                      src="/PICODAROSA_text-img.png"
-                      alt="PICO DA ROSA text logo"
-                      width={160}
-                      height={35}
-                      priority
-                    />
-                  </Link>
-                </div>
-              </div>
-              {/* Text column (below on mobile, right on desktop) */}
-              <div className="flex flex-col items-end justify-center text-right w-full md:w-auto">
-                <h2 className="text-3xl sm:text-3xl md:text-4xl font-bold drop-shadow-md text-white font-burford">
-                  Fruta Miúda
-                </h2>
-                <h3 className="text-xl sm:text-lg md:text-xl font-medium text-white drop-shadow-md font-burford">
-                  de Pedrógão Grande
-                </h3>
-                <Link href="/products" passHref>
-                  <Button
-                    className="mt-2 pb-2 px-4 rounded-lg p-1 text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford"
-                  >
-                    encomendar
-                  </Button>
+<div
+  className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+    transition-opacity duration-500 ease-in-out
+    ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+>
+
+
+          {/* topbar */}
+          <Link href="/">
+                  <Image
+                    className={`transition-all duration-200 ${
+                      isSticky ? "scale-100" : "scale-100 invert"
+                    } pr-2`}
+                    src="/PICODAROSA_logo-img.svg"
+                    alt="PICO DA ROSA logo"
+                    width={100}
+                    height={30}
+                    priority
+                  />
                 </Link>
-                <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-md font-semibold font-burford">
-                  Mirtilos<br />Framboesas<br />groselhas
-                </div>
+                <Link href="/">
+                  <Image
+                    className={`transition-all duration-200 ${
+                      isSticky ? "scale-100" : "scale-100 invert"
+                    }`}
+                    src="/PICODAROSA_text-img.png"
+                    alt="PICO DA ROSA text logo"
+                    width={160}
+                    height={35}
+                    priority
+                  />
+                </Link>
+          <Link href="/products">
+            <Button className="bg-primary text-white font-bold">Encomendar</Button>
+          </Link>
+        </div>
+      
+
+      <main className="relative m-0 p-0">
+        {/* HERO SECTION */}
+        <div className="relative w-screen h-screen">
+          {/* hero content */}
+          <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center w-full h-full z-20 animate-fadein">
+
+            {/* HERO logo (sticky dentro da hero) */}
+            <div
+              ref={logoRef}
+              className={`
+                 top-0 z-50 w-full flex transition-all duration-200 bg-transparent py-0`}
+            >
+              <div className="flex items-center gap-2">
+                <Link href="/">
+                  <Image
+                    className={`transition-all duration-200 scale-100 invert pr-2`}
+                    src="/PICODAROSA_logo-img.svg"
+                    alt="PICO DA ROSA logo"
+                    width={100}
+                    height={30}
+                    priority
+                  />
+                </Link>
+                <Link href="/">
+                  <Image
+                    className={`transition-all duration-200 ${
+                      isSticky ? "scale-100" : "scale-100 invert"
+                    }`}
+                    src="/PICODAROSA_text-img.png"
+                    alt="PICO DA ROSA text logo"
+                    width={160}
+                    height={35}
+                    priority
+                  />
+                </Link>
+              </div>
+            </div>
+
+            {/* Texto */}
+            <div className="flex flex-col items-end justify-center text-right w-full md:w-auto pr-10 z-20">
+              <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-white font-burford">
+                Fruta Miúda
+              </h2>
+              <h3 className="text-xl md:text-xl font-semibold text-white drop-shadow-md font-burford">
+                de Pedrógão Grande
+              </h3>
+              <Link href="/products" passHref>
+                <Button className="mt-2 rounded pt-1 px-4 bg-white text-primary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
+                  encomendar
+                </Button>
+              </Link>
+              <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-lg font-semibold font-burford">
+                Mirtilos<br />Framboesas<br />groselhas
               </div>
             </div>
           </div>
+
+          {/* imagem de fundo */}
+          <div className="flex w-screen bg-white -z-40">
+            <Image
+              className="w-full h-full object-cover object-top"
+              src="/imgs/f.jpeg"
+              alt="Fruta Miúda em Pedrógão Grande"
+              fill
+              priority
+              style={{ objectFit: "cover", objectPosition: "top" }}
+            />
+          </div>
+
+          {/* overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+
+          {/* blur effect */}
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center mb-50">
+            <div
+              className="w-[300vw] h-[150vw] max-w-600 max-h-500 rounded-full"
+              style={{
+                background:
+                  "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 1%, rgba(0,0,0,0.0) 100%)",
+                filter: "blur(30px)",
+              }}
+            />
+          </div>
         </div>
+
+
+
+        <section>
+          <p className="text-lg leading-relaxed px-20 py-10">
+            Produção de frutos vermelhos no centro do país.
+          </p>
+        </section>
+
+        {/* About ou outro conteúdo */}
+      <AboutSection />
+
       </main>
+
       {/* Fade-in animation keyframes */}
       <style jsx global>{`
         @keyframes fadein {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
         .animate-fadein {
-          animation: fadein 1.2s cubic-bezier(0.4,0,0.2,1);
+          animation: fadein 1.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
       `}</style>
     </div>
