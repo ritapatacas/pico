@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import AboutSection from "@/components/AboutSection";
+import { Products } from "@/app/products/page"
 
 export default function HomePage() {
   const logoRef = useRef<HTMLDivElement>(null);
@@ -31,43 +32,30 @@ export default function HomePage() {
 
   return (
     <div className="relative">
-<div
-  className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+      <div
+        className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
     transition-opacity duration-500 ease-in-out
     ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
->
+      >
 
 
-          {/* topbar */}
-          <Link href="/">
-                  <Image
-                    className={`transition-all duration-200 ${
-                      isSticky ? "scale-100" : "scale-100 invert"
-                    } pr-2`}
-                    src="/PICODAROSA_logo-img.svg"
-                    alt="PICO DA ROSA logo"
-                    width={100}
-                    height={30}
-                    priority
-                  />
-                </Link>
-                <Link href="/">
-                  <Image
-                    className={`transition-all duration-200 ${
-                      isSticky ? "scale-100" : "scale-100 invert"
-                    }`}
-                    src="/PICODAROSA_text-img.png"
-                    alt="PICO DA ROSA text logo"
-                    width={160}
-                    height={35}
-                    priority
-                  />
-                </Link>
-          <Link href="/products">
-            <Button className="bg-primary text-white font-bold">Encomendar</Button>
-          </Link>
-        </div>
-      
+        {/* topbar */}
+        <Link href="/">
+          <Image
+            className={`transition-all duration-250 ${isSticky ? "scale-80" : "scale-80 invert"
+              } pr-1`}
+            src="logo/logo_h.svg"
+            alt="PICO DA ROSA logo"
+            width={300}
+            height={73}
+            priority
+          />
+        </Link>
+        <Link href="/products">
+          <Button className="bg-primary text-white font-bold">Encomendar</Button>
+        </Link>
+      </div>
+
 
       <main className="relative m-0 p-0">
         {/* HERO SECTION */}
@@ -81,26 +69,14 @@ export default function HomePage() {
               className={`
                  top-0 z-50 w-full flex transition-all duration-200 bg-transparent py-0`}
             >
-              <div className="flex items-center gap-2">
+              <div className="flex items-center">
                 <Link href="/">
                   <Image
-                    className={`transition-all duration-200 scale-100 invert pr-2`}
-                    src="/PICODAROSA_logo-img.svg"
+                    className={`transition-all duration-200 scale-80 invert pr-2 pt-3 pb-10`}
+                    src="logo/logo_h.svg"
                     alt="PICO DA ROSA logo"
-                    width={100}
-                    height={30}
-                    priority
-                  />
-                </Link>
-                <Link href="/">
-                  <Image
-                    className={`transition-all duration-200 ${
-                      isSticky ? "scale-100" : "scale-100 invert"
-                    }`}
-                    src="/PICODAROSA_text-img.png"
-                    alt="PICO DA ROSA text logo"
-                    width={160}
-                    height={35}
+                    width={300}
+                    height={73}
                     priority
                   />
                 </Link>
@@ -162,8 +138,28 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* About ou outro conteúdo */}
-      <AboutSection />
+        {/* About */}
+        <AboutSection />
+
+        <section>
+          <Image
+          src="imgs/PR-01.webp"
+          alt="PICO DA ROSA logo"
+          width={4032}
+          height={3024}
+          priority
+
+          />
+          <p className="text-lg leading-relaxed px-20 py-10">
+            Produção de frutos vermelhos no centro do país.
+          </p>
+        </section>
+
+        {/* Products */}
+        <div className="px-10">
+        <Products />
+        </div>
+
 
       </main>
 

@@ -3,16 +3,14 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import Modal from "@/components/ui/Modal"
 import ProductPageLayout from "@/components/ProductPageLayout"
 import FreshFruitAddPopup, { Product } from "@/components/fresh-fruit-add-popup"
-
 // Temporary import for JSON, replace with fetch if needed
 import productsData from "@/products.json"
 
-export default function ProductsGallery() {
+export function Products() {
   const [search, setSearch] = useState("")
   const [products, setProducts] = useState(productsData)
   const [displayed, setDisplayed] = useState(8)
@@ -89,4 +87,8 @@ export default function ProductsGallery() {
       <FreshFruitAddPopup open={modalOpen} onClose={() => setModalOpen(false)} product={modalProduct} />
     </div>
   )
+}
+
+export default function ProductsPage() {
+  return <Products />
 } 
