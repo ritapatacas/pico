@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect } from "react"
 
 export default function Modal({ open, onClose, children }: { open: boolean, onClose: () => void, children: React.ReactNode }) {
