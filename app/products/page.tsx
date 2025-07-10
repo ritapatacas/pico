@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -17,6 +17,16 @@ export function Products() {
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalProduct, setModalProduct] = useState<Product | null>(null)
+
+  const onAddProduct = (product: Product ) => {
+    setModalProduct(product);
+    setModalOpen(true);
+  }
+
+  const onCloseModal = () => {
+    setModalProduct(null);
+    setModalOpen(false);
+  }
 
   // Infinite scroll
   useEffect(() => {
@@ -75,7 +85,7 @@ export function Products() {
               <Button
                 className="textbutton font-burford m-1 bg-black text-white hover:bg-gray-900 pb-1"
                 size="sm"
-                onClick={() => { setModalProduct(product); setModalOpen(true); }}
+                onClick={() => onAddProduct(product)}
               >
                 Adicionar
               </Button>
@@ -84,7 +94,7 @@ export function Products() {
         ))}
       </div>
       {loading && <div className="text-center opacity-40">Carregando...</div>}
-      <FreshFruitAddPopup open={modalOpen} onClose={() => setModalOpen(false)} product={modalProduct} />
+      {modalProduct && <FreshFruitAddPopup open={modalOpen} onClose={onCloseModal} product={modalProduct} />}
     </div>
   )
 }

@@ -1,3 +1,5 @@
+"use client"
+
 import { useState, useEffect } from "react"
 import Modal from "@/components/ui/Modal"
 import productsData from "@/products.json"
@@ -8,7 +10,7 @@ import { useCart } from "@/contexts/cart-context"
 
 export type Product = typeof productsData[number];
 
-export default function FreshFruitAddPopup({ open, onClose, product }: { open: boolean, onClose: () => void, product: Product | null }) {
+export default function FreshFruitAddPopup({ open, onClose, product }: { open: boolean, onClose: () => void, product: Product }) {
   if (!product) return null;
 
   const { addToCart } = useCart();
@@ -21,7 +23,11 @@ export default function FreshFruitAddPopup({ open, onClose, product }: { open: b
   const [showSuccess, setShowSuccess] = useState(false)
 
   function getSelectedEmbaladoOption(selectedSize: string) {
-    return product.embaladoOptions.find(opt => opt.size === selectedSize) || product.embaladoOptions[0];
+    if(product && product.embaladoOptions.length > 0) {
+      return product.embaladoOptions.find(opt => opt.size === selectedSize) || product.embaladoOptions[0];
+    }
+    // Fallback: return a default option if none exist
+    return { size: '', price: 0, kgPrice: 0 };
   }
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1)
