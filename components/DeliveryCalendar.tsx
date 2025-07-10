@@ -43,7 +43,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
           available: availableDays.map((d) => new Date(d)),
         }}
         modifiersStyles={{
-          available: { backgroundColor: "#d1fae5" }, // Tailwind: bg-emerald-100
+          available: { backgroundColor: "#d1fae5" },
         }}
         disabled={(date) => {
           const iso = date.toISOString().split("T")[0];
