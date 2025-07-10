@@ -1,6 +1,6 @@
 // lib/delivery/calculations.ts
 
-import { STATIONS_COORDS, FREE_RADIUS_METERS, DEVIATION_THRESHOLDS_METERS } from '../deliveryConfig';
+import { STATIONS_COORDS, FREE_RADIUS_METERS, DEVIATION_THRESHOLDS_METERS } from '../delivery/deliveryConfig';
 import type { Station, DeliveryCoordinates, DistanceCalculation } from './types';
 
 /**
