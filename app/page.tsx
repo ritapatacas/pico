@@ -1,22 +1,50 @@
+"use client";
+
 // app/page.tsx
 import Products from "@/components/Products";
-import productsData from "@/products.json";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRef, useEffect, useState } from "react";
 import AboutSection from "@/components/AboutSection";
 
 export default function HomePage() {
+  const logoRef = useRef<HTMLDivElement>(null);
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(entry.intersectionRatio < 1); // sticky quando cola ao topo
+      },
+      {
+        threshold: [1],
+      }
+    );
+
+    if (logoRef.current) {
+      observer.observe(logoRef.current);
+    }
+
+    return () => {
+      if (logoRef.current) observer.unobserve(logoRef.current);
+    };
+  }, []);
 
   return (
     <div className="relative">
       <div
-        className="fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center transition-opacity duration-500 ease-in-out opacity-100 pointer-events-auto"
+        className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+    transition-opacity duration-500 ease-in-out
+    ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
+
+
         {/* topbar */}
         <Link href="/">
           <Image
-            className="transition-all duration-250 scale-80 invert pr-1"
+            className={`transition-all duration-250 ${isSticky ? "scale-80" : "scale-80 invert"
+              } pr-1`}
             src="logo/logo_h.svg"
             alt="PICO DA ROSA logo"
             width={300}
@@ -38,12 +66,14 @@ export default function HomePage() {
 
             {/* HERO logo (sticky dentro da hero) */}
             <div
-              className="top-0 z-50 w-full flex transition-all duration-200 bg-transparent py-0"
+              ref={logoRef}
+              className={`
+                 top-0 z-50 w-full flex transition-all duration-200 bg-transparent py-0`}
             >
               <div className="flex items-center">
                 <Link href="/">
                   <Image
-                    className="transition-all duration-200 scale-80 invert pr-2 pt-3 pb-10"
+                    className={`transition-all duration-200 scale-80 invert pr-2 pt-3 pb-10`}
                     src="logo/logo_h.svg"
                     alt="PICO DA ROSA logo"
                     width={300}
@@ -124,24 +154,29 @@ export default function HomePage() {
         </section>
 
         {/* Products */}
-        <p className="text-lg leading-relaxed px-20 py-10">
-          Produção de frutos vermelhos no centro do país.
-        </p>
-
-        <div className="border-t border-gray-400 mx-10 my-8 space-y-2">
-        </div>
-
-        <div id="products" className="px-10 py-8">
-          <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-center font-burford mb-2">
-            Produtos
-          </h2>
-          <Products />
-
+        <div className="px-10">
+        <Products />
         </div>
 
 
       </main>
 
+      {/* Fade-in animation keyframes */}
+      <style jsx global>{`
+        @keyframes fadein {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadein {
+          animation: fadein 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+      `}</style>
     </div>
   );
 }
