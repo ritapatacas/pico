@@ -66,7 +66,7 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      router.push('/products');
+      router.push('#products');
     }
   }, [shouldRedirect, router]);
 

@@ -32,12 +32,12 @@ interface SuccessModalProps {
   };
 }
 
-export default function SuccessModal({ 
-  open, 
-  onClose, 
-  sessionId, 
+export default function SuccessModal({
+  open,
+  onClose,
+  sessionId,
   paymentMethod = 'stripe',
-  deliveryInfo 
+  deliveryInfo
 }: SuccessModalProps) {
   const { clearCart, cartItems, cartTotal } = useCart();
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ export default function SuccessModal({
   useEffect(() => {
     if (open && !hasClearedCart.current) {
       hasClearedCart.current = true;
-      
+
       // Get delivery fee from localStorage if available
       try {
         const shippingData = localStorage.getItem("shipping");
@@ -75,13 +75,13 @@ export default function SuccessModal({
         console.error('Error parsing shipping data:', error);
         setDeliveryFee(0);
       }
-      
+
       if (sessionId && paymentMethod === 'stripe') {
         setLoading(true);
         // Clear cart and shipping info after successful payment
         clearCart();
         localStorage.removeItem("shipping");
-        
+
         // Verify the payment session with Stripe
         verifyPaymentSession(sessionId);
       } else if (paymentMethod === 'cash') {
@@ -96,7 +96,7 @@ export default function SuccessModal({
     try {
       const response = await fetch(`/api/verify-session?session_id=${sessionId}`);
       const data = await response.json();
-      
+
       if (response.ok) {
         setPaymentDetails(data);
       } else {
@@ -114,12 +114,12 @@ export default function SuccessModal({
     setError(null);
     setPaymentDetails(null);
     hasClearedCart.current = false;
-    
+
     // Clear cart when modal is closed
     if (paymentMethod === 'cash') {
       clearCart();
     }
-    
+
     onClose();
   };
 
@@ -136,7 +136,7 @@ export default function SuccessModal({
   const formatSlot = (slot: number) => {
     const slots = {
       1: '09:00 - 12:00',
-      2: '12:00 - 15:00', 
+      2: '12:00 - 15:00',
       3: '15:00 - 18:00',
       4: '18:00 - 21:00'
     };
@@ -186,113 +186,96 @@ export default function SuccessModal({
         </div>
 
         <div className="space-y-6">
-          {/* Order Summary */}
+          {/* Combined Order Information */}
           <div className="bg-gray-50 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Package className="h-5 w-5" />
-              Resumo do Pedido
+              Detalhes do Pedido
             </h2>
-            
-            {paymentDetails?.items && paymentDetails.items.length > 0 ? (
-              <div className="space-y-3 mb-4">
-                {paymentDetails.items.map((item, index) => (
-                  <div key={index} className="flex justify-between items-center">
-                    <span className="font-medium">{item.name}</span>
-                    <span className="text-gray-600">
-                      {item.quantity} × {item.price}€
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-3 mb-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-center">
-                    <span className="font-medium">{item.name}</span>
-                    <span className="text-gray-600">
-                      {item.quantity} × {item.price.toFixed(2)}€
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-            
-            <div className="border-t pt-4 space-y-2">
-              {deliveryFee > 0 && (
-                <div className="flex justify-between items-center text-sm">
-                  <span>Taxa de entrega:</span>
-                  <span>{deliveryFee.toFixed(2)}€</span>
+
+            {/* Order Items */}
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3 text-sm text-gray-600 uppercase tracking-wide">Itens</h3>
+              {paymentDetails?.items && paymentDetails.items.length > 0 ? (
+                <div className="space-y-2">
+                  {paymentDetails.items.map((item, index) => (
+                    <div key={index} className="flex justify-between items-center text-sm">
+                      <span>{item.name}</span>
+                      <span className="text-gray-600">
+                        {item.quantity} × {item.price}€
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {cartItems.map((item) => (
+                    <div key={item.id} className="flex justify-between items-center text-sm">
+                      <span>{item.name}</span>
+                      <span className="text-gray-600">
+                        {item.quantity} × {item.price.toFixed(2)}€
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
-              <div className="flex justify-between items-center text-lg font-bold">
-                <span>Total:</span>
+
+              {/* Total */}
+              <div className="border-t pt-4 mt-4 space-y-2">
+                {deliveryFee > 0 && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span>Taxa de entrega:</span>
+                    <span>{deliveryFee.toFixed(2)}€</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center text-lg font-bold">
+                  <span>Total:</span>
+                </div>
+                <div className="mb-6 pb-4 border-b border-gray-200">
+
+                  <span>
+                    {paymentDetails?.amount || (cartTotal + deliveryFee).toFixed(2)}€
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Method */}
+            <div className="mb-6 pb-4 border-b border-gray-200">
+              <h3 className="font-semibold mb-2 text-sm text-gray-600 uppercase tracking-wide">Pagamento</h3>
+              <div className="flex items-center gap-2 text-sm">
+                {paymentMethod === 'stripe' ? <CreditCard className="h-4 w-4" /> : <Banknote className="h-4 w-4" />}
                 <span>
-                  {paymentDetails?.amount || (cartTotal + deliveryFee).toFixed(2)}€
+                  {paymentMethod === 'stripe' ? 'Cartão de Crédito/Débito' : 'Contra-reembolso'}
                 </span>
               </div>
             </div>
-          </div>
 
-          {/* Payment Method */}
-          <div className="bg-blue-50 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              {paymentMethod === 'stripe' ? <CreditCard className="h-5 w-5" /> : <Banknote className="h-5 w-5" />}
-              Método de Pagamento
-            </h2>
-            <div className="text-sm text-gray-700">
-              {paymentMethod === 'stripe' ? (
-                <p>💳 <strong>Cartão de Crédito/Débito</strong> - Pagamento processado com sucesso</p>
-              ) : (
-                <p>💵 <strong>Contra-reembolso</strong> - Pagamento na entrega</p>
-              )}
-            </div>
-          </div>
-
-          {/* Delivery Information */}
-          {deliveryInfo && (
-            <div className="bg-green-50 rounded-lg p-6">
-              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5" />
-                Informações de Entrega
-              </h2>
-              <div className="space-y-3 text-sm text-gray-700">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">Tipo:</span>
-                  <span>{deliveryInfo.type === 'pickup' ? 'Levantar em mão' : 'Entrega ao domicílio'}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">Local:</span>
-                  <span>{deliveryInfo.location}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span className="font-medium">Data:</span>
-                  <span>{formatDate(deliveryInfo.date)}</span>
-                </div>
-                {deliveryInfo.slot && (
+            {/* Delivery Information */}
+            {deliveryInfo && (
+              <div className="mb-6 pb-4 border-b border-gray-200">
+                <h3 className="font-semibold mb-2 text-sm text-gray-600 uppercase tracking-wide">Entrega</h3>
+                <div className="space-y-1 text-sm">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">Horário:</span>
-                    <span>{formatSlot(deliveryInfo.slot)}</span>
+                    <MapPin className="h-3 w-3" />
+                    <span>{deliveryInfo.type === 'pickup' ? 'Levantar em mão' : 'Entrega ao domicílio'}</span>
                   </div>
-                )}
+                  <div className="ml-5">
+                    <span>{deliveryInfo.location}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-3 w-3" />
+                    <span>{formatDate(deliveryInfo.date)}</span>
+                  </div>
+                  {deliveryInfo.slot && (
+                    <div className="ml-5 text-gray-600">
+                      {formatSlot(deliveryInfo.slot)}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Order Details */}
-          <div className="bg-blue-50 rounded-lg p-6">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <Mail className="h-5 w-5" />
-              Próximos Passos
-            </h2>
-            <div className="space-y-3 text-sm text-gray-700">
-              <p>✅ <strong>Pedido confirmado</strong> - O seu pedido foi processado com sucesso</p>
-              <p>📧 <strong>Email de confirmação</strong> - Enviaremos um email com os detalhes do pedido</p>
-              <p>📦 <strong>Preparação do pedido</strong> - O seu pedido será preparado e enviado em breve</p>
-              {paymentDetails?.order_id && (
-                <p>🆔 <strong>ID do Pedido:</strong> {paymentDetails.order_id}</p>
-              )}
-            </div>
           </div>
 
           {/* Session ID for Stripe payments */}
@@ -309,15 +292,10 @@ export default function SuccessModal({
           <Link href="/">
             <Button className="w-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2">
               <Home className="h-4 w-4" />
-              Voltar à Loja
+              Voltar
             </Button>
           </Link>
-          
-          <Link href="/mirtilos">
-            <Button variant="outline" className="w-full">
-              Continuar a Comprar
-            </Button>
-          </Link>
+
         </div>
       </div>
     </Modal>

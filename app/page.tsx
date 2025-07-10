@@ -51,7 +51,7 @@ export default function HomePage() {
             priority
           />
         </Link>
-        <Link href="/products">
+        <Link href="#products">
           <Button className="bg-primary text-white font-bold">Encomendar</Button>
         </Link>
       </div>
@@ -91,7 +91,7 @@ export default function HomePage() {
               <h3 className="text-xl md:text-xl font-semibold text-white drop-shadow-md font-burford">
                 de Pedrógão Grande
               </h3>
-              <Link href="/products" passHref>
+              <Link href="#products" passHref>
                 <Button className="mt-2 rounded pt-1 px-4 bg-white text-primary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
                   encomendar
                 </Button>
@@ -139,7 +139,9 @@ export default function HomePage() {
         </section>
 
         {/* About */}
+        <div id="about">
         <AboutSection />
+        </div>
 
         <section>
           <Image
@@ -150,13 +152,13 @@ export default function HomePage() {
           priority
 
           />
-          <p className="text-lg leading-relaxed px-20 py-10">
-            Produção de frutos vermelhos no centro do país.
-          </p>
         </section>
 
         {/* Products */}
-        <div className="px-10">
+        <div id="products" className="px-10">
+          <p className="text-lg leading-relaxed px-20 py-10">
+            Produção de frutos vermelhos no centro do país.
+          </p>
         <Products />
         </div>
 
