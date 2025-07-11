@@ -13,7 +13,7 @@ import productsData from "@/products.json"
 
 export function Products() {
   const [search, setSearch] = useState("")
-  const [products, setProducts] = useState(productsData)
+  const [products, setProducts] = useState(productsData ?? []);
   const [displayed, setDisplayed] = useState(8)
   const [loading, setLoading] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -49,7 +49,7 @@ export function Products() {
   }, [displayed, products.length, loading])
 
   // Search filter
-  const filtered = products.filter((p) => {
+  const filtered = (products ?? []).filter((p) => {
     const q = search.toLowerCase()
     return (
       p.name.toLowerCase().includes(q) ||
