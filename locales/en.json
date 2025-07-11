@@ -43,7 +43,9 @@
     "contactUs": "contact us",
     "ifProblem": "if you encounter any problems",
     "contactInfo": "You can contact us via email",
-    "orPhone": "or by phone"
+    "orPhone": "or by phone",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
   },
   "product": {
     "addToCart": "Add to Cart",
@@ -120,5 +122,11 @@
     "discount": "Discount",
     "total": "Total",
     "proceedToCheckout": "Proceed to Checkout"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signInDescription": "Sign in to make your shopping easier",
+    "signInWith": "Sign in with"
   }
 }

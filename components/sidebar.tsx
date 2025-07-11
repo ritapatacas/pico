@@ -3,13 +3,19 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { GalleryVerticalEnd, Home, Menu, Settings, ShoppingCart, X, Users, Store, Mail, Plus, Minus, Trash2 } from "lucide-react"
+import { GalleryVerticalEnd, Home, Menu, Settings, ShoppingCart, X, Users, Store, Mail, Plus, Minus, Trash2, LogIn, LogOut } from "lucide-react"
 import { useLanguageSettings } from "@/hooks/use-settings-store"
 import { useCart } from "@/contexts/cart-context"
 import { SettingsPanel } from "@/components/settings/settings-panel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import "@/app/globals.css"
+import { useAuth } from "@/hooks/use-auth"
+import Modal from "@/components/ui/Modal";
+import { signIn } from "next-auth/react";
+
+
+
 
 interface SidebarProps {
   version: string
@@ -25,6 +31,8 @@ export function Sidebar({ version }: SidebarProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [openSection, setOpenSection] = useState<'home' | 'settings' | 'cart' | null>(null)
   const { cartItems, cartCount, cartTotal, updateItemQuantity, removeFromCart } = useCart()
+  const { user, isAuthenticated, signIn, signOut } = useAuth();
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -50,6 +58,27 @@ export function Sidebar({ version }: SidebarProps) {
       setIsSidebarOpen(!isSidebarOpen)
     }
   }
+
+  const handleGoogleSignIn = async () => {
+    const result = await signIn("google", { callbackUrl: "/", redirect: false });
+    if (result?.url) {
+      const width = 500;
+      const height = 600;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+      const popup = window.open(
+        result.url,
+        "GoogleSignIn",
+        `width=${width},height=${height},top=${top},left=${left}`
+      );
+      const timer = setInterval(() => {
+        if (popup && popup.closed) {
+          clearInterval(timer);
+          window.location.reload();
+        }
+      }, 500);
+    }
+  };
 
   if (isMobile) {
     return (
@@ -77,6 +106,7 @@ export function Sidebar({ version }: SidebarProps) {
                 <X className="h-4 w-4" />
               </button>
             </div>
+
             {/* Main navigation styled like accordion triggers */}
             <div className={`space-y-2 ${burfordFontClass}`}>
               <Link href="#about" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
@@ -90,15 +120,7 @@ export function Sidebar({ version }: SidebarProps) {
             </div>
             <div className="flex-1 overflow-y-auto px-3">
               <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
-                <AccordionItem value="settings">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <Settings className="h-4 w-4" />
-                    {t("sidebar.settings")}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <SettingsPanel />
-                  </AccordionContent>
-                </AccordionItem>
+
                 <AccordionItem value="cart">
                   <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                     <ShoppingCart className="h-4 w-4" />
@@ -157,14 +179,18 @@ export function Sidebar({ version }: SidebarProps) {
                             </div>
                           </div>
                         ))}
-                        <div className="mt-8 border-t border-border" />
+                        <div className="mt-8 mx-8 border-t border-border border-gray-400" />
                         <div className="flex justify-between items-center m-4 text-lg ">
                           <span className="font-semibold">{t("sidebar.total")}:</span>
                           <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
                         </div>
                         <div className="mx-10 my-5">
+
+
+
+
                           <Button
-                            className="px-8 w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                            className="px-8 w-full bg-primary bg-black hover:bg-gray-900 text-md font-semibold text-white hover:bg-gray-700"
                             onClick={() => {
                               setIsSidebarOpen(false);
                               router.push('/checkout');
@@ -188,7 +214,68 @@ export function Sidebar({ version }: SidebarProps) {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
+                <AccordionItem value="settings">
+                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                    <Settings className="h-4 w-4" />
+                    {t("sidebar.settings")}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <SettingsPanel />
+                  </AccordionContent>
+                </AccordionItem>
+
               </Accordion>
+
+
+
+              <div id="sigin-button" className="flex w-full justify-left h-16 mt-auto items-left transition-colors hover:bg-secondary/50 text-left">
+                {/* Auth block for mobile */}
+                <div className="">
+                  {!isAuthenticated ? (
+                    <>
+                      <button
+                        onClick={() => setIsSignInModalOpen(true)}
+                        className="flex items-center gap-2 rounded-md py-4 transition-colors hover:bg-secondary/50 text-left text-2xl font-bold"
+                      >
+                        <LogIn className={burfordFontClass + " h-4 w-4 mt-2 text-left"} />
+                        {t("sidebar.signIn")}
+                      </button>
+                      <Modal open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)}>
+                        <div className="flex flex-col items-center gap-6 p-4 w-full">
+                          <h2 className="text-xl font-bold mb-4">{t("sidebar.signIn")}</h2>
+                          <Button
+                            onClick={handleGoogleSignIn}
+                            className="w-full"
+                            variant="outline"
+                          >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mr-2">
+                              <path
+                                d="M21.35 11.1H12.18v2.92h5.19c-.22 1.18-1.32 3.47-5.19 3.47-3.12 0-5.66-2.59-5.66-5.79s2.54-5.79 5.66-5.79c1.78 0 2.97.76 3.65 1.41l2.49-2.41C17.13 3.98 14.89 3 12.18 3 6.65 3 2.25 7.42 2.25 12.01s4.4 9.01 9.93 9.01c5.7 0 9.47-4 9.47-9.62 0-.65-.07-1.14-.16-1.3z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            Entrar com Google
+                          </Button>
+                        </div>
+                      </Modal>
+                    </>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="px-3 py-2 text-lg font-semibold">
+                        <p className="font-lg">{user?.name}</p>
+                        <p className="text-muted-foreground">{user?.email}</p>
+                      </div>
+                      <button
+                        onClick={() => signOut()}
+                        className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left w-full"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        {t("sidebar.signOut")}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </>
         )}
@@ -273,6 +360,30 @@ export function Sidebar({ version }: SidebarProps) {
                 <span>{item.name}</span>
               </Link>
             ))}
+            {/* Auth block for desktop */}
+            {!isAuthenticated ? (
+              <button
+                onClick={() => signIn()}
+                className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left"
+              >
+                <LogIn className="h-4 w-4" />
+                {t("sidebar.signIn")}
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <div className="px-3 py-2 text-sm">
+                  <p className="font-medium">{user?.name}</p>
+                  <p className="text-muted-foreground">{user?.email}</p>
+                </div>
+                <button
+                  onClick={() => signOut()}
+                  className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left w-full"
+                >
+                  <LogOut className="h-4 w-4" />
+                  {t("sidebar.signOut")}
+                </button>
+              </div>
+            )}
           </nav>
         </div>
         <div className="p-4 ">

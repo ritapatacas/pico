@@ -1,6 +1,30 @@
 import { useEffect } from "react"
 import { createPortal } from "react-dom"
 
+
+// In your modal component
+const handleGoogleSignIn = () => {
+  const width = 500;
+  const height = 600;
+  const left = window.screen.width / 2 - width / 2;
+  const top = window.screen.height / 2 - height / 2;
+
+  const popup = window.open(
+    '/api/auth/signin/google',
+    'GoogleSignIn',
+    `width=${width},height=${height},top=${top},left=${left}`
+  );
+
+  // Optionally, poll or listen for sign-in completion
+  const timer = setInterval(() => {
+    if (popup && popup.closed) {
+      clearInterval(timer);
+      // Optionally, refresh session or UI here
+      window.location.reload(); // or use next-auth's getSession()
+    }
+  }, 500);
+};
+
 export default function Modal({ open, onClose, children }: { open: boolean, onClose: () => void, children: React.ReactNode }) {
   console.log('Modal component - open:', open);
   
@@ -69,6 +93,8 @@ export default function Modal({ open, onClose, children }: { open: boolean, onCl
   if (typeof window !== 'undefined') {
     return createPortal(modalContent, document.body);
   }
+
+  
   
   return modalContent;
 } 

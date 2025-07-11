@@ -6,6 +6,7 @@ import { CartProvider } from "@/contexts/cart-context";
 import { CartDrawerProvider } from "@/contexts/cart-drawer-context";
 import { MainLayout } from "@/components/MainLayout";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { Providers } from "./providers";
 
 export const metadata: Metadata = {
   title: "Pico da Rosa",
@@ -21,17 +22,19 @@ export default function RootLayout({
     <html lang="pt" suppressHydrationWarning>
       <body className="antialiased">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <SettingsStoreProvider>
-            <LanguageProvider>
-              <CartProvider>
-                <CartDrawerProvider>
-                  <MainLayout>
-                    {children}
-                  </MainLayout>
-                </CartDrawerProvider>
-              </CartProvider>
-            </LanguageProvider>
-          </SettingsStoreProvider>
+          <Providers>
+            <SettingsStoreProvider>
+              <LanguageProvider>
+                <CartProvider>
+                  <CartDrawerProvider>
+                    <MainLayout>
+                      {children}
+                    </MainLayout>
+                  </CartDrawerProvider>
+                </CartProvider>
+              </LanguageProvider>
+            </SettingsStoreProvider>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>
