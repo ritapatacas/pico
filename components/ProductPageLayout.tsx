@@ -16,7 +16,7 @@ export interface EmbaladoOption {
 }
 
 export interface ProductPageLayoutProps {
-  productKey: string; // e.g. "blueberries"
+  productKey: string;
   mainImage: string;
   backgroundImage: string;
   embaladoOptions: EmbaladoOption[];

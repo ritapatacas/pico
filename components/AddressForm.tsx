@@ -37,6 +37,7 @@ export default function AddressForm() {
       setCoords({ ...result, displayName: "" });
 
       const res = await fetch(`/api/delivery/options?lat=${result.lat}&lon=${result.lon}`);
+
       if (!res.ok) throw new Error("Erro ao obter opções de entrega");
       const data = await res.json();
       setSlots(data);
@@ -154,6 +155,7 @@ export default function AddressForm() {
   function calculateDeviation(lat: number, lon: number): number {
     const { deviation } = findNearestStationAndDeviation({ lat, lon });
     return deviation;
+
   }
 
   return (
@@ -240,3 +242,4 @@ export default function AddressForm() {
     </div>
   );
 }
+

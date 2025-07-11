@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import Modal from "@/components/ui/Modal"
 import ProductPageLayout from "@/components/ProductPageLayout"
+
 import FreshFruitAddPopup, { Product } from "@/components/fresh-fruit-add-popup"
 // Temporary import for JSON, replace with fetch if needed
 import productsData from "@/products.json"
@@ -99,6 +100,7 @@ export function Products() {
   )
 }
 
+
 export default function ProductsPage() {
-  return <Products />
+  return <Products />;
 } 
