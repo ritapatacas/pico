@@ -4,6 +4,7 @@ import { useState } from "react";
 import { geocodeAddress } from "@/lib/geocode";
 import { supabase } from "@/lib/supabaseClient";
 import DeliveryCalendar from "@/components/DeliveryCalendar";
+import { findNearestStationAndDeviation } from "@/lib/delivery/calculations";
 
 type DeliveryOption = {
   date: string;
@@ -33,9 +34,10 @@ export default function AddressForm() {
 
     try {
       const result = await geocodeAddress(address);
-      setCoords(result);
+      setCoords({ ...result, displayName: "" });
 
-      const res = await fetch(`/api/delivery-options?lat=${result.lat}&lon=${result.lon}`);
+      const res = await fetch(`/api/delivery/options?lat=${result.lat}&lon=${result.lon}`);
+
       if (!res.ok) throw new Error("Erro ao obter opções de entrega");
       const data = await res.json();
       setSlots(data);
@@ -151,9 +153,9 @@ export default function AddressForm() {
 
   // Helper function to calculate deviation (1-5) based on distance
   function calculateDeviation(lat: number, lon: number): number {
-    // This is a simple example - you can implement your own logic
-    // For now, returning a random value between 1-5
-    return Math.floor(Math.random() * 5) + 1;
+    const { deviation } = findNearestStationAndDeviation({ lat, lon });
+    return deviation;
+
   }
 
   return (
@@ -240,3 +242,4 @@ export default function AddressForm() {
     </div>
   );
 }
+

@@ -1,0 +1,103 @@
+next.config.ts:7 - default
+tailwind.config.ts:84 - default
+app/layout-old.tsx:14 - default
+app/layout-old.tsx:9 - metadata
+app/layout.tsx:15 - default
+app/layout.tsx:10 - metadata
+app/page copy.tsx:5 - default
+app/page.tsx:10 - default
+components/Calltoaction.tsx:34 - default
+components/Cart.tsx:31 - default
+components/CartSidebar.tsx:8 - CartSidebar
+components/featured-destinations.tsx:6 - FeaturedDestinations
+components/header-vertical.tsx:13 - VerticalHeader
+components/HeroWithStickyTopbar.tsx:6 - default
+components/newsletter.tsx:4 - Newsletter
+components/popular-packages.tsx:8 - PopularPackages
+components/ProductPageLayout.tsx:12 - EmbaladoOption (used in module)
+components/ProductPageLayout.tsx:18 - ProductPageLayoutProps (used in module)
+components/sidebar copy.tsx:20 - Sidebar
+components/StickyHeader.tsx:4 - StickyHeader
+components/testimonials.tsx:5 - Testimonials
+components/theme-debug.tsx:9 - ThemeDebug
+components/user-dropdown.tsx:24 - UserDropdown
+contexts/cart-context.tsx:6 - CartItem (used in module)
+data/mockDeliveries.ts:3 - Delivery (used in module)
+data/mockDeliveries.ts:12 - mockDeliveries
+hooks/use-settings-store.tsx:110 - useSettingsStore (used in module)
+hooks/use-settings-store.tsx:180 - useSettings
+hooks/use-settings-store.tsx:194 - SettingsProvider
+lib/deliveryConfig.ts:12 - DEVIATION_THRESHOLDS_METERS
+lib/deliveryUtils.ts:5 - haversineDistanceMeters (used in module)
+lib/deliveryUtils.ts:25 - calculateDeviation
+lib/i18n.ts:6 - translations (used in module)
+app/checkout/page.tsx:9 - default
+app/encomedar/page.tsx:3 - default
+app/mirtilos/page.tsx:36 - default
+app/payment/page.tsx:32 - default
+app/product/page copy.tsx:11 - default
+app/product/page.tsx:4 - default
+app/products/page.tsx:4 - default
+app/settings/page.tsx:3 - default
+app/success/page.tsx:4 - default
+components/icons/flag-fr.tsx:2 - FlagFR
+components/icons/index.ts:2 - FlagGB
+components/icons/index.ts:2 - FlagPT
+components/settings/color-theme-selector.tsx:19 - ColorThemeSelector
+components/settings/radius-selector.tsx:14 - RadiusSelector
+components/ui/badge.tsx:46 - badgeVariants (used in module)
+components/ui/breadcrumb.tsx:84 - Breadcrumb (used in module)
+components/ui/breadcrumb.tsx:85 - BreadcrumbList (used in module)
+components/ui/breadcrumb.tsx:86 - BreadcrumbItem (used in module)
+components/ui/breadcrumb.tsx:87 - BreadcrumbLink (used in module)
+components/ui/breadcrumb.tsx:88 - BreadcrumbPage (used in module)
+components/ui/breadcrumb.tsx:89 - BreadcrumbSeparator (used in module)
+components/ui/breadcrumb.tsx:90 - BreadcrumbEllipsis (used in module)
+components/ui/button.tsx:33 - ButtonProps (used in module)
+components/ui/button.tsx:47 - buttonVariants (used in module)
+components/ui/card.tsx:89 - CardAction (used in module)
+components/ui/card.tsx:90 - CardDescription (used in module)
+components/ui/carousel.tsx:235 - CarouselApi (used in module)
+components/ui/dropdown-menu.tsx:170 - DropdownMenuCheckboxItem (used in module)
+components/ui/dropdown-menu.tsx:171 - DropdownMenuRadioItem (used in module)
+components/ui/dropdown-menu.tsx:174 - DropdownMenuShortcut (used in module)
+components/ui/dropdown-menu.tsx:176 - DropdownMenuPortal (used in module)
+components/ui/dropdown-menu.tsx:177 - DropdownMenuSub (used in module)
+components/ui/dropdown-menu.tsx:178 - DropdownMenuSubContent (used in module)
+components/ui/dropdown-menu.tsx:179 - DropdownMenuSubTrigger (used in module)
+components/ui/dropdown-menu.tsx:180 - DropdownMenuRadioGroup (used in module)
+components/ui/select.tsx:177 - SelectGroup (used in module)
+components/ui/select.tsx:179 - SelectLabel (used in module)
+components/ui/select.tsx:180 - SelectScrollDownButton (used in module)
+components/ui/select.tsx:181 - SelectScrollUpButton (used in module)
+components/ui/select.tsx:182 - SelectSeparator (used in module)
+components/ui/separator.tsx:28 - Separator (used in module)
+components/ui/toggle.tsx:47 - Toggle (used in module)
+components/ui/toggle.tsx:47 - toggleVariants (used in module)
+lib/delivery/types.ts:3 - Station (used in module)
+lib/delivery/types.ts:9 - DeliveryCoordinates (used in module)
+lib/delivery/types.ts:14 - GeocodeResult
+lib/delivery/types.ts:20 - DistanceCalculation
+lib/delivery/types.ts:26 - DeliveryOption
+lib/delivery/types.ts:35 - DeliverySlot (used in module)
+lib/delivery/types.ts:43 - DeliveryAvailability (used in module)
+lib/delivery/types.ts:49 - DeliveryRecord
+lib/delivery/types.ts:76 - CreateDeliveryRequest
+lib/delivery/types.ts:90 - DeliveryOptionsRequest
+lib/delivery/types.ts:95 - DeliveryOptionsResponse
+lib/theme/index.ts:130 - getThemeVariables (used in module)
+lib/theme/index.ts:135 - applyTheme
+lib/theme/index.ts:43 - ColorTheme (used in module)
+lib/theme/index.ts:84 - ThemeMode (used in module)
+lib/theme/index.ts:86 - themes (used in module)
+lib/theme/index.ts:162 - baseTheme (used in module)
+lib/theme/index.ts:163 - ThemeDefinition (used in module)
+lib/theme/index.ts:163 - ColorThemeDefinition (used in module)
+app/admin/orders/page.tsx:10 - default
+app/api/checkout_sessions/route.ts:27 - POST
+app/api/delivery-options/route.ts:5 - haversineDistanceMeters (used in module)
+app/api/delivery-options/route.ts:25 - calculateDeviation
+app/api/schedule-delivery/route.ts:18 - POST
+app/api/schedule-delivery/route.ts:38 - GET
+app/api/verify-session/route.ts:4 - GET
+app/api/webhooks/stripe/route.ts:95 - POST
