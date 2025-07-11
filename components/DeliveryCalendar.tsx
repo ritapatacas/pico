@@ -44,6 +44,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
         }}
         modifiersStyles={{
           available: { backgroundColor: "#d1fae5" },
+
         }}
         disabled={(date) => {
           const iso = date.toISOString().split("T")[0];
