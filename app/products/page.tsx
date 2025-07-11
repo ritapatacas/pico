@@ -99,6 +99,7 @@ export function Products() {
   )
 }
 
+
 export default function ProductsPage() {
-  return <Products />
+  return <Products productsData={productsData} />;
 } 

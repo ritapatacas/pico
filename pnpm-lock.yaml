@@ -53,9 +53,6 @@ importers:
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@19.1.0)
-      geocode:
-        specifier: ^0.0.3
-        version: 0.0.3
       geolib:
         specifier: ^3.3.4
         version: 3.3.4
@@ -1665,9 +1662,6 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  geocode@0.0.3:
-    resolution: {integrity: sha512-MLcZ3210bX/6UUb5yqK9djDG+ROa5mFvf44BtMHpXLhZynyzhnmOhSzSyVtBDmNF1s3rkyQ5MXdIdJR/By5K1w==}
-
   geolib@3.3.4:
     resolution: {integrity: sha512-EicrlLLL3S42gE9/wde+11uiaYAaeSVDwCUIv2uMIoRBfNJCn8EsSI+6nS3r4TCKDO6+RQNM9ayLq2at+oZQWQ==}
 
@@ -2676,6 +2670,7 @@ packages:
 
   zod@4.0.3:
     resolution: {integrity: sha512-V78FonTAxtGAyF2xR75x0YoW8uKXdQiusoPtzbT07vH3mZiGdTQN6INuivHyYT6M2V2YRFDEKIF4ylTJh54EXg==}
+
 
 snapshots:
 
@@ -4328,13 +4323,6 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  geocode@0.0.3:
-    dependencies:
-      async: 0.2.10
-      cradle: 0.6.9
-      underscore: 1.4.4
-    transitivePeerDependencies:
-      - supports-color
 
   geolib@3.3.4: {}
 

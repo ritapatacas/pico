@@ -18,7 +18,6 @@ export default function AboutSection() {
         <div className="absolute inset-0 flex items-center justify-center">
           <Card className="bg-gray-300 opacity-60 text-black text-base overflow-hidden transition-all hover:shadow-lg w-[70vw] flex flex-col justify-between">
             <CardContent className="flex flex-col flex-grow font-semibold">
-              <h1 className="text-2xl font-bold mb-2">O Pico da Rosa</h1>
               <p className="text-lg leading-relaxed mb-2">
                 É num lugar no centro do país, no cabeço da aldeia dos Troviscais, em Pedrógão Grande, que o PICO DA ROSA cresce, naquelas que um dia foram as terras de sustento dos meus avós, Rosa e Américo.
               </p>
@@ -31,7 +30,8 @@ export default function AboutSection() {
       </div>
       <div>
         <p className="text-lg leading-relaxed px-20 py-10">
-          Este projeto não teria saído do imaginário sem o apoio desse legado maior - a minha família que permitiu que ele nascesse cedendo-lhe a sua terra. E tão só teria sido um devaneio não fosse a força, coragem e perseverança da minha mãe.
+          Este projeto não teria saído do imaginário sem o apoio desse legado maior: a minha família que permitiu que ele nascesse cedendo-lhe a sua terra. <br />
+          E tão só teria sido um devaneio não fosse a força, coragem e perseverança da minha mãe.
         </p>
         <Image
           className="w-full"
