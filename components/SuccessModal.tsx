@@ -178,10 +178,10 @@ export default function SuccessModal({
         <div className="text-center mb-8">
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Pedido Confirmado!
+            Pedido processado!
           </h1>
           <p className="text-gray-600 text-lg">
-            Obrigado pela sua compra. O seu pedido foi processado com sucesso.
+            O seu pedido foi processado com sucesso, verifique os detalhes da encomenda e o email de confirmação
           </p>
         </div>
 
@@ -194,8 +194,8 @@ export default function SuccessModal({
             </h2>
 
             {/* Order Items */}
-            <div className="mb-6">
-              <h3 className="font-semibold mb-3 text-sm text-gray-600 uppercase tracking-wide">Itens</h3>
+            <div className="mb-4">
+
               {paymentDetails?.items && paymentDetails.items.length > 0 ? (
                 <div className="space-y-2">
                   {paymentDetails.items.map((item, index) => (
@@ -221,18 +221,15 @@ export default function SuccessModal({
               )}
 
               {/* Total */}
-              <div className="border-t pt-4 mt-4 space-y-2">
+              <div className="border-t border-gray-100 pt-2 mt-4 space-y-2">
                 {deliveryFee > 0 && (
                   <div className="flex justify-between items-center text-sm">
                     <span>Taxa de entrega:</span>
                     <span>{deliveryFee.toFixed(2)}€</span>
                   </div>
                 )}
-                <div className="flex justify-between items-center text-lg font-bold">
+                <div className="flex justify-between items-center text-lg font-bold mb-2 pb-5 border-b ">
                   <span>Total:</span>
-                </div>
-                <div className="mb-6 pb-4 border-b border-gray-200">
-
                   <span>
                     {paymentDetails?.amount || (cartTotal + deliveryFee).toFixed(2)}€
                   </span>
@@ -241,8 +238,10 @@ export default function SuccessModal({
             </div>
 
             {/* Payment Method */}
-            <div className="mb-6 pb-4 border-b border-gray-200">
-              <h3 className="font-semibold mb-2 text-sm text-gray-600 uppercase tracking-wide">Pagamento</h3>
+            <div className="mb-2 pb-2 border-b border-gray-100">
+              <p className="font-bold text-lg mb-2 text-gray-600 uppercase tracking-wide">
+                Pagamento
+              </p>
               <div className="flex items-center gap-2 text-sm">
                 {paymentMethod === 'stripe' ? <CreditCard className="h-4 w-4" /> : <Banknote className="h-4 w-4" />}
                 <span>
@@ -253,8 +252,10 @@ export default function SuccessModal({
 
             {/* Delivery Information */}
             {deliveryInfo && (
-              <div className="mb-6 pb-4 border-b border-gray-200">
-                <h3 className="font-semibold mb-2 text-sm text-gray-600 uppercase tracking-wide">Entrega</h3>
+              <div className="mb-2 pb-2">
+                <p className="font-bold text-lg mb-2 text-gray-600 uppercase tracking-wide">
+                  Entrega
+                </p>
                 <div className="space-y-1 text-sm">
                   <div className="flex items-center gap-2">
                     <MapPin className="h-3 w-3" />
@@ -290,8 +291,7 @@ export default function SuccessModal({
 
         <div className="mt-8 space-y-4">
           <Link href="/">
-            <Button className="w-full bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2">
-              <Home className="h-4 w-4" />
+            <Button className="w-full text-white bg-black hover:bg-gray-900 flex items-center justify-center gap-2">
               Voltar
             </Button>
           </Link>

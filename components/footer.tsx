@@ -23,9 +23,9 @@ export function Footer() {
         />
       </div>
 
-      <div className="bg-primary text-primary-foreground px-4 pt-10 w-full">
+      <div className="bg-primary text-primary-foreground px-6 pt-7 w-full">
         <div className="container mx-auto max-w-4xl">
-          <div className="mt-2 mb-8">
+          <div className="mt-2 mb-5">
 
             { /* logo */}
             <div className="flex items-center space-x-2">
@@ -72,12 +72,12 @@ export function Footer() {
           </div>
 
           {/* social */}
-          <nav className="flex flex-wrap gap-x-6 gap-y-2 mb-4 px-2">
+          <nav className="flex flex-wrap gap-x-4 gap-y-2 mb-4 px-2">
             <div className="flex items-center space-x-4">
               <button
-                className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 scale-80 hover:scale-90 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
+                className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 scale-75 invert hover:scale-80 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
                 onClick={() => window.open(
-                  'https://reformaagraria.pt/',
+                  'https://reformaagraria.pt/perfis/10243/',
                   '_blank',
                   'noopener,noreferrer'
                 )}

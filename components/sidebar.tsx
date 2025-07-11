@@ -54,7 +54,7 @@ export function Sidebar({ version }: SidebarProps) {
   if (isMobile) {
     return (
       <div
-        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
+        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t border-gray-100 ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
           } flex flex-col`}
         style={{ willChange: 'height' }}
       >
@@ -163,7 +163,7 @@ export function Sidebar({ version }: SidebarProps) {
                           <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
                         </div>
                         <div className="mx-10 my-5">
-                          <Button 
+                          <Button
                             className="px-8 w-full bg-primary text-primary-foreground hover:bg-primary/90"
                             onClick={() => {
                               setIsSidebarOpen(false);
@@ -228,16 +228,19 @@ export function Sidebar({ version }: SidebarProps) {
                 setOpenSection('cart');
               }
             }}
-            className={`flex flex-col items-center p-2 relative ${isSidebarOpen && openSection === 'cart' ? "text-primary" : "text-muted-foreground"}`}
+            className={`flex flex-col items-center p-2 ${isSidebarOpen && openSection === 'cart' ? "text-primary" : "text-muted-foreground"}`}
           >
-            <ShoppingCart className="h-5 w-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-white">
-                {cartCount}
-              </span>
-            )}
+            <span className="relative">
+              <ShoppingCart className="h-5 w-5" />
+              {cartCount > 0 && (
+                <span className="absolute -top-2 -right-4 flex h-4 w-4 pb-1 items-center justify-center rounded-full bg-red-700 text-[11px] text-white font-bold">
+                  {cartCount}
+                </span>
+              )}
+            </span>
             <span className="text-xs">{t("sidebar.cart")}</span>
           </button>
+
         </div>
       </div>
     )
@@ -272,7 +275,7 @@ export function Sidebar({ version }: SidebarProps) {
             ))}
           </nav>
         </div>
-        <div className="p-4 border-t">
+        <div className="p-4 ">
           <nav className="space-y-2">
             <button
               onClick={handleSettingsClick}

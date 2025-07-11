@@ -140,26 +140,33 @@ export default function HomePage() {
 
         {/* About */}
         <div id="about">
-        <AboutSection />
+          <AboutSection />
         </div>
 
         <section>
           <Image
-          src="imgs/PR-01.webp"
-          alt="PICO DA ROSA logo"
-          width={4032}
-          height={3024}
-          priority
+            src="imgs/PR-01.webp"
+            alt="PICO DA ROSA logo"
+            width={4032}
+            height={3024}
+            priority
 
           />
         </section>
 
         {/* Products */}
-        <div id="products" className="px-10">
-          <p className="text-lg leading-relaxed px-20 py-10">
-            Produção de frutos vermelhos no centro do país.
-          </p>
-        <Products />
+        <p className="text-lg leading-relaxed px-20 py-10">
+          Produção de frutos vermelhos no centro do país.
+        </p>
+
+        <div className="border-t border-gray-400 mx-10 my-8 space-y-2">
+        </div>
+
+        <div id="products" className="px-10 py-8">
+          <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-center font-burford mb-2">
+            Produtos
+          </h2>
+          <Products />
         </div>
 
 
