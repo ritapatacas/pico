@@ -13,6 +13,7 @@ import "@/app/globals.css"
 import { useAuth } from "@/hooks/use-auth"
 import Modal from "@/components/ui/Modal";
 import { signIn } from "next-auth/react";
+import { Client } from '@/lib/clients';
 
 
 
@@ -33,6 +34,39 @@ export function Sidebar({ version }: SidebarProps) {
   const { cartItems, cartCount, cartTotal, updateItemQuantity, removeFromCart } = useCart()
   const { user, isAuthenticated, signIn, signOut } = useAuth();
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [client, setClient] = useState<Client | null>(null);
+  const [isClientLoading, setIsClientLoading] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  useEffect(() => {
+    async function fetchClient() {
+      console.log('fetchClient called, isAuthenticated:', isAuthenticated, 'user.email:', user?.email);
+      if (isAuthenticated && user?.email) {
+        setIsClientLoading(true);
+        try {
+          const response = await fetch(`/api/client/${encodeURIComponent(user.email)}`);
+          if (response.ok) {
+            const clientData = await response.json();
+            console.log('Client data from API:', clientData);
+            setClient(clientData);
+            setImageLoaded(false); // Reset image loading state
+          } else {
+            console.log('Error fetching client:', response.status, response.statusText);
+            setClient(null);
+          }
+        } catch (error) {
+          console.error('Error fetching client:', error);
+          setClient(null);
+        }
+        setIsClientLoading(false);
+      } else {
+        console.log('Not authenticated or no email');
+        setClient(null);
+        setIsClientLoading(false);
+      }
+    }
+    fetchClient();
+  }, [isAuthenticated, user?.email]);
 
   useEffect(() => {
     const checkIfMobile = () => {
@@ -42,6 +76,13 @@ export function Sidebar({ version }: SidebarProps) {
     window.addEventListener("resize", checkIfMobile)
     return () => window.removeEventListener("resize", checkIfMobile)
   }, [])
+
+  useEffect(() => {
+    if (client) {
+      console.log('client:', client);
+      console.log('client.image_url:', client.image_url, typeof client.image_url);
+    }
+  }, [client]);
 
   const mainNavigation = [{ name: t("home"), href: "/", icon: Home, current: pathname === "/" }]
 
@@ -228,7 +269,8 @@ export function Sidebar({ version }: SidebarProps) {
 
 
 
-              <div id="sigin-button" className="flex w-full justify-left h-16 mt-auto items-left transition-colors hover:bg-secondary/50 text-left">
+              <div id="login" className="flex w-full justify-left h-16 mt-auto items-left transition-colors hover:bg-secondary/50 text-left">
+
                 {/* Auth block for mobile */}
                 <div className="">
                   {!isAuthenticated ? (
@@ -259,11 +301,36 @@ export function Sidebar({ version }: SidebarProps) {
                         </div>
                       </Modal>
                     </>
-                  ) : (
+                  ) :  (
                     <div className="space-y-2">
-                      <div className="px-3 py-2 text-lg font-semibold">
-                        <p className="font-lg">{user?.name}</p>
-                        <p className="text-muted-foreground">{user?.email}</p>
+                      <div className="px-3 py-2 text-lg font-semibold flex items-center gap-3">
+                        {isClientLoading ? (
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
+                            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                          </div>
+                        ) : typeof client?.image_url === 'string' && client.image_url.length > 0 ? (
+                          <img 
+                            src={client.image_url} 
+                            alt="avatar" 
+                            className="w-10 h-10 rounded-full object-cover border"
+                            onLoad={() => setImageLoaded(true)}
+                            onError={() => setImageLoaded(false)}
+                            style={{ display: imageLoaded ? 'block' : 'none' }}
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 border">
+                            <LogIn className="w-6 h-6" />
+                          </div>
+                        )}
+                        {!imageLoaded && typeof client?.image_url === 'string' && client.image_url.length > 0 && (
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
+                            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-lg">{user?.name}</p>
+                          <p className="text-muted-foreground text-base">{user?.email}</p>
+                        </div>
                       </div>
                       <button
                         onClick={() => signOut()}
