@@ -226,4 +226,122 @@ h6 {
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Make all radio inputs black by default */
+  input[type="radio"] {
+    accent-color: black;
+  }
+  
+  /* Make all select chevrons black */
+  [data-slot="select-trigger"] svg,
+  [data-slot="select-scroll-up-button"] svg,
+  [data-slot="select-scroll-down-button"] svg {
+    color: black !important;
+  }
+  
+  /* Override any Radix UI default colors for chevrons */
+  .radix-select-trigger svg,
+  .radix-select-scroll-up-button svg,
+  .radix-select-scroll-down-button svg {
+    color: black !important;
+  }
+  
+  /* Force all chevron icons to be black */
+  svg[data-lucide="chevron-down"],
+  svg[data-lucide="chevron-up"] {
+    color: black !important;
+  }
+  
+  /* Override any existing chevron colors with maximum specificity */
+  *[data-slot="select-trigger"] *[class*="chevron"],
+  *[data-slot="select-scroll-up-button"] *[class*="chevron"],
+  *[data-slot="select-scroll-down-button"] *[class*="chevron"] {
+    color: black !important;
+  }
+  
+  /* Make react-day-picker calendar chevrons black */
+  .rdp-chevron {
+    color: black !important;
+  }
+  
+  /* Override any default colors for calendar navigation buttons */
+  .rdp-button_previous svg,
+  .rdp-button_next svg {
+    color: black !important;
+  }
+  
+  /* Maximum specificity for react-day-picker chevrons */
+  .rdp-root .rdp-nav .rdp-button_previous .rdp-chevron,
+  .rdp-root .rdp-nav .rdp-button_next .rdp-chevron {
+    color: black !important;
+  }
+  
+  /* Override any inline styles */
+  .rdp-chevron[style*="color"] {
+    color: black !important;
+  }
+  
+  /* Specific styles for calendar in checkout */
+  .calendar-monochrome .rdp-chevron {
+    color: black !important;
+  }
+  
+  .calendar-monochrome .rdp-button_previous svg,
+  .calendar-monochrome .rdp-button_next svg {
+    color: black !important;
+  }
+  
+  /* Make today's date black and bold */
+  .rdp-day.rdp-today .rdp-day_button {
+    color: black !important;
+    font-weight: bold !important;
+  }
+  
+  /* Make selected day have black background and white text */
+  .rdp-day.rdp-selected .rdp-day_button {
+    background-color: black !important;
+    color: white !important;
+    border-radius: 0 !important;
+  }
+  
+  /* Override any hover states */
+  .rdp-day_button:hover {
+    background-color: black !important;
+    color: white !important;
+  }
+  
+  /* Specific styles for calendar in checkout */
+  .calendar-monochrome .rdp-day.rdp-today .rdp-day_button {
+    color: black !important;
+    font-weight: bold !important;
+  }
+  
+  .calendar-monochrome .rdp-day.rdp-selected .rdp-day_button {
+    background-color: black !important;
+    color: white !important;
+    border-radius: 0 !important;
+  }
+  
+  .calendar-monochrome .rdp-day_button:hover {
+    background-color: black !important;
+    color: white !important;
+  }
+  
+  /* Force all react-day-picker chevrons to be black regardless of any other styles */
+  svg.rdp-chevron {
+    color: black !important;
+    fill: black !important;
+  }
+  
+  /* Override any CSS variables that might be affecting the color */
+  .rdp-root {
+    --rdp-color: black !important;
+    --rdp-accent-color: black !important;
+    --rdp-accent-background-color: black !important;
+    --rdp-day_button-border-radius: 0 !important;
+    --rdp-selected-border: 2px solid black !important;
+    --rdp-today-color: black !important;
+    --rdp-range_start-date-background-color: black !important;
+    --rdp-range_end-date-background-color: black !important;
+  }
 }

@@ -3,11 +3,20 @@ import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import { createClient } from '@supabase/supabase-js'
 
-// Estrutura sugerida para a tabela 'users' na Supabase:
-// CREATE TABLE users (
+// Estrutura sugerida para a tabela 'clients' na Supabase:
+// CREATE TABLE clients (
 //   email text PRIMARY KEY,
 //   name text,
-//   image text
+//   mobile text,
+//   address text,
+//   provider text,
+//   provider_id text,
+//   image_url text,
+//   given_name text,
+//   family_name text,
+//   locale text,
+//   verified_email boolean,
+//   last_login_at timestamp
 // );
 
 const supabase = createClient(
@@ -40,6 +49,8 @@ const handler = NextAuth({
         const clientData = {
           email: user.email,
           name: user.name,
+          mobile: null, // Campo para telemóvel (será preenchido pelo usuário)
+          address: null, // Campo para morada (será preenchido pelo usuário)
           provider: account?.provider,
           provider_id: account?.providerAccountId,
           image_url: user.image,

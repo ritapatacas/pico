@@ -2,23 +2,26 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
+import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLanguageSettings } from "@/hooks/use-settings-store";
 import DeliveryCalendar from "@/components/DeliveryCalendar";
 import SuccessModal from "@/components/SuccessModal";
 import TestModal from "@/components/TestModal";
 
 const PICKUP_STATIONS = [
-  { value: "Lisboa", label: "Lisboa" },
-  { value: "Amadora", label: "Amadora" },
-  { value: "Pedrógão Grande", label: "Pedrógão Grande" },
+  { value: "LIS", label: "Lisboa" },
+  { value: "AMA", label: "Amadora" },
+  { value: "PG", label: "Pedrógão Grande" },
 ];
 
 export default function CheckoutClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { cartItems, cartTotal, clearCart } = useCart();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { t, language } = useLanguageSettings();
   const [form, setForm] = useState({
     name: "",
@@ -58,6 +61,32 @@ export default function CheckoutClient() {
     ? deliveryOptions.map(opt => ({ ...opt, price: 0 }))
     : deliveryOptions;
 
+  // Buscar dados do cliente quando o usuário estiver autenticado
+  useEffect(() => {
+    const fetchClientData = async () => {
+      if (isAuthenticated && user?.email) {
+        try {
+          const response = await fetch(`/api/client/${encodeURIComponent(user.email)}`);
+          if (response.ok) {
+            const clientData = await response.json();
+            setForm(prev => ({
+              ...prev,
+              name: clientData.name || "",
+              email: clientData.email || "",
+              phone: clientData.mobile || "", // Usar o campo mobile da tabela clients
+            }));
+          }
+        } catch (error) {
+          console.error('Erro ao buscar dados do cliente:', error);
+        }
+      }
+    };
+
+    if (!authLoading) {
+      fetchClientData();
+    }
+  }, [isAuthenticated, user?.email, authLoading]);
+
   useEffect(() => {
     if (cartItems.length === 0 && !showSuccessModal && !showTestModal) {
       setShouldRedirect(true);
@@ -73,7 +102,7 @@ export default function CheckoutClient() {
   // Helper function to get delivery info from form
   const getDeliveryInfo = () => {
     if (!selectedDate) return undefined;
-    
+
     return {
       type: form.deliveryType as 'pickup' | 'delivery',
       location: form.deliveryType === 'pickup' ? form.pickupStation : form.address,
@@ -86,16 +115,16 @@ export default function CheckoutClient() {
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
     const success = searchParams.get('success');
-    
+
     console.log('Checkout useEffect - sessionId:', sessionId, 'success:', success);
     console.log('Current form state:', form);
     console.log('Selected date/slot:', selectedDate, selectedSlot);
-    
+
     if (success === 'true' && sessionId) {
       console.log('Showing success modal for Stripe payment');
       const deliveryInfo = getDeliveryInfo();
       console.log('Delivery info:', deliveryInfo);
-      
+
       // Show success modal for Stripe payment
       setSuccessModalData({
         sessionId,
@@ -117,6 +146,18 @@ export default function CheckoutClient() {
     );
   }
 
+  // Mostrar loading enquanto verifica autenticação
+  if (authLoading) {
+    return (
+      <div className="max-w-xl mx-auto py-12 px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Verificando autenticação...</p>
+        </div>
+      </div>
+    );
+  }
+
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -133,8 +174,8 @@ export default function CheckoutClient() {
     }));
   }
 
-  function handlePickupStationChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm((prev) => ({ ...prev, pickupStation: e.target.value }));
+  function handlePickupStationChange(value: string) {
+    setForm((prev) => ({ ...prev, pickupStation: value }));
   }
 
   async function handleAddressChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -155,13 +196,39 @@ export default function CheckoutClient() {
     }
   }
 
-  function handlePayNow() {
+  async function saveClientData() {
+    if (isAuthenticated && user?.email) {
+      try {
+        await fetch(`/api/client/${encodeURIComponent(user.email)}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: form.name,
+            mobile: form.phone,
+            address: form.address,
+          }),
+        });
+      } catch (error) {
+        console.error('Erro ao salvar dados do cliente:', error);
+      }
+    }
+  }
+
+  async function handlePayNow() {
+    // Salvar dados do cliente se estiver logado
+    await saveClientData();
+
     // Guardar dados e redirecionar para pagamento
     localStorage.setItem("shipping", JSON.stringify(form));
     router.push("/payment?discount=10");
   }
 
-  function handleCashOnDelivery() {
+  async function handleCashOnDelivery() {
+    // Salvar dados do cliente se estiver logado
+    await saveClientData();
+
     // Mostrar modal de sucesso para contra-reembolso
     localStorage.setItem("shipping", JSON.stringify(form));
     setSuccessModalData({
@@ -172,26 +239,52 @@ export default function CheckoutClient() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-2xl font-bold mb-6">{t("checkout.title")}</h1>
+    <div className="max-w-4xl mx-auto py-12 px-5">
+      <h1 className="text-2xl font-bold px-1 mb-4">{t("checkout.title")}</h1>
+
+
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Shipping Form */}
         <div>
-          <form className="space-y-4 bg-white p-6 rounded shadow" onSubmit={e => e.preventDefault()}>
+          <form className="space-y-3 bg-white p-6 rounded shadow" onSubmit={e => e.preventDefault()}>
             <div>
-              <label className="block text-sm font-medium mb-1">Nome</label>
-              <input name="name" value={form.name} onChange={handleChange} required className="w-full border rounded px-3 py-2" />
+              <label className="block text-sm font-semibold font-medium mb-1">Nome</label>
+              <input
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                className="w-full border rounded px-3"
+                placeholder={isAuthenticated ? "Nome do usuário logado" : "Digite seu nome"}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input name="email" type="email" value={form.email} onChange={handleChange} required className="w-full border rounded px-3 py-2" />
+              <label className="block text-sm font-semibold font-medium mb-1">Email</label>
+              <input
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                className="w-full border rounded px-3"
+                placeholder={isAuthenticated ? "" : "Digite seu email"}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Telemóvel</label>
-              <input name="phone" type="tel" value={form.phone} onChange={handleChange} required className="w-full border rounded px-3 py-2" />
+              <label className="block text-sm font-medium font-semibold mb-1">Telemóvel</label>
+              <input
+                name="phone"
+                type="tel"
+                value={form.phone}
+                onChange={handleChange}
+                required
+                className="w-full border rounded px-3"
+                placeholder={isAuthenticated ? "" : "Digite seu telemóvel"}
+              />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-1">Entrega</label>
+              <label className="block text-lg font-bold mb-1">Entrega</label>
               <div className="flex gap-4 mt-2">
                 <label className="flex items-center gap-2">
                   <input
@@ -200,6 +293,7 @@ export default function CheckoutClient() {
                     value="pickup"
                     checked={form.deliveryType === "pickup"}
                     onChange={handleDeliveryTypeChange}
+                    className="accent-black"
                   />
                   Levantar em mão
                 </label>
@@ -210,6 +304,7 @@ export default function CheckoutClient() {
                     value="delivery"
                     checked={form.deliveryType === "delivery"}
                     onChange={handleDeliveryTypeChange}
+                    className="accent-black"
                   />
                   Agendar entrega
                 </label>
@@ -218,26 +313,23 @@ export default function CheckoutClient() {
             {form.deliveryType === "pickup" && (
               <div>
                 <label className="block text-sm font-medium mb-1">Escolha a estação</label>
-                <div className="flex gap-4 mt-2">
-                  {PICKUP_STATIONS.map((station) => (
-                    <label key={station.value} className="flex items-center gap-2">
-                      <input
-                        type="radio"
-                        name="pickupStation"
-                        value={station.value}
-                        checked={form.pickupStation === station.value}
-                        onChange={handlePickupStationChange}
-                        required
-                      />
-                      {station.label}
-                    </label>
-                  ))}
-                </div>
+                <Select value={form.pickupStation} onValueChange={handlePickupStationChange} required>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Selecione uma estação" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PICKUP_STATIONS.map((station) => (
+                      <SelectItem key={station.value} value={station.value}>
+                        {station.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             )}
             {form.deliveryType === "delivery" && (
               <div>
-                <label className="block text-sm font-medium mb-1">Morada</label>
+                <label className="block text-sm font-semibold font-medium mb-1">Morada</label>
                 <input
                   name="address"
                   value={form.address}
@@ -247,6 +339,7 @@ export default function CheckoutClient() {
                 />
               </div>
             )}
+            
             {/* Mostrar calendário de agendamento se já houver estação ou morada preenchida */}
             {((form.deliveryType === "pickup" && form.pickupStation) || (form.deliveryType === "delivery" && form.address)) && (
               <div className="mt-6">
@@ -258,54 +351,26 @@ export default function CheckoutClient() {
                   }}
                 />
                 {selectedDate && selectedSlot && (
-                  <div className="mt-4 p-3 border rounded bg-green-50">
-                    <p><strong>Entrega agendada:</strong> {selectedDate} – Slot {selectedSlot}</p>
+                  <div className="mt-4 p-3 border border-gray-300 rounded bg-gray-50">
+                    <p className="text-gray-800"><strong>Entrega agendada:</strong> {selectedDate} – Slot {selectedSlot}</p>
                   </div>
                 )}
               </div>
             )}
-            <div className="flex gap-2 mt-6">
-              <Button type="button" onClick={handlePayNow} className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700">
-                Pagar agora (10% desconto)
+
+            <div className="flex gap-2 mt-6 font-bold">
+              <Button type="button" onClick={handlePayNow} className="flex-1 bg-green-600 text-white py-3 rounded hover:bg-green-700">
+                Pagar (10% desconto)
               </Button>
-              <Button type="button" onClick={handleCashOnDelivery} className="w-full bg-gray-800 text-white py-3 rounded hover:bg-black">
+              <Button type="button" onClick={handleCashOnDelivery} className="flex-1 bg-gray-800 text-white py-3 rounded hover:bg-black">
                 Contra-reembolso
               </Button>
             </div>
-            <div className="mt-4 space-y-2">
-              <Button 
-                type="button" 
-                onClick={() => {
-                  console.log('Test button clicked');
-                  setSuccessModalData({
-                    paymentMethod: 'cash',
-                    deliveryInfo: {
-                      type: 'pickup',
-                      location: 'Test Location',
-                      date: '2025-07-15',
-                      slot: 2
-                    }
-                  });
-                  setShowSuccessModal(true);
-                }} 
-                className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 text-sm"
-              >
-                🧪 TESTE SUCCESS MODAL
-              </Button>
-              <Button 
-                type="button" 
-                onClick={() => {
-                  console.log('🔵 BLUE BUTTON CLICKED!');
-                  setShowTestModal(true);
-                  console.log('🔵 showTestModal set to true');
-                }} 
-                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 text-sm"
-              >
-                🧪 TESTE MODAL SIMPLES
-              </Button>
-            </div>
+
           </form>
         </div>
+
+
         {/* Order Summary */}
         <div>
           <h2 className="text-xl font-semibold mb-4">{t("checkout.orderSummary")}</h2>
@@ -336,7 +401,7 @@ export default function CheckoutClient() {
           </Card>
         </div>
       </div>
-      
+
       {/* Success Modal */}
       {(() => {
         console.log('Rendering SuccessModal - successModalData:', successModalData, 'showSuccessModal:', showSuccessModal);
@@ -355,7 +420,7 @@ export default function CheckoutClient() {
           deliveryInfo={successModalData.deliveryInfo}
         />
       )}
-      
+
       {/* Test Modal */}
       {(() => {
         console.log('Rendering TestModal - showTestModal:', showTestModal);

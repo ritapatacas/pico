@@ -35,7 +35,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
   const selectedDaySlots = options.filter((opt) => opt.date === selectedDate);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 calendar-monochrome">
       <DayPicker
         mode="single"
         onDayClick={handleDayClick}
@@ -43,7 +43,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
           available: availableDays.map((d) => new Date(d)),
         }}
         modifiersStyles={{
-          available: { backgroundColor: "#d1fae5" },
+          available: { backgroundColor: "#f3f4f6" }, // Cinza claro monocromático
         }}
         disabled={(date) => {
           const iso = date.toISOString().split("T")[0];
@@ -53,7 +53,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
 
       {selectedDate && (
         <div>
-          <h3 className="text-md font-semibold mb-2">
+          <h3 className="text-md font-semibold mb-2 text-gray-800">
             ⏱️ Slots para {selectedDate}:
           </h3>
           <ul className="space-y-2">
@@ -61,10 +61,10 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
               <li
                 key={idx}
                 onClick={() => onSelect(slot.date, slot.slot)}
-                className="cursor-pointer p-3 border rounded hover:bg-blue-50 transition"
+                className="cursor-pointer p-3 border border-gray-300 rounded hover:bg-gray-100 transition-colors"
               >
                 <div className="flex justify-between items-center">
-                  <span className="font-medium">{slot.slot}</span>
+                  <span className="font-medium text-gray-800">{slot.slot}</span>
                   <span className="text-sm text-gray-600">
                     {slot.price.toFixed(2)} €
                   </span>
