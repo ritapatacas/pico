@@ -29,6 +29,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
     const iso = day.toISOString().split("T")[0];
     if (availableDays.includes(iso)) {
       setSelectedDate(iso);
+      onSelect(iso, 1);
     }
   };
 
@@ -51,7 +52,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
         }}
       />
 
-      {selectedDate && (
+{/*       {selectedDate && (
         <div>
           <h3 className="text-md font-semibold mb-2 text-gray-800">
             ⏱️ Slots para {selectedDate}:
@@ -73,7 +74,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
             ))}
           </ul>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
@@ -10,6 +11,8 @@ import { useLanguageSettings } from "@/hooks/use-settings-store";
 import DeliveryCalendar from "@/components/DeliveryCalendar";
 import SuccessModal from "@/components/SuccessModal";
 import TestModal from "@/components/TestModal";
+import { getScheduleOptions } from "@/lib/delivery/scheduleService";
+import type { DeliveryOption } from "@/lib/delivery/types";
 
 const PICKUP_STATIONS = [
   { value: "LIS", label: "Lisboa" },
@@ -34,7 +37,10 @@ export default function CheckoutClient() {
   const [submitting, setSubmitting] = useState(false);
   const [shouldRedirect, setShouldRedirect] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedSlot, setSelectedSlot] = useState<1 | 2 | 3 | 4 | null>(null);
+  const [selectedSlot, setSelectedSlot] = useState<1 | null>(null);
+  const [preferredTime, setPreferredTime] = useState("");
+  const [scheduleOptions, setScheduleOptions] = useState<DeliveryOption[]>([]);
+  const [loadingOptions, setLoadingOptions] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showTestModal, setShowTestModal] = useState(false);
   const [successModalData, setSuccessModalData] = useState<{
@@ -45,21 +51,53 @@ export default function CheckoutClient() {
       location: string;
       date: string;
       slot?: number;
+      preferredTime?: string;
     };
   } | null>(null);
 
-  // Mock de opções de entrega (substituir por fetch real se necessário)
-  const deliveryOptions = [
-    { date: "2025-07-12", slot: 1 as 1, price: 0, available: true },
-    { date: "2025-07-13", slot: 2 as 2, price: 1.5, available: true },
-    { date: "2025-07-14", slot: 3 as 3, price: 2.5, available: false },
-    { date: "2025-07-15", slot: 4 as 4, price: 3.0, available: true }
-  ];
+  // Carregar opções de agendamento baseado no tipo de entrega
+  useEffect(() => {
+    const loadScheduleOptions = async () => {
+      if (form.deliveryType === 'pickup' && form.pickupStation) {
+        setLoadingOptions(true);
+        try {
+          const options = await getScheduleOptions('pickup', form.pickupStation);
+          setScheduleOptions(options);
+        } catch (error) {
+          console.error('Erro ao carregar opções de pickup:', error);
+          setScheduleOptions([]);
+        } finally {
+          setLoadingOptions(false);
+        }
+      } else if (form.deliveryType === 'delivery' && form.address && form.address.length > 5) {
+        setLoadingOptions(true);
+        try {
+          // TODO: Implementar geocodificação real
+          // Por agora, usar coordenadas mock para Lisboa centro
+          const mockCoords = { lat: 38.7223, lon: -9.1393 };
+          const options = await getScheduleOptions('delivery', undefined, form.address, mockCoords);
+          setScheduleOptions(options);
+        } catch (error) {
+          console.error('Erro ao carregar opções de delivery:', error);
+          setScheduleOptions([]);
+        } finally {
+          setLoadingOptions(false);
+        }
+      } else {
+        setScheduleOptions([]);
+      }
+    };
 
-  // Opções para o calendário, ajustando preço para pickup
-  const calendarOptions = form.deliveryType === "pickup"
-    ? deliveryOptions.map(opt => ({ ...opt, price: 0 }))
-    : deliveryOptions;
+    loadScheduleOptions();
+  }, [form.deliveryType, form.pickupStation, form.address]);
+
+  // Opções para o calendário
+  const calendarOptions = scheduleOptions.map(opt => ({
+    date: opt.date,
+    slot: 1 as const,
+    price: opt.price,
+    available: opt.available
+  }));
 
   // Buscar dados do cliente quando o usuário estiver autenticado
   useEffect(() => {
@@ -107,7 +145,8 @@ export default function CheckoutClient() {
       type: form.deliveryType as 'pickup' | 'delivery',
       location: form.deliveryType === 'pickup' ? form.pickupStation : form.address,
       date: selectedDate,
-      slot: selectedSlot || undefined
+      slot: selectedSlot || undefined,
+      preferredTime: preferredTime || undefined
     };
   };
 
@@ -133,7 +172,7 @@ export default function CheckoutClient() {
       });
       setShowSuccessModal(true);
     }
-  }, [searchParams, form.deliveryType, form.pickupStation, form.address, selectedDate, selectedSlot]);
+  }, [searchParams, form.deliveryType, form.pickupStation, form.address, selectedDate, selectedSlot, preferredTime]);
 
   if (shouldRedirect) {
     return (
@@ -172,28 +211,25 @@ export default function CheckoutClient() {
       pickupStation: value === "pickup" ? "Lisboa" : "",
       address: value === "delivery" ? "" : "",
     }));
+    // Reset selection when changing delivery type
+    setSelectedDate(null);
+    setSelectedSlot(null);
+    setPreferredTime("");
   }
 
   function handlePickupStationChange(value: string) {
     setForm((prev) => ({ ...prev, pickupStation: value }));
+    // Reset selection when changing station
+    setSelectedDate(null);
+    setSelectedSlot(null);
   }
 
   async function handleAddressChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setForm((prev) => ({ ...prev, address: value }));
-    // Só tentar geocodificar se houver valor suficiente
-    if (form.deliveryType === "delivery" && value.length > 5) {
-      try {
-        const res = await fetch(`/api/delivery/options?lat=0&lon=0&address=${encodeURIComponent(value)}`);
-        // Aqui normalmente farias a geocodificação real, mas para já simula:
-        // Exemplo: const { lat, lon } = await geocodeAddress(value);
-        // console.log('Coordenadas encontradas:', lat, lon);
-        // Para já, só loga o valor da morada
-        console.log('Morada introduzida:', value);
-      } catch (err) {
-        // Ignorar erros nesta simulação
-      }
-    }
+    // Reset selection when changing address
+    setSelectedDate(null);
+    setSelectedSlot(null);
   }
 
   async function saveClientData() {
@@ -217,20 +253,44 @@ export default function CheckoutClient() {
   }
 
   async function handlePayNow() {
+    // Validar se tem data selecionada
+    if (!selectedDate) {
+      alert("Por favor, selecione uma data para agendamento");
+      return;
+    }
+
     // Salvar dados do cliente se estiver logado
     await saveClientData();
 
-    // Guardar dados e redirecionar para pagamento
-    localStorage.setItem("shipping", JSON.stringify(form));
+    // Guardar dados incluindo horário preferencial
+    const shippingData = {
+      ...form,
+      selectedDate,
+      selectedSlot,
+      preferredTime
+    };
+    localStorage.setItem("shipping", JSON.stringify(shippingData));
     router.push("/payment?discount=10");
   }
 
   async function handleCashOnDelivery() {
+    // Validar se tem data selecionada
+    if (!selectedDate) {
+      alert("Por favor, selecione uma data para agendamento");
+      return;
+    }
+
     // Salvar dados do cliente se estiver logado
     await saveClientData();
 
     // Mostrar modal de sucesso para contra-reembolso
-    localStorage.setItem("shipping", JSON.stringify(form));
+    const shippingData = {
+      ...form,
+      selectedDate,
+      selectedSlot,
+      preferredTime
+    };
+    localStorage.setItem("shipping", JSON.stringify(shippingData));
     setSuccessModalData({
       paymentMethod: 'cash',
       deliveryInfo: getDeliveryInfo()
@@ -241,8 +301,6 @@ export default function CheckoutClient() {
   return (
     <div className="max-w-4xl mx-auto py-12 px-5">
       <h1 className="text-2xl font-bold px-1 mb-4">{t("checkout.title")}</h1>
-
-
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Shipping Form */}
@@ -255,7 +313,7 @@ export default function CheckoutClient() {
                 value={form.name}
                 onChange={handleChange}
                 required
-                className="w-full border rounded px-3"
+                className="w-full border rounded px-3 py-2"
                 placeholder={isAuthenticated ? "Nome do usuário logado" : "Digite seu nome"}
               />
             </div>
@@ -267,7 +325,7 @@ export default function CheckoutClient() {
                 value={form.email}
                 onChange={handleChange}
                 required
-                className="w-full border rounded px-3"
+                className="w-full border rounded px-3 py-2"
                 placeholder={isAuthenticated ? "" : "Digite seu email"}
               />
             </div>
@@ -279,7 +337,7 @@ export default function CheckoutClient() {
                 value={form.phone}
                 onChange={handleChange}
                 required
-                className="w-full border rounded px-3"
+                className="w-full border rounded px-3 py-2"
                 placeholder={isAuthenticated ? "" : "Digite seu telemóvel"}
               />
             </div>
@@ -310,6 +368,7 @@ export default function CheckoutClient() {
                 </label>
               </div>
             </div>
+
             {form.deliveryType === "pickup" && (
               <div>
                 <label className="block text-sm font-medium mb-1">Escolha a estação</label>
@@ -327,6 +386,7 @@ export default function CheckoutClient() {
                 </Select>
               </div>
             )}
+
             {form.deliveryType === "delivery" && (
               <div>
                 <label className="block text-sm font-semibold font-medium mb-1">Morada</label>
@@ -336,40 +396,87 @@ export default function CheckoutClient() {
                   onChange={handleAddressChange}
                   required
                   className="w-full border rounded px-3 py-2"
+                  placeholder="Digite a morada completa"
                 />
               </div>
             )}
-            
-            {/* Mostrar calendário de agendamento se já houver estação ou morada preenchida */}
+
+
+
+
+            {/* Mostrar calendário de agendamento */}
             {((form.deliveryType === "pickup" && form.pickupStation) || (form.deliveryType === "delivery" && form.address)) && (
               <div className="mt-6">
-                <DeliveryCalendar
-                  options={calendarOptions}
-                  onSelect={(date, slot) => {
-                    setSelectedDate(date);
-                    setSelectedSlot(slot);
-                  }}
-                />
-                {selectedDate && selectedSlot && (
-                  <div className="mt-4 p-3 border border-gray-300 rounded bg-gray-50">
-                    <p className="text-gray-800"><strong>Entrega agendada:</strong> {selectedDate} – Slot {selectedSlot}</p>
+                {loadingOptions ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                    <p className="text-sm text-gray-600">A carregar opções de agendamento...</p>
                   </div>
+                ) : (
+                  <>
+                    <DeliveryCalendar
+                      options={calendarOptions}
+                      onSelect={(date) => {
+                        setSelectedDate(date);
+                        setSelectedSlot(1); // Sempre slot 1
+                      }}
+                    />
+
+                    {/* Mostrar campos após selecionar data */}
+                    {selectedDate && (
+                      <div className="mt-4 space-y-4">
+                        {/* Campo de horário preferencial */}
+                        <div>
+                          <label className="block text-sm font-medium mb-1">Horário Preferencial</label>
+                          <input
+                            value={preferredTime}
+                            onChange={(e) => setPreferredTime(e.target.value)}
+                            className="w-full border rounded px-3 py-2"
+                            placeholder="Ex: Entre 15h e 17h, Depois das 16h, etc."
+                          />
+                          <p className="text-xs text-gray-500 mt-1">Opcional - ajuda-nos a planear melhor a entrega</p>
+                        </div>
+
+                        {/* Informação do agendamento */}
+                        <div className="p-3 border border-gray-300 rounded bg-gray-50">
+                          <p className="text-gray-800">
+                            <strong>Agendado para:</strong> {new Date(selectedDate).toLocaleDateString('pt-PT', {
+                              weekday: 'long',
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })} - tarde
+                            {preferredTime && <span className="block text-sm mt-1"><strong>Horário preferencial:</strong> {preferredTime}</span>}
+                          </p>
+                        </div>
+
+                        {/* Botões de pagamento */}
+                        <div className="flex gap-2 font-bold">
+                          <Button
+                            type="button"
+                            onClick={handlePayNow}
+                            className="flex-1 bg-green-600 text-white py-3 rounded hover:bg-green-700"
+                          >
+                            Pagar (10% desconto)
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleCashOnDelivery}
+                            className="flex-1 bg-gray-800 text-white py-3 rounded hover:bg-black"
+                          >
+                            Contra-reembolso
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}
 
-            <div className="flex gap-2 mt-6 font-bold">
-              <Button type="button" onClick={handlePayNow} className="flex-1 bg-green-600 text-white py-3 rounded hover:bg-green-700">
-                Pagar (10% desconto)
-              </Button>
-              <Button type="button" onClick={handleCashOnDelivery} className="flex-1 bg-gray-800 text-white py-3 rounded hover:bg-black">
-                Contra-reembolso
-              </Button>
-            </div>
 
           </form>
         </div>
-
 
         {/* Order Summary */}
         <div>
@@ -390,10 +497,22 @@ export default function CheckoutClient() {
                     </span>
                   </div>
                 ))}
+
+                {/* Mostrar custo de entrega se aplicável */}
+                {form.deliveryType === "delivery" && selectedDate && scheduleOptions.length > 0 && (
+                  <div className="flex justify-between items-center text-sm">
+                    <span>Custo de entrega:</span>
+                    <span>{scheduleOptions[0]?.price?.toFixed(2).replace(".", ",")}€</span>
+                  </div>
+                )}
+
                 <div className="border-t pt-4">
                   <div className="flex justify-between items-center text-lg font-bold">
                     <span>{t("checkout.total")}:</span>
-                    <span>{cartTotal.toFixed(2).replace(".", ",")}€</span>
+                    <span>
+                      {(cartTotal + (form.deliveryType === "delivery" && selectedDate && scheduleOptions.length > 0 ? scheduleOptions[0]?.price || 0 : 0))
+                        .toFixed(2).replace(".", ",")}€
+                    </span>
                   </div>
                 </div>
               </div>
@@ -403,10 +522,6 @@ export default function CheckoutClient() {
       </div>
 
       {/* Success Modal */}
-      {(() => {
-        console.log('Rendering SuccessModal - successModalData:', successModalData, 'showSuccessModal:', showSuccessModal);
-        return null;
-      })()}
       {successModalData && (
         <SuccessModal
           open={showSuccessModal}
@@ -422,10 +537,6 @@ export default function CheckoutClient() {
       )}
 
       {/* Test Modal */}
-      {(() => {
-        console.log('Rendering TestModal - showTestModal:', showTestModal);
-        return null;
-      })()}
       <TestModal
         open={showTestModal}
         onClose={() => {
@@ -435,4 +546,4 @@ export default function CheckoutClient() {
       />
     </div>
   );
-} 
+}
