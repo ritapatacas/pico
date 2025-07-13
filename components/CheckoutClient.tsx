@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
@@ -31,7 +32,7 @@ export default function CheckoutClient() {
     email: "",
     phone: "",
     deliveryType: "pickup", // 'pickup' ou 'delivery'
-    pickupStation: "Lisboa",
+    pickupStation: "",      // ← Começar vazio
     address: "",
   });
   const [submitting, setSubmitting] = useState(false);
@@ -185,7 +186,6 @@ export default function CheckoutClient() {
     );
   }
 
-  // Mostrar loading enquanto verifica autenticação
   if (authLoading) {
     return (
       <div className="max-w-xl mx-auto py-12 px-4">
@@ -207,11 +207,9 @@ export default function CheckoutClient() {
     setForm((prev) => ({
       ...prev,
       deliveryType: value,
-      // Reset dependent fields
-      pickupStation: value === "pickup" ? "Lisboa" : "",
+      pickupStation: value === "pickup" ? "" : "",
       address: value === "delivery" ? "" : "",
     }));
-    // Reset selection when changing delivery type
     setSelectedDate(null);
     setSelectedSlot(null);
     setPreferredTime("");
@@ -219,7 +217,6 @@ export default function CheckoutClient() {
 
   function handlePickupStationChange(value: string) {
     setForm((prev) => ({ ...prev, pickupStation: value }));
-    // Reset selection when changing station
     setSelectedDate(null);
     setSelectedSlot(null);
   }
@@ -405,7 +402,9 @@ export default function CheckoutClient() {
 
 
             {/* Mostrar calendário de agendamento */}
-            {((form.deliveryType === "pickup" && form.pickupStation) || (form.deliveryType === "delivery" && form.address)) && (
+
+            {((form.deliveryType === "pickup" && form.pickupStation && form.pickupStation !== "") || (form.deliveryType === "delivery" && form.address)) && (
+
               <div className="mt-6">
                 {loadingOptions ? (
                   <div className="text-center py-4">
