@@ -44,8 +44,8 @@
     "ifProblem": "se encontrar algum problema",
     "contactInfo": "Pode contactar-nos através do email",
     "orPhone": "ou pelo telefone",
-    "signIn": "Iniciar Sessão",
-    "signOut": "Terminar Sessão"
+    "signIn": "login",
+    "signOut": "logout"
   },
   "product": {
     "addToCart": "Adicionar",

@@ -88,17 +88,15 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-white font-burford">
                 Fruta Miúda
               </h2>
-              <h3 className="text-xl md:text-xl font-semibold text-white drop-shadow-md font-burford">
-                de Pedrógão Grande
-              </h3>
+              <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-lg font-semibold font-burford">
+                Mirtilos | Framboesas | groselhas
+              </div>
               <Link href="#products" passHref>
                 <Button className="mt-2 rounded pt-1 px-4 bg-white text-primary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
                   encomendar
                 </Button>
               </Link>
-              <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-lg font-semibold font-burford">
-                Mirtilos<br />Framboesas<br />groselhas
-              </div>
+
             </div>
           </div>
 

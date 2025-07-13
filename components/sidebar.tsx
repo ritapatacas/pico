@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/use-auth"
 import Modal from "@/components/ui/Modal";
 import { signIn } from "next-auth/react";
 import { Client } from '@/lib/clients';
+import { SocialNav } from "./SocialNav"
 
 
 
@@ -124,229 +125,266 @@ export function Sidebar({ version }: SidebarProps) {
   if (isMobile) {
     return (
       <div
-        className={`fixed left-0 z-40 w-full transition-all duration-300 bg-background border-t border-gray-100 ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
+        className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-background  ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
           } flex flex-col`}
         style={{ willChange: 'height' }}
       >
-        {/* Header and Content (only when open) */}
+        {/* (only when open) */}
         {isSidebarOpen && (
           <>
-            <div className="flex h-16 items-center justify-between border-b px-4">
-              <div className="flex items-center gap-2">
-                <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                  <GalleryVerticalEnd className="size-5" />
-                </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="text-base font-semibold">PICO DA ROSA</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setIsSidebarOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-secondary"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
+            {/* sidebar header */}
+            <div id="sidebar-header" className="flex w-full justify-between items-center px-4 py-3 border-b-1 border-black ">
+              <div className="flex items-center gap-3">
 
-            {/* Main navigation styled like accordion triggers */}
-            <div className={`space-y-2 ${burfordFontClass}`}>
-              <Link href="#about" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
-                <Users className="h-4 w-4" />
-                {t("sidebar.about")}
-              </Link>
-              <Link href="#products" className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left" onClick={() => setIsSidebarOpen(false)}>
-                <Store className="h-4 w-4" />
-                {t("sidebar.products")}
-              </Link>
-            </div>
-            <div className="flex-1 overflow-y-auto px-3">
-              <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+                {/* loggin */}
+                {isClientLoading ? (
+                  <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
+                    <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                ) : typeof client?.image_url === 'string' && client.image_url.length > 0 ? (
+                  <img
+                    src={client.image_url}
+                    alt="avatar"
+                    className="w-10 h-10 rounded-full object-cover border"
+                    onLoad={() => setImageLoaded(true)}
+                    onError={() => setImageLoaded(false)}
+                    style={{ display: imageLoaded ? 'block' : 'none' }}
+                  />
+                ) : (
+                  <button
+                    onClick={handleGoogleSignIn}
+                    className="flex items-center justify-center gap-1 rounded-md py-1 transition-colors hover:bg-secondary/100 text-lg leading-none"
+                  >
 
-                <AccordionItem value="cart">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <ShoppingCart className="h-4 w-4" />
-                    {t("sidebar.cart")} ({cartCount})
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    {cartItems.length === 0 ? (
-                      <p className="text-muted-foreground">
-                        {t("sidebar.emptyCart")} <br />
-                        {t("sidebar.visitProducts")}{' '}
-                        <Link href="#products" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                          {t("sidebar.products")}
-                        </Link>{' '}
-                        {t("sidebar.or")}{' '}
-                        <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
-                          {t("sidebar.contactUs")}
-                        </Link>{' '}
-                        {t("sidebar.ifProblem")}
-                      </p>
-                    ) : (
-                      <div className="space-y-4">
-                        {cartItems.map((item) => (
-                          <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                            <div className="flex-1">
-                              <h4 className="font-medium text-sm">{item.name}</h4>
-                              <p className="text-xs text-muted-foreground">
-                                {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
-                              >
-                                <Minus className="h-3 w-3" />
-                              </Button>
-                              <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6"
-                                onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
-                              >
-                                <Plus className="h-3 w-3" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 text-destructive hover:text-destructive/80"
-                                onClick={() => removeFromCart(item.id)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </div>
-                          </div>
-                        ))}
-                        <div className="mt-8 mx-8 border-t border-border border-gray-400" />
-                        <div className="flex justify-between items-center m-4 text-lg ">
-                          <span className="font-semibold">{t("sidebar.total")}:</span>
-                          <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
-                        </div>
-                        <div className="mx-10 my-5">
-
-
-
-
-                          <Button
-                            className="px-8 w-full bg-primary bg-black hover:bg-gray-900 text-md font-semibold text-white hover:bg-gray-700"
-                            onClick={() => {
-                              setIsSidebarOpen(false);
-                              router.push('/checkout');
-                            }}
-                          >
-                            {t("sidebar.buy")}
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="contactos">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <Mail className="h-4 w-4" />
-                    {t("sidebar.contacts")}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2">
-                      <p className="text-base">{t("sidebar.contactInfo")} <a href="mailto:info@picodarosa.pt" className="underline">info@picodarosa.pt</a> {t("sidebar.orPhone")} <a href="tel:+351912345678" className="underline">+351 912 345 678</a>.</p>
+                    <div className="w-7 h-7 flex items-center justify-center">
+                      <LogIn className="h-4 w-4 flex-shrink-0" />
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="settings">
-                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                    <Settings className="h-4 w-4" />
-                    {t("sidebar.settings")}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <SettingsPanel />
-                  </AccordionContent>
-                </AccordionItem>
+                    <span className="pb-1 hover:font-bold transition-all">
+                      Login
+                    </span>
+                  </button>
+                )}
 
-              </Accordion>
+                <div>
+                  <p className="text-xl font-bold">{user?.name}</p>
+                  <div id="link-account" className="hidden">
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center justify-center gap-2 rounded-md transition-colors hover:bg-secondary/50 text-sm leading-none"
+                    >
+                      <div className="pt-1">
 
 
 
-              <div id="login" className="flex w-full justify-left h-16 mt-auto items-left transition-colors hover:bg-secondary/50 text-left">
-
-                {/* Auth block for mobile */}
-                <div className="">
-                  {!isAuthenticated ? (
-                    <>
-                      <button
-                        onClick={() => setIsSignInModalOpen(true)}
-                        className="flex items-center gap-2 rounded-md py-4 transition-colors hover:bg-secondary/50 text-left text-2xl font-bold"
-                      >
-                        <LogIn className={burfordFontClass + " h-4 w-4 mt-2 text-left"} />
-                        {t("sidebar.signIn")}
-                      </button>
-                      <Modal open={isSignInModalOpen} onClose={() => setIsSignInModalOpen(false)}>
-                        <div className="flex flex-col items-center gap-6 p-4 w-full">
-                          <h2 className="text-xl font-bold mb-4">{t("sidebar.signIn")}</h2>
-                          <Button
-                            onClick={handleGoogleSignIn}
-                            className="w-full"
-                            variant="outline"
-                          >
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="mr-2">
-                              <path
-                                d="M21.35 11.1H12.18v2.92h5.19c-.22 1.18-1.32 3.47-5.19 3.47-3.12 0-5.66-2.59-5.66-5.79s2.54-5.79 5.66-5.79c1.78 0 2.97.76 3.65 1.41l2.49-2.41C17.13 3.98 14.89 3 12.18 3 6.65 3 2.25 7.42 2.25 12.01s4.4 9.01 9.93 9.01c5.7 0 9.47-4 9.47-9.62 0-.65-.07-1.14-.16-1.3z"
-                                fill="currentColor"
-                              />
-                            </svg>
-                            Entrar com Google
-                          </Button>
-                        </div>
-                      </Modal>
-                    </>
-                  ) :  (
-                    <div className="space-y-2">
-                      <div className="px-3 py-2 text-lg font-semibold flex items-center gap-3">
-                        {isClientLoading ? (
-                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
-                            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                          </div>
-                        ) : typeof client?.image_url === 'string' && client.image_url.length > 0 ? (
-                          <img 
-                            src={client.image_url} 
-                            alt="avatar" 
-                            className="w-10 h-10 rounded-full object-cover border"
-                            onLoad={() => setImageLoaded(true)}
-                            onError={() => setImageLoaded(false)}
-                            style={{ display: imageLoaded ? 'block' : 'none' }}
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-500 border">
-                            <LogIn className="w-6 h-6" />
-                          </div>
-                        )}
-                        {!imageLoaded && typeof client?.image_url === 'string' && client.image_url.length > 0 && (
-                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
-                            <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
-                          </div>
-                        )}
-                        <div>
-                          <p className="font-lg">{user?.name}</p>
-                          <p className="text-muted-foreground text-base">{user?.email}</p>
-                        </div>
                       </div>
-                      <button
-                        onClick={() => signOut()}
-                        className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left w-full"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        {t("sidebar.signOut")}
-                      </button>
-                    </div>
+                      <span className="flex items-center">Conta</span>
+                    </button>
+                  </div>
+
+                  {isAuthenticated && client && (
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center justify-center gap-2 rounded-md py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
+                    >
+                      <LogOut className="h-4 w-4 flex-shrink-0" />
+                      <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
+                    </button>
                   )}
                 </div>
+              </div>
+
+              {/* logout */}
+              <div className=" flex justify-right pt-2">
+
+                {isAuthenticated && client && (
+                  <button
+                    onClick={() => signOut()}
+                    className="hidden flex items-center justify-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
+                  >
+                    <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
+                    <LogOut className="h-4 w-4 flex-shrink-0" />
+                  </button>
+                )}
+                <button
+                  onClick={() => setIsSidebarOpen(false)}
+                  className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-secondary"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+
+            {/* sidebar nav */}
+            <div id="nav" className="flex flex-col h-full px-8 py-4">
+              <div className="flex-1 h-full overflow-y-auto">
+                <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+
+                  <AccordionItem value="about" className="border-none">
+                    <AccordionTrigger
+                      className={burfordFontClass + " text-left flex items-center gap-2"}
+                      onClick={() => {
+                        setIsSidebarOpen(false);
+                        router.push('#about');
+                      }}
+                    >
+                      <Users className="h-4 w-4" />
+                      <span className="pb-1 text-[18px]">
+                        {t("sidebar.about")}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {/* Conteúdo vazio - apenas para navegação */}
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="products" className="border-none">
+                    <AccordionTrigger
+                      className={burfordFontClass + " text-left flex items-center gap-2"}
+                      onClick={() => {
+                        setIsSidebarOpen(false);
+                        router.push('#products');
+                      }}
+                    >
+                      <Store className="h-4 w-4" />
+                      <span className="pb-1 text-[18px]">                        {t("sidebar.products")}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {/* Conteúdo vazio - apenas para navegação */}
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="contactos" className="border-none">
+                    <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                      <Mail className="h-4 w-4" />
+                      <span className="pb-1 text-[18px]">                        {t("sidebar.contacts")}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2">
+                        <p className="text-base">{t("sidebar.contactInfo")} <a href="mailto:info@picodarosa.pt" className="underline">info@picodarosa.pt</a> {t("sidebar.orPhone")} <a href="tel:+351912345678" className="underline">+351 912 345 678</a>.</p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <div className="border-b border-gray-300 my-2" />
+
+
+
+                  <AccordionItem value="cart" className="border-none">
+                    <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                      <ShoppingCart className="h-4 w-4" />
+                      <span className="pb-2 pl-1 text-[18px]">                          {t("sidebar.cart")} {cartCount > 0 && `(${cartCount})`}
+                      </span>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      {cartItems.length === 0 ? (
+                        <p className="text-muted-foreground">
+                          {t("sidebar.emptyCart")} <br />
+                          {t("sidebar.visitProducts")}{' '}
+                          <Link href="#products" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                            {t("sidebar.products")}
+                          </Link>{' '}
+                          {t("sidebar.or")}{' '}
+                          <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                            {t("sidebar.contactUs")}
+                          </Link>{' '}
+                          {t("sidebar.ifProblem")}
+                        </p>
+                      ) : (
+                        <div className="space-y-4">
+                          {cartItems.map((item) => (
+                            <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                              <div className="flex-1">
+                                <h4 className="font-medium text-sm">{item.name}</h4>
+                                <p className="text-xs text-muted-foreground">
+                                  {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </Button>
+                                <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6"
+                                  onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-6 w-6 text-destructive hover:text-destructive/80"
+                                  onClick={() => removeFromCart(item.id)}
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          ))}
+                          <div className="mt-8 mx-8 border-t border-border border-gray-400" />
+                          <div className="flex justify-between items-center m-4 text-lg ">
+                            <span className="font-semibold">{t("sidebar.total")}:</span>
+                            <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
+                          </div>
+                          <div className="mx-10 my-5">
+
+
+
+
+                            <Button
+                              className="px-8 w-full bg-primary bg-black hover:bg-gray-900 text-md font-semibold text-white hover:bg-gray-700"
+                              onClick={() => {
+                                setIsSidebarOpen(false);
+                                router.push('/checkout');
+                              }}
+                            >
+                              {t("sidebar.buy")}
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+
+
+
+                </Accordion>
+              </div>
+
+              <div className={burfordFontClass + " text-left flex justify-between items-end gap-2"}>
+
+                <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+                  <AccordionItem value="settings">
+                    <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                      <Settings className="h-5 w-5" />
+
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <SettingsPanel />
+                    </AccordionContent>
+                  </AccordionItem>
+
+                </Accordion>
+                <div className=" flex justify-center">
+
+                </div>
+                <SocialNav className="flex-col" />
               </div>
             </div>
           </>
         )}
-        {/* Bottom Navigation (always visible) */}
+
+        {/* bottom (always visible) */}
         <div className="flex w-full items-center justify-around h-16 border-t bg-background pb-1 pt-2 mt-auto">
           <Link
             href="/"
@@ -387,7 +425,7 @@ export function Sidebar({ version }: SidebarProps) {
             <span className="relative">
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-4 flex h-4 w-4 pb-1 items-center justify-center rounded-full bg-red-700 text-[11px] text-white font-bold">
+                <span className="absolute -top-2 -right-4 flex h-5 w-5 pb-1 items-center justify-center rounded-full bg-red-700 text-[11px] text-white font-bold">
                   {cartCount}
                 </span>
               )}
@@ -460,7 +498,7 @@ export function Sidebar({ version }: SidebarProps) {
               className={`flex w-full items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${isSidebarOpen ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
                 }`}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-5 w-5" />
               <span>{t("settings")}</span>
             </button>
           </nav>
