@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabaseClient'
 import type { Order, OrderItem, OrderWithItems } from '@/lib/types'
+import { v4 as uuidv4 } from 'uuid';
 
 // Legacy interface for backward compatibility
 export interface LegacyOrder {
@@ -166,6 +167,8 @@ export async function createOrder(orderData: {
     total_price: number
   }>
 }): Promise<OrderWithItems> {
+  // Gerar token único para admin
+  const adminToken = uuidv4();
   // Create order
   const { data: order, error: orderError } = await supabase
     .from('orders')
@@ -180,6 +183,7 @@ export async function createOrder(orderData: {
       total: orderData.total,
       currency: orderData.currency,
       status: 'pending',
+      admin_token: adminToken,
     }])
     .select()
     .single()
@@ -213,9 +217,10 @@ export async function createOrder(orderData: {
 
   // Return complete order with items
   if (order.stripe_session_id) {
-    return getOrderBySessionId(order.stripe_session_id) || order
+    const orderWithItems = await getOrderBySessionId(order.stripe_session_id);
+    return orderWithItems || order;
   } else {
     // For cash orders, return the order directly since we don't have a session ID
-    return order
+    return order;
   }
 } 

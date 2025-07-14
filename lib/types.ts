@@ -61,6 +61,7 @@ export interface Order {
   status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   notes?: string
   delivery_id?: string
+  admin_token?: string
   created_at: string
   updated_at: string
 }
