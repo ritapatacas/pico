@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { OrderManager, Order } from '@/lib/orders';
+import { OrderManager, LegacyOrder } from '@/lib/orders';
+import { supabase } from '@/lib/supabaseClient';
+import { getProductIdsByKeys } from '@/lib/products';
 
 // Check if Stripe secret key is configured
 if (!process.env.STRIPE_SECRET_KEY) {
@@ -19,7 +21,7 @@ async function processSuccessfulOrder(session: Stripe.Checkout.Session) {
     console.log('Processing successful order for session:', session.id);
     
     // Extract order details
-    const orderDetails: Order = {
+    const orderDetails: LegacyOrder = {
       id: session.id,
       sessionId: session.id,
       customerEmail: session.customer_details?.email || undefined,
@@ -38,15 +40,121 @@ async function processSuccessfulOrder(session: Stripe.Checkout.Session) {
 
     console.log('Order details:', orderDetails);
 
-    // Save order to storage
+    // Save order to local storage (existing functionality)
     OrderManager.saveOrder(orderDetails);
 
+    // Find or create client
+    let clientId: string | null = null;
+    if (orderDetails.customerEmail) {
+      const { data: clientData, error: clientError } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('email', orderDetails.customerEmail)
+        .single();
+
+      if (clientError && clientError.code !== 'PGRST116') {
+        console.error('Error finding client:', clientError);
+      } else if (clientData) {
+        clientId = clientData.id;
+      } else {
+        // Create guest client if not found
+        const { data: newClient, error: createError } = await supabase
+          .from('clients')
+          .insert([{
+            email: orderDetails.customerEmail,
+            name: orderDetails.customerName || 'Guest User',
+            is_guest: true,
+          }])
+          .select('id')
+          .single();
+
+        if (createError) {
+          console.error('Error creating guest client:', createError);
+        } else {
+          clientId = newClient.id;
+        }
+      }
+    }
+
+    // Save order to Supabase database with new structure
+    try {
+      const { data: orderData, error: orderError } = await supabase
+        .from('orders')
+        .insert([
+          {
+            client_id: clientId,
+            stripe_session_id: session.id,
+            payment_method: 'stripe',
+            payment_status: orderDetails.paymentStatus === 'paid' ? 'completed' : 'pending',
+            subtotal: orderDetails.amount,
+            delivery_fee: 0.00, // Will be updated when delivery is linked
+            discount: 0.00,
+            total: orderDetails.amount,
+            currency: orderDetails.currency.toUpperCase(),
+            status: 'confirmed',
+            notes: null,
+          }
+        ])
+        .select()
+        .single();
+
+      if (orderError) {
+        console.error('Error saving order to database:', orderError);
+      } else {
+        console.log('Order saved to database successfully:', orderData);
+        
+        // Save order items
+        if (orderDetails.items.length > 0) {
+          // Extract product keys from Stripe line items metadata
+          const productKeys = session.line_items?.data
+            .map(item => {
+              const product = item.price?.product;
+              return typeof product === 'object' && 'metadata' in product ? product.metadata?.product_key : undefined;
+            })
+            .filter(Boolean) as string[] || [];
+
+          // Get product IDs from product keys
+          const productIds = productKeys.length > 0 ? await getProductIdsByKeys(productKeys) : {};
+
+          const orderItems = orderDetails.items.map((item, index) => {
+            const stripeItem = session.line_items?.data[index];
+            const product = stripeItem?.price?.product;
+            const productKey = typeof product === 'object' && 'metadata' in product ? product.metadata?.product_key : undefined;
+            
+            return {
+              order_id: orderData.id,
+              product_id: productKey ? productIds[productKey] : null,
+              product_name: item.name,
+              quantity: item.quantity,
+              unit_price: item.price / item.quantity,
+              total_price: item.price,
+            };
+          });
+
+          const { error: itemsError } = await supabase
+            .from('order_items')
+            .insert(orderItems);
+
+          if (itemsError) {
+            console.error('Error saving order items:', itemsError);
+          } else {
+            console.log('Order items saved successfully');
+          }
+        }
+        
+        // Process delivery information if exists
+        await processDeliveryInfo(session.id, orderData.id);
+      }
+    } catch (dbError) {
+      console.error('Database error:', dbError);
+      // Continue processing even if database save fails
+    }
+
     // Here you would typically:
-    // 1. Save order to database (already done above)
-    // 2. Update inventory
-    // 3. Send confirmation email
-    // 4. Create shipping label
-    // 5. Update order status
+    // 1. Update inventory
+    // 2. Send confirmation email
+    // 3. Create shipping label
+    // 4. Update order status
 
     console.log('Order processed successfully:', {
       orderId: session.id,
@@ -55,13 +163,47 @@ async function processSuccessfulOrder(session: Stripe.Checkout.Session) {
       items: orderDetails.items.length,
     });
 
-    // TODO: Send confirmation email
-    // await sendOrderConfirmationEmail(orderDetails);
-
     return orderDetails;
   } catch (error) {
     console.error('Error processing order:', error);
     throw error;
+  }
+}
+
+// Helper function to process delivery information
+async function processDeliveryInfo(sessionId: string, orderId: string) {
+  try {
+    // Check if there's delivery info for this session
+    const { data: deliveries, error } = await supabase
+      .from('deliveries')
+      .select('*')
+      .eq('stripe_session_id', sessionId);
+
+    if (error) {
+      console.error('Error checking delivery info:', error);
+      return;
+    }
+
+    if (deliveries && deliveries.length > 0) {
+      // Update delivery records with order ID and confirm status
+      for (const delivery of deliveries) {
+        const { error: updateError } = await supabase
+          .from('deliveries')
+          .update({ 
+            order_id: orderId,
+            status: 'confirmed' 
+          })
+          .eq('id', delivery.id);
+
+        if (updateError) {
+          console.error('Error updating delivery info:', updateError);
+        } else {
+          console.log('Delivery info updated for order:', orderId);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error processing delivery info:', error);
   }
 }
 
@@ -70,11 +212,15 @@ async function handleFailedPayment(paymentIntent: Stripe.PaymentIntent) {
   try {
     console.log('Handling failed payment:', paymentIntent.id);
     
-    // Here you would typically:
-    // 1. Update order status to failed
-    // 2. Send failure notification to customer
-    // 3. Restore inventory if needed
-    // 4. Log the failure for retry
+    // Update any pending deliveries to failed status
+    const { error } = await supabase
+      .from('deliveries')
+      .update({ status: 'cancelled' })
+      .eq('stripe_session_id', paymentIntent.id);
+
+    if (error) {
+      console.error('Error updating failed payment delivery status:', error);
+    }
 
     console.log('Payment failed details:', {
       paymentIntentId: paymentIntent.id,
@@ -82,9 +228,6 @@ async function handleFailedPayment(paymentIntent: Stripe.PaymentIntent) {
       currency: paymentIntent.currency,
       failureReason: paymentIntent.last_payment_error?.message,
     });
-
-    // TODO: Send failure notification email
-    // await sendPaymentFailureEmail(paymentIntent);
 
   } catch (error) {
     console.error('Error handling failed payment:', error);
@@ -157,9 +300,8 @@ export async function POST(request: NextRequest) {
     }
   } catch (error) {
     console.error('Error processing webhook event:', error);
-    // In production, you might want to return an error status
-    // but for now, we'll return success to prevent Stripe from retrying
+    // Return success to prevent Stripe from retrying
   }
 
   return NextResponse.json({ received: true });
-} 
+}

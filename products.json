@@ -5,14 +5,15 @@
     "mainImage": "/imgs/mirtilo.webp",
     "backgroundImage": "/imgs/mirtilo.webp",
     "embaladoOptions": [
-      { "size": "125g", "price": 1.25, "kgPrice": 10 },
-      { "size": "250g", "price": 2.0, "kgPrice": 8 },
-      { "size": "500g", "price": 3.5, "kgPrice": 7 },
-      { "size": "700g", "price": 4.2, "kgPrice": 6 }
+      { "size": "125g", "price": 1.25, "kgPrice": 10, "product_key": "BLU_125" },
+      { "size": "250g", "price": 2.0, "kgPrice": 8, "product_key": "BLU_250" },
+      { "size": "500g", "price": 3.5, "kgPrice": 7, "product_key": "BLU_500" },
+      { "size": "700g", "price": 4.2, "kgPrice": 6, "product_key": "BLU_700" }
     ],
     "precoGranelPorKg": 6,
     "packagedImage": "/imgs/mirtilo_embalagem.webp",
     "bulkImage": "/imgs/mirtilo_granel.webp",
+    "bulkProductKey": "BLU_1000",
     "detailsContent": {
       "varieties": "Duke, Emerald",
       "location": "Pedrógão Grande",
@@ -21,10 +22,10 @@
     },
     "pricesContent": {
       "packaged": [
-        { "size": "125g", "price": 1.25 },
-        { "size": "250g", "price": 2.0 },
-        { "size": "500g", "price": 3.5 },
-        { "size": "700g", "price": 4.2 }
+        { "size": "125g", "price": 1.25, "product_key": "BLU_125" },
+        { "size": "250g", "price": 2.0, "product_key": "BLU_250" },
+        { "size": "500g", "price": 3.5, "product_key": "BLU_500" },
+        { "size": "700g", "price": 4.2, "product_key": "BLU_700" }
       ],
       "bulk": 6
     }
@@ -35,13 +36,14 @@
     "mainImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
     "backgroundImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
     "embaladoOptions": [
-      { "size": "125g", "price": 2.00, "kgPrice": 16 },
-      { "size": "250g", "price": 3.50, "kgPrice": 14 },
-      { "size": "500g", "price": 6.00, "kgPrice": 12 }
+      { "size": "125g", "price": 2.00, "kgPrice": 16, "product_key": "RASP_125" },
+      { "size": "250g", "price": 3.50, "kgPrice": 14, "product_key": "RASP_250" },
+      { "size": "500g", "price": 6.00, "kgPrice": 12, "product_key": "RASP_500" }
     ],
     "precoGranelPorKg": 12,
     "packagedImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
     "bulkImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
+    "bulkProductKey": "RASP_1000",
     "detailsContent": {
       "varieties": "Heritage, Kweli",
       "location": "Pedrógão Grande",
@@ -50,9 +52,9 @@
     },
     "pricesContent": {
       "packaged": [
-        { "size": "125g", "price": 2.00 },
-        { "size": "250g", "price": 3.50 },
-        { "size": "500g", "price": 6.00 }
+        { "size": "125g", "price": 2.00, "product_key": "RASP_125" },
+        { "size": "250g", "price": 3.50, "product_key": "RASP_250" },
+        { "size": "500g", "price": 6.00, "product_key": "RASP_500" }
       ],
       "bulk": 12
     }

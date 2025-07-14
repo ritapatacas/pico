@@ -48,10 +48,10 @@ export default function MirtilosPage() {
   const [showSuccess, setShowSuccess] = useState(false)
 
   const embaladoOptions = [
-    { size: "125g", price: 1.25, kgPrice: 10 },
-    { size: "250g", price: 2.0, kgPrice: 8 },
-    { size: "500g", price: 3.5, kgPrice: 7 },
-    { size: "700g", price: 4.2, kgPrice: 6 },
+    { size: "125g", price: 1.25, kgPrice: 10, product_key: "BLU_125" },
+    { size: "250g", price: 2.0, kgPrice: 8, product_key: "BLU_250" },
+    { size: "500g", price: 3.5, kgPrice: 7, product_key: "BLU_500" },
+    { size: "700g", price: 4.2, kgPrice: 6, product_key: "BLU_700" },
   ];
   const precoGranelPorKg = 6;
 
@@ -79,6 +79,7 @@ export default function MirtilosPage() {
         quantity: quantity,
         image: '/imgs/mirtilo_embalagem.webp',
         size: selectedOption.size,
+        product_key: selectedOption.product_key,
       });
     } else { // granel
       addToCart({
@@ -86,6 +87,7 @@ export default function MirtilosPage() {
         price: precoGranelPorKg,
         quantity: kiloQuantity,
         image: '/imgs/mirtilo_granel.webp',
+        product_key: 'BLU_1000',
       });
     }
     

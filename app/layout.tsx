@@ -6,6 +6,7 @@ import { CartProvider } from "@/contexts/cart-context";
 import { CartDrawerProvider } from "@/contexts/cart-drawer-context";
 import { MainLayout } from "@/components/MainLayout";
 import { LanguageProvider } from "@/components/LanguageProvider";
+import { PaymentSuccessHandler } from "@/components/PaymentSuccessHandler";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
               <LanguageProvider>
                 <CartProvider>
                   <CartDrawerProvider>
+                    <PaymentSuccessHandler />
                     <MainLayout>
                       {children}
                     </MainLayout>

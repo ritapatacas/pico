@@ -54,6 +54,9 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: item.name,
             images: item.image ? [getAbsoluteImageUrl(item.image, request)] : [],
+            metadata: {
+              product_key: item.product_key || '',
+            },
           },
           unit_amount: Math.round(item.price * 100), // Stripe usa centavos
         },

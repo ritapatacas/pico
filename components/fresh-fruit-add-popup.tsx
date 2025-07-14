@@ -42,6 +42,7 @@ export default function FreshFruitAddPopup({ open, onClose, product }: { open: b
         quantity: quantity,
         image: product.packagedImage,
         size: selectedOption.size,
+        product_key: selectedOption.product_key,
       });
     } else {
       addToCart({
@@ -49,6 +50,7 @@ export default function FreshFruitAddPopup({ open, onClose, product }: { open: b
         price: product.precoGranelPorKg,
         quantity: kiloQuantity,
         image: product.bulkImage,
+        product_key: product.bulkProductKey,
       });
     }
     setShowSuccess(true);

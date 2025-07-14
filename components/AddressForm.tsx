@@ -17,29 +17,34 @@ export default function AddressForm() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lon: number; displayName: string } | null>(null);
   const [slots, setSlots] = useState<DeliveryOption[] | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<1 | 2 | 3 | 4 | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setError(null);
-    setCoords(null);
-    setSlots(null);
+    setError("");
 
     try {
-      const result = await geocodeAddress(address);
-      setCoords({ ...result, displayName: "" });
+      const coords = await geocodeAddress(address);
+      setCoords(coords);
 
-      const res = await fetch(`/api/delivery/options?lat=${result.lat}&lon=${result.lon}`);
-      if (!res.ok) throw new Error("Erro ao obter opções de entrega");
-      const data = await res.json();
-      setSlots(data);
+      // Mock delivery options - in real app, this would come from API
+      const mockSlots: DeliveryOption[] = [
+        { date: "2024-01-15", slot: 1, price: 5.00, available: true },
+        { date: "2024-01-15", slot: 2, price: 5.00, available: true },
+        { date: "2024-01-15", slot: 3, price: 5.00, available: true },
+        { date: "2024-01-15", slot: 4, price: 5.00, available: true },
+        { date: "2024-01-16", slot: 1, price: 5.00, available: true },
+        { date: "2024-01-16", slot: 2, price: 5.00, available: true },
+        { date: "2024-01-16", slot: 3, price: 5.00, available: true },
+        { date: "2024-01-16", slot: 4, price: 5.00, available: true },
+      ];
+      setSlots(mockSlots);
     } catch (err: any) {
       setError(err.message || "Erro inesperado");
     } finally {
@@ -60,81 +65,82 @@ export default function AddressForm() {
     });
 
     try {
-      // Calculate deviation based on distance (you can adjust this logic)
+      // Calculate deviation based on distance
       const deviation = calculateDeviation(coords.lat, coords.lon);
       
-      console.log('About to insert into Supabase:', {
-        name: name,
-        email: email,
-        address: address,
-        display_name: coords.displayName,
-        latitude: coords.lat,
-        longitude: coords.lon,
-        delivery_date: selectedDate,
-        delivery_slot: selectedSlot,
-        deviation: deviation,
-        status: 'pending'
-      });
+      // Find or create client
+      let clientId: string;
+      const { data: existingClient, error: clientError } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('email', email)
+        .single();
 
-      // Save to Supabase
-      const { data, error } = await supabase
+      if (clientError && clientError.code !== 'PGRST116') {
+        console.error('Error finding client:', clientError);
+        throw new Error('Error finding client');
+      }
+
+      if (existingClient) {
+        clientId = existingClient.id;
+      } else {
+        // Create new client
+        const { data: newClient, error: createError } = await supabase
+          .from('clients')
+          .insert([{
+            name,
+            email,
+            is_guest: true,
+          }])
+          .select('id')
+          .single();
+
+        if (createError) {
+          console.error('Error creating client:', createError);
+          throw new Error('Error creating client');
+        }
+        clientId = newClient.id;
+      }
+
+      // Create address
+      const { data: addressData, error: addressError } = await supabase
+        .from('addresses')
+        .insert([{
+          client_id: clientId,
+          address,
+          latitude: coords.lat,
+          longitude: coords.lon,
+          is_primary: true, // First address is primary
+        }])
+        .select('id')
+        .single();
+
+      if (addressError) {
+        console.error('Error creating address:', addressError);
+        throw new Error('Error creating address');
+      }
+
+      // Create delivery
+      const { data: deliveryData, error: deliveryError } = await supabase
         .from('deliveries')
-        .insert([
-          {
-            name: name,
-            email: email,
-            address: address,
-            display_name: coords.displayName,
-            latitude: coords.lat,
-            longitude: coords.lon,
-            delivery_date: selectedDate,
-            delivery_slot: selectedSlot,
-            deviation: deviation,
-            status: 'pending'
-          }
-        ])
+        .insert([{
+          client_id: clientId,
+          address_id: addressData.id,
+          delivery_type: 'delivery',
+          delivery_date: selectedDate,
+          delivery_slot: selectedSlot,
+          deviation: deviation,
+          delivery_price: 5.00, // Fixed price for now
+          status: 'pending'
+        }])
         .select();
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      if (deliveryError) {
+        console.error('Supabase error:', deliveryError);
+        throw deliveryError;
       }
 
-      // Also call your existing API
-      // Comment out this section temporarily to test Supabase only
-      /*
-      const response = await fetch("/api/schedule-delivery", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name,
-          email: email,
-          address,
-          lat: coords.lat,
-          lon: coords.lon,
-          date: selectedDate,
-          slot: selectedSlot,
-          deviation: deviation,
-        }),
-      });
-    
-      const result = await response.json();
-      if (result.success) {
-        alert("✅ Encomenda registada com sucesso!");
-        // Clear form
-        setSelectedDate(null);
-        setSelectedSlot(null);
-        setName("");
-        setEmail("");
-        setAddress("");
-        setCoords(null);
-        setSlots(null);
-      } else {
-        alert("❌ Erro: " + result.error);
-      }
-      */
-
-      // Just show success for Supabase
+      // Show success
       alert("✅ Encomenda registada com sucesso!");
       // Clear form
       setSelectedDate(null);

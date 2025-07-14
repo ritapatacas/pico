@@ -13,6 +13,7 @@ export interface EmbaladoOption {
   size: string;
   price: number;
   kgPrice: number;
+  product_key?: string;
 }
 
 export interface ProductPageLayoutProps {
@@ -75,6 +76,7 @@ export default function ProductPageLayout({
         quantity: quantity,
         image: packagedImage,
         size: selectedOption.size,
+        product_key: selectedOption.product_key,
       });
     } else { // granel
       addToCart({
@@ -82,6 +84,7 @@ export default function ProductPageLayout({
         price: precoGranelPorKg,
         quantity: kiloQuantity,
         image: bulkImage,
+        product_key: productKey === 'blueberries' ? 'BLU_1000' : 'RASP_1000',
       });
     }
     setShowSuccess(true);

@@ -6,6 +6,11 @@ import { CheckCircle, Package, Mail, Home, Calendar, MapPin, CreditCard, Banknot
 import Link from "next/link";
 import { useCart } from "@/contexts/cart-context";
 import Modal from "@/components/ui/Modal";
+import { createOrder } from "@/lib/orders";
+import { findOrCreateClient } from "@/lib/clients";
+import { findOrCreateAddress } from "@/lib/addresses";
+import { createDelivery } from "@/lib/delivery/supabase";
+import { getProductIdsByKeys } from "@/lib/products";
 
 interface PaymentDetails {
   status: string;
@@ -85,12 +90,134 @@ export default function SuccessModal({
         // Verify the payment session with Stripe
         verifyPaymentSession(sessionId);
       } else if (paymentMethod === 'cash') {
-        // For cash on delivery, don't clear cart immediately - show success first
-        localStorage.removeItem("shipping");
-        setLoading(false);
+        setLoading(true);
+        // For cash on delivery, create order in database
+        createCashOrder();
       }
     }
-  }, [open, sessionId, paymentMethod, deliveryInfo]); // Added deliveryInfo to dependencies
+  }, [open, sessionId, paymentMethod, deliveryInfo, cartItems, cartTotal, clearCart]);
+
+  const createCashOrder = async () => {
+    try {
+      const shippingData = localStorage.getItem("shipping");
+      if (!shippingData) {
+        throw new Error('Shipping data not found');
+      }
+
+      const shipping = JSON.parse(shippingData);
+      
+      // Create or find client
+      const clientId = await findOrCreateClient({
+        name: shipping.name,
+        email: shipping.email,
+        mobile: shipping.phone,
+      });
+
+      // Create address if delivery
+      let addressId: string | undefined;
+      if (deliveryInfo?.type === 'delivery' && shipping.address) {
+        const address = await findOrCreateAddress(clientId, {
+          address: shipping.address,
+        });
+        addressId = address.id;
+      }
+
+      // Get product IDs from product keys
+      const productKeys = cartItems
+        .map(item => item.product_key)
+        .filter(Boolean) as string[];
+      
+      console.log('Cart items:', cartItems);
+      console.log('Product keys extracted:', productKeys);
+      
+      const productIds = await getProductIdsByKeys(productKeys);
+      console.log('Product IDs found:', productIds);
+
+      // Create order
+      const order = await createOrder({
+        client_id: clientId,
+        payment_method: 'cash_on_delivery',
+        subtotal: cartTotal,
+        delivery_fee: deliveryFee,
+        discount: 0,
+        total: cartTotal + deliveryFee,
+        currency: 'EUR',
+        items: cartItems.map(item => {
+          let productId = item.product_key ? productIds[item.product_key] : null;
+          
+          // If no product_id found, try to find a default product for this item
+          if (!productId && item.size) {
+            // Try to find a product based on the size
+            const defaultKey = item.size === '125g' ? 'BLU_125' : 
+                             item.size === '250g' ? 'BLU_250' : 
+                             item.size === '500g' ? 'BLU_500' : 
+                             item.size === '700g' ? 'BLU_700' : null;
+            if (defaultKey && productIds[defaultKey]) {
+              console.log(`Using default product key ${defaultKey} for item ${item.name}`);
+              productId = productIds[defaultKey];
+            }
+          }
+          
+          // If still no product_id, try to find any blueberry product
+          if (!productId) {
+            const fallbackKey = 'BLU_250'; // Default to 250g
+            if (productIds[fallbackKey]) {
+              console.log(`Using fallback product key ${fallbackKey} for item ${item.name}`);
+              productId = productIds[fallbackKey];
+            }
+          }
+          
+          return {
+            product_id: productId || undefined,
+            product_name: item.name,
+            quantity: item.quantity,
+            unit_price: item.price,
+            total_price: item.price * item.quantity,
+          };
+        }),
+      });
+
+      // Create delivery if needed
+      if (deliveryInfo && deliveryInfo.date) {
+        console.log('Creating delivery for order:', order.id);
+        await createDelivery({
+          client_id: clientId,
+          order_id: order.id,
+          address_id: addressId,
+          delivery_type: deliveryInfo.type,
+          pickup_station: deliveryInfo.type === 'pickup' ? deliveryInfo.location : undefined,
+          delivery_date: deliveryInfo.date,
+          delivery_slot: (deliveryInfo.slot || 1) as 1 | 2 | 3 | 4,
+          deviation: 1, // Default deviation
+          delivery_price: deliveryFee,
+        });
+        console.log('Delivery created successfully');
+      }
+
+      // Set payment details
+      setPaymentDetails({
+        status: 'success',
+        amount: (cartTotal + deliveryFee).toFixed(2),
+        customer_email: shipping.email,
+        order_id: order.id,
+        items: cartItems.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: (item.price * item.quantity).toFixed(2),
+        })),
+      });
+
+      // Clear cart and shipping info
+      clearCart();
+      localStorage.removeItem("shipping");
+
+    } catch (error) {
+      console.error('Error creating cash order:', error);
+      setError('Erro ao criar pedido. Tente novamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const verifyPaymentSession = async (sessionId: string) => {
     try {
@@ -114,12 +241,6 @@ export default function SuccessModal({
     setError(null);
     setPaymentDetails(null);
     hasClearedCart.current = false;
-
-    // Clear cart when modal is closed
-    if (paymentMethod === 'cash') {
-      clearCart();
-    }
-
     onClose();
   };
 
@@ -148,7 +269,9 @@ export default function SuccessModal({
       <Modal open={open} onClose={handleClose}>
         <div className="text-center p-8">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Verificando pagamento...</p>
+          <p className="text-gray-600">
+            {paymentMethod === 'cash' ? 'Processando pedido...' : 'Verificando pagamento...'}
+          </p>
         </div>
       </Modal>
     );
@@ -284,6 +407,15 @@ export default function SuccessModal({
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-600">
                 <strong>ID da Sessão:</strong> {sessionId}
+              </p>
+            </div>
+          )}
+
+          {/* Order ID for cash payments */}
+          {paymentDetails?.order_id && paymentMethod === 'cash' && (
+            <div className="bg-gray-50 rounded-lg p-4">
+              <p className="text-sm text-gray-600">
+                <strong>ID do Pedido:</strong> {paymentDetails.order_id}
               </p>
             </div>
           )}

@@ -27,15 +27,15 @@ export interface DeliveryOption {
   type: 'pickup' | 'delivery';
   station?: string;
   date: string;
-  slot: 1; // Apenas 1 slot por dia
+  slot: 1 | 2 | 3 | 4; // Updated to support multiple slots
   price: number;
   description: string;
   available: boolean;
 }
 
 export interface DeliverySlot {
-  slot: 1; // Apenas slot 1
-  label: string; // "tarde"
+  slot: 1 | 2 | 3 | 4; // Updated to support multiple slots
+  label: string;
   available: boolean;
   maxCapacity: number;
   currentBookings: number;
@@ -43,7 +43,7 @@ export interface DeliverySlot {
 
 export interface DeliveryAvailability {
   date: string;
-  slot: DeliverySlot; // Singular, apenas 1 slot
+  slots: DeliverySlot[]; // Updated to support multiple slots
 }
 
 export interface ScheduleOptions {
@@ -53,48 +53,35 @@ export interface ScheduleOptions {
   preferredTime?: string; // Campo livre para horário preferencial
 }
 
-// Database types (mantendo compatibilidade)
+// Database types (updated for new structure)
 export interface DeliveryRecord {
   id: string;
-  customer_name: string;
-  customer_email: string;
-  customer_phone?: string;
-  address: string;
-  display_name: string;
-  latitude: number;
-  longitude: number;
+  client_id: string;
+  order_id?: string;
+  address_id?: string;
   delivery_type: 'pickup' | 'delivery';
   pickup_station?: string;
   delivery_date: string;
-  delivery_slot: number; // Manter como number para compatibilidade
-  nearest_station: string;
-  distance_to_station_meters: number;
+  delivery_slot: 1 | 2 | 3 | 4;
   deviation: number;
   delivery_price: number;
-  order_id?: string;
   stripe_session_id?: string;
   status: 'pending' | 'confirmed' | 'in_transit' | 'delivered' | 'cancelled';
-  driver_notes?: string;
-  customer_notes?: string;
-  preferred_time?: string; // Novo campo para horário preferencial
   created_at: string;
   updated_at: string;
-  delivered_at?: string;
 }
 
 export interface CreateDeliveryRequest {
-  customer_name: string;
-  customer_email: string;
-  customer_phone?: string;
-  address: string;
+  client_id: string;
+  order_id?: string;
+  address_id?: string;
   delivery_type: 'pickup' | 'delivery';
   pickup_station?: string;
   delivery_date: string;
-  delivery_slot: 1; // Sempre slot 1
-  order_id?: string;
+  delivery_slot: 1 | 2 | 3 | 4;
+  deviation: number;
+  delivery_price: number;
   stripe_session_id?: string;
-  customer_notes?: string;
-  preferred_time?: string; // Horário preferencial
 }
 
 export interface DeliveryOptionsRequest {
@@ -107,14 +94,12 @@ export interface DeliveryOptionsResponse {
     stations: Array<{
       name: string;
       address: string;
-      available_slot: DeliverySlot; // Singular
+      available_slots: DeliverySlot[];
     }>;
   };
   delivery_options: {
     address: string;
     coordinates: DeliveryCoordinates;
-    nearest_station: string;
-    distance_km: number;
     deviation: number;
     base_price: number;
     available_dates: DeliveryAvailability[];
