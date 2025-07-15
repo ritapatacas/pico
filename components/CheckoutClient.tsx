@@ -134,7 +134,7 @@ export default function CheckoutClient() {
 
   useEffect(() => {
     if (shouldRedirect) {
-      router.push('#products');
+      router.push('/');
     }
   }, [shouldRedirect, router]);
 
@@ -303,41 +303,64 @@ export default function CheckoutClient() {
         {/* Shipping Form */}
         <div>
           <form className="space-y-3 bg-white p-6 rounded shadow" onSubmit={e => e.preventDefault()}>
-            <div>
-              <label className="block text-sm font-semibold font-medium mb-1">Nome</label>
-              <input
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                required
-                className="w-full border rounded px-3 py-2"
-                placeholder={isAuthenticated ? "Nome do usuário logado" : "Digite seu nome"}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold font-medium mb-1">Email</label>
-              <input
-                name="email"
-                type="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                className="w-full border rounded px-3 py-2"
-                placeholder={isAuthenticated ? "" : "Digite seu email"}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium font-semibold mb-1">Telemóvel</label>
-              <input
-                name="phone"
-                type="tel"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                className="w-full border rounded px-3 py-2"
-                placeholder={isAuthenticated ? "" : "Digite seu telemóvel"}
-              />
-            </div>
+            {isAuthenticated ? (
+              <div className="space-y-2 mb-4">
+                <label className="block text-lg font-bold mb-1">Contacto</label>
+                  <div className="text-md font-medium px-2">{form.name}</div>   
+                  
+                  <div className="text-md font-medium px-2">{form.email}</div>
+
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                    className="border rounded border-gray-600 mx-2 px-2"
+                    placeholder="telemóvel"
+                    />
+                    <div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-sm font-semibold font-medium mb-1">Nome</label>
+                  <input
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="nome"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold font-medium mb-1">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="email"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium font-semibold mb-1">Telemóvel</label>
+                  <input
+                    name="phone"
+                    type="tel"
+                    value={form.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full border rounded px-3 py-2"
+                    placeholder="telemóvel"
+                  />
+                </div>
+              </>
+            )}
             <div>
               <label className="block text-lg font-bold mb-1">Entrega</label>
               <div className="flex gap-4 mt-2">

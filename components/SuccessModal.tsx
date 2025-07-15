@@ -177,6 +177,26 @@ export default function SuccessModal({
         }),
       });
 
+      // Enviar email ao produtor
+      if (order.id && order.admin_token) {
+        const orderSummary = cartItems.map(item =>
+          `${item.quantity} x ${item.name} (${(item.price * item.quantity).toFixed(2)}€)`
+        ).join('\n') + `\nTotal: ${(cartTotal + deliveryFee).toFixed(2)}€`;
+        try {
+          await fetch('/api/send-confirmation-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId: order.id,
+              adminToken: order.admin_token,
+              orderSummary,
+            }),
+          });
+        } catch (err) {
+          console.error('Erro ao enviar email ao produtor:', err);
+        }
+      }
+
       // Create delivery if needed
       if (deliveryInfo && deliveryInfo.date) {
         console.log('Creating delivery for order:', order.id);
