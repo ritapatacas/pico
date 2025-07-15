@@ -195,6 +195,20 @@ export default function SuccessModal({
         } catch (err) {
           console.error('Erro ao enviar email ao produtor:', err);
         }
+        // Enviar email ao cliente
+        try {
+          await fetch('/api/send-client-confirmation-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              to: shipping.email,
+              orderSummary,
+              orderId: order.id,
+            }),
+          });
+        } catch (err) {
+          console.error('Erro ao enviar email ao cliente:', err);
+        }
       }
 
       // Create delivery if needed
