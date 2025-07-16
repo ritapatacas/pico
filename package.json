@@ -24,7 +24,6 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
-    "geocode": "^0.0.3",
     "geolib": "^3.3.4",
     "lucide-react": "^0.515.0",
     "next": "15.2.4",
@@ -42,6 +41,7 @@
     "tailwindcss-animate": "^1.0.7",
     "uuid": "^11.1.0",
     "zod": "^4.0.3"
+
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

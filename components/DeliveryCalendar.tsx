@@ -44,7 +44,7 @@ export default function DeliveryCalendar({ options, onSelect }: Props) {
           available: availableDays.map((d) => new Date(d)),
         }}
         modifiersStyles={{
-          available: { backgroundColor: "#f3f4f6" }, // Cinza claro monocromático
+          available: { backgroundColor: "#f3f4f6" },
         }}
         disabled={(date) => {
           const iso = date.toISOString().split("T")[0];

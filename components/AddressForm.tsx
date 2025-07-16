@@ -30,21 +30,14 @@ export default function AddressForm() {
     setError("");
 
     try {
-      const coords = await geocodeAddress(address);
-      setCoords(coords);
+      const result = await geocodeAddress(address);
+      setCoords({ ...result, displayName: "" });
 
-      // Mock delivery options - in real app, this would come from API
-      const mockSlots: DeliveryOption[] = [
-        { date: "2024-01-15", slot: 1, price: 5.00, available: true },
-        { date: "2024-01-15", slot: 2, price: 5.00, available: true },
-        { date: "2024-01-15", slot: 3, price: 5.00, available: true },
-        { date: "2024-01-15", slot: 4, price: 5.00, available: true },
-        { date: "2024-01-16", slot: 1, price: 5.00, available: true },
-        { date: "2024-01-16", slot: 2, price: 5.00, available: true },
-        { date: "2024-01-16", slot: 3, price: 5.00, available: true },
-        { date: "2024-01-16", slot: 4, price: 5.00, available: true },
-      ];
-      setSlots(mockSlots);
+      const res = await fetch(`/api/delivery/options?lat=${result.lat}&lon=${result.lon}`);
+
+      if (!res.ok) throw new Error("Erro ao obter opções de entrega");
+      const data = await res.json();
+      setSlots(data);
     } catch (err: any) {
       setError(err.message || "Erro inesperado");
     } finally {
@@ -160,6 +153,7 @@ export default function AddressForm() {
   function calculateDeviation(lat: number, lon: number): number {
     const { deviation } = findNearestStationAndDeviation({ lat, lon });
     return deviation;
+
   }
 
   return (
@@ -246,3 +240,4 @@ export default function AddressForm() {
     </div>
   );
 }
+
