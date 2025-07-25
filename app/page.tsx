@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AboutSection from "@/components/AboutSection";
-import productsData from "@/products.json";
 
 export default function HomePage() {
 

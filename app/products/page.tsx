@@ -48,8 +48,8 @@ export function Products() {
   }, [displayed, products.length, loading])
 
   // Search filter
-  const filtered = products.filter((p) => {
-    const q = search.toLowerCase()
+  const filtered = (products ?? []).filter((p) => {
+    const q = search.toLowerCase();
     return (
       p.name.toLowerCase().includes(q) ||
       p.key.toLowerCase().includes(q) ||
