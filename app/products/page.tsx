@@ -4,8 +4,7 @@ import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import Modal from "@/components/ui/Modal"
-import ProductPageLayout from "@/components/ProductPageLayout"
+
 import FreshFruitAddPopup, { Product } from "@/components/fresh-fruit-add-popup"
 // Temporary import for JSON, replace with fetch if needed
 import productsData from "@/products.json"
@@ -48,8 +47,8 @@ export function Products() {
   }, [displayed, products.length, loading])
 
   // Search filter
-  const filtered = products.filter((p) => {
-    const q = search.toLowerCase()
+  const filtered = (products ?? []).filter((p) => {
+    const q = search.toLowerCase();
     return (
       p.name.toLowerCase().includes(q) ||
       p.key.toLowerCase().includes(q) ||
@@ -99,7 +98,3 @@ export function Products() {
   )
 }
 
-
-export default function ProductsPage() {
-  return <Products productsData={productsData} />;
-} 

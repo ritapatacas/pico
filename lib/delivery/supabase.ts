@@ -8,26 +8,19 @@ export const supabase = createClient(
 import type { DeliveryRecord, CreateDeliveryRequest, DeliverySlot } from './types';
 
 /**
- * Get available delivery slots for a specific date and station
+ * Get available delivery slots for a specific date
  */
 export async function getAvailableSlots(
-  date: string,
-  station?: string
+  date: string
 ): Promise<DeliverySlot[]> {
   const maxCapacityPerSlot = 10; // Maximum deliveries per slot
   
   // Get current bookings for the date
-  let query = supabase
+  const { data: bookings, error } = await supabase
     .from('deliveries')
     .select('delivery_slot')
     .eq('delivery_date', date)
     .eq('status', 'confirmed');
-
-  if (station) {
-    query = query.eq('nearest_station', station);
-  }
-
-  const { data: bookings, error } = await query;
   
   if (error) {
     console.error('Error fetching delivery slots:', error);
@@ -79,39 +72,11 @@ export async function getAvailableSlots(
  * Create a new delivery booking
  */
 export async function createDelivery(
-  request: CreateDeliveryRequest,
-  coordinates: { lat: number; lon: number },
-  displayName: string,
-  nearestStation: string,
-  distanceMeters: number,
-  deviation: number,
-  price: number
+  request: CreateDeliveryRequest
 ): Promise<DeliveryRecord> {
-  const deliveryData = {
-    customer_name: request.customer_name,
-    customer_email: request.customer_email,
-    customer_phone: request.customer_phone,
-    address: request.address,
-    display_name: displayName,
-    latitude: coordinates.lat,
-    longitude: coordinates.lon,
-    delivery_type: request.delivery_type,
-    pickup_station: request.pickup_station,
-    delivery_date: request.delivery_date,
-    delivery_slot: request.delivery_slot,
-    nearest_station: nearestStation,
-    distance_to_station_meters: distanceMeters,
-    deviation,
-    delivery_price: price,
-    order_id: request.order_id,
-    stripe_session_id: request.stripe_session_id,
-    customer_notes: request.customer_notes,
-    status: 'pending' as const,
-  };
-
   const { data, error } = await supabase
     .from('deliveries')
-    .insert(deliveryData)
+    .insert(request)
     .select()
     .single();
 
@@ -149,22 +114,11 @@ export async function getDeliveryById(id: string): Promise<DeliveryRecord | null
  */
 export async function updateDeliveryStatus(
   id: string,
-  status: DeliveryRecord['status'],
-  driverNotes?: string
+  status: DeliveryRecord['status']
 ): Promise<void> {
-  const updateData: any = { status };
-  
-  if (driverNotes) {
-    updateData.driver_notes = driverNotes;
-  }
-  
-  if (status === 'delivered') {
-    updateData.delivered_at = new Date().toISOString();
-  }
-
   const { error } = await supabase
     .from('deliveries')
-    .update(updateData)
+    .update({ status })
     .eq('id', id);
 
   if (error) {
@@ -174,18 +128,18 @@ export async function updateDeliveryStatus(
 }
 
 /**
- * Get deliveries for a customer
+ * Get deliveries for a client
  */
-export async function getCustomerDeliveries(email: string): Promise<DeliveryRecord[]> {
+export async function getClientDeliveries(clientId: string): Promise<DeliveryRecord[]> {
   const { data, error } = await supabase
     .from('deliveries')
     .select('*')
-    .eq('customer_email', email)
+    .eq('client_id', clientId)
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching customer deliveries:', error);
-    throw new Error('Failed to fetch customer deliveries');
+    console.error('Error fetching client deliveries:', error);
+    throw new Error('Failed to fetch client deliveries');
   }
 
   return data || [];
@@ -200,7 +154,11 @@ export async function getDeliveriesForDate(
 ): Promise<DeliveryRecord[]> {
   let query = supabase
     .from('deliveries')
-    .select('*')
+    .select(`
+      *,
+      clients(name, email),
+      addresses(address, city, postal_code)
+    `)
     .eq('delivery_date', date);
 
   if (status) {

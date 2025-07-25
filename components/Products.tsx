@@ -8,7 +8,8 @@ import FreshFruitAddPopup, { Product } from "@/components/fresh-fruit-add-popup"
 import productsData from "@/products.json" // importa aqui
 
 
-export default function Products({ productsData }: { productsData: Product[] }) {
+
+export default function Products() {
   const [search, setSearch] = useState("")
   const [products, setProducts] = useState(productsData)
   const [displayed, setDisplayed] = useState(8)
@@ -82,7 +83,13 @@ export default function Products({ productsData }: { productsData: Product[] }) 
         ))}
       </div>
       {loading && <div className="text-center opacity-40">Carregando...</div>}
-      <FreshFruitAddPopup open={modalOpen} onClose={() => setModalOpen(false)} product={modalProduct} />
+      {modalProduct && (
+  <FreshFruitAddPopup
+    open={modalOpen}
+    onClose={() => setModalOpen(false)}
+    product={modalProduct}
+  />
+)}
     </div>
   )
 }

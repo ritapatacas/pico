@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useMemo, ReactNode } from "react"
+import React, { createContext, useContext, useState, useMemo, ReactNode, useEffect } from "react"
 import { useLanguageSettings } from "@/hooks/use-settings-store"
 
 export interface CartItem {
@@ -10,6 +10,7 @@ export interface CartItem {
   quantity: number;
   image: string;
   size?: string; // e.g., '125g'
+  product_key?: string; // e.g., 'BLU_125', 'BLU_1000'
 }
 
 interface CartContextType {
@@ -24,12 +25,46 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
+const CART_STORAGE_KEY = 'picodarosa_cart';
+
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const { t } = useLanguageSettings();
 
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    try {
+      const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart);
+        // Check if cart items have product_key field, if not, clear the cart
+        const hasProductKeys = parsedCart.every((item: any) => item.product_key);
+        if (!hasProductKeys) {
+          console.log('Clearing old cart without product keys');
+          localStorage.removeItem(CART_STORAGE_KEY);
+          setCartItems([]);
+        } else {
+          setCartItems(parsedCart);
+        }
+      }
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
+  }, [cartItems]);
+
   const addToCart = (item: Omit<CartItem, 'id'>) => {
     const id = item.size ? `mirtilo-${item.size}` : `mirtilo-granel`;
+    
+    console.log('Adding item to cart:', item);
     
     // Translate the product name based on the current language
     let translatedName = item.name;
@@ -50,7 +85,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
         );
       }
       // If item doesn't exist, add it to the cart
-      return [...prevItems, { ...item, id, name: translatedName }];
+      const newItem = { ...item, id, name: translatedName };
+      console.log('New cart item:', newItem);
+      return [...prevItems, newItem];
     });
   };
 
@@ -68,6 +105,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => {
     setCartItems([]);
+    // Also clear from localStorage
+    try {
+      localStorage.removeItem(CART_STORAGE_KEY);
+    } catch (error) {
+      console.error('Error clearing cart from localStorage:', error);
+    }
   };
   
   const cartCount = useMemo(() => {
@@ -78,7 +121,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   }, [cartItems]);
 
-
   const value = useMemo(() => ({
     cartItems,
     addToCart,
@@ -87,7 +129,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     clearCart,
     cartCount,
     cartTotal,
-  }), [cartItems]);
+  }), [cartItems, cartCount, cartTotal]);
 
   return (
     <CartContext.Provider value={value}>

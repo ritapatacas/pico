@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { OrderManager } from '@/lib/orders';
+import { getOrderBySessionId } from '@/lib/orders';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,17 +14,37 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Try to get order from local storage first
-    const order = OrderManager.getOrder(sessionId);
+    // Try to get order from database first
+    const order = await getOrderBySessionId(sessionId);
 
     if (order) {
+      // Return order details from database
+      const paymentDetails = {
+        status: 'success',
+        amount: order.total.toFixed(2),
+        customer_email: order.client?.email,
+        order_id: order.id,
+        items: order.items.map(item => ({
+          name: item.product_name,
+          quantity: item.quantity,
+          price: item.total_price.toFixed(2),
+        })),
+      };
+
+      return NextResponse.json(paymentDetails);
+    }
+
+    // Fallback to local storage for backward compatibility
+    const legacyOrder = OrderManager.getOrder(sessionId);
+
+    if (legacyOrder) {
       // Return order details from our storage
       const paymentDetails = {
         status: 'success',
-        amount: order.amount.toFixed(2),
-        customer_email: order.customerEmail,
-        order_id: order.id,
-        items: order.items.map(item => ({
+        amount: legacyOrder.amount.toFixed(2),
+        customer_email: legacyOrder.customerEmail,
+        order_id: legacyOrder.id,
+        items: legacyOrder.items.map(item => ({
           name: item.name,
           quantity: item.quantity,
           price: item.price.toFixed(2),
