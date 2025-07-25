@@ -1,9 +1,10 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useCart } from '@/contexts/cart-context';
 
 export function usePaymentSuccess() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const { clearCart } = useCart();
 
   useEffect(() => {
@@ -13,7 +14,7 @@ export function usePaymentSuccess() {
     if (success === 'true' && sessionId) {
       console.log('Payment success detected, clearing cart...');
       
-      // Clear cart after successful payment
+      // Clear cart
       clearCart();
       
       // Clear shipping data
@@ -22,6 +23,9 @@ export function usePaymentSuccess() {
       } catch (error) {
         console.error('Error clearing shipping data:', error);
       }
+
+      // 🧹 Remove query string from URL
+      router.replace(window.location.pathname);
     }
-  }, [searchParams, clearCart]);
-} 
+  }, [searchParams, clearCart, router]);
+}

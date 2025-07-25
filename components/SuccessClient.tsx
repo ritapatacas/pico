@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Package, Mail, Home } from "lucide-react";
 import Link from "next/link";

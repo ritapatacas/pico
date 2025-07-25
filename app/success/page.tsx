@@ -1,3 +1,5 @@
+// app/success/page.tsx
+
 import { Suspense } from "react";
 import SuccessClient from "@/components/SuccessClient";
 

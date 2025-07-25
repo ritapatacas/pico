@@ -8,7 +8,7 @@ import { MainLayout } from "@/components/MainLayout";
 import { LanguageProvider } from "@/components/LanguageProvider";
 import { PaymentSuccessHandler } from "@/components/PaymentSuccessHandler";
 import { Providers } from "./providers";
-import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "Pico da Rosa",
@@ -23,8 +23,9 @@ function AppProviders({ children }: { children: React.ReactNode }) {
           <LanguageProvider>
             <CartProvider>
               <CartDrawerProvider>
-                <PaymentSuccessHandler />
-                <MainLayout>
+              <Suspense fallback={null}>
+                  <PaymentSuccessHandler />
+                </Suspense>                <MainLayout>
                   {children}
                 </MainLayout>
               </CartDrawerProvider>
