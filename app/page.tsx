@@ -1,6 +1,6 @@
 // app/page.tsx
 import Products from "@/components/Products";
-
+import productsData from "@/products.json";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
