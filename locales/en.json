@@ -127,6 +127,7 @@
     "signIn": "Sign In",
     "signOut": "Sign Out",
     "signInDescription": "Sign in to make your shopping easier",
-    "signInWith": "Sign in with"
+    "signInWith": "Sign in with",
+    "account": "Account"
   }
 }

@@ -44,6 +44,7 @@ export function Sidebar({ version }: SidebarProps) {
         setIsClientLoading(true);
         try {
           const response = await fetch(`/api/client/${encodeURIComponent(user.email)}`);
+          console.log('API response status:', response.status);
           if (response.ok) {
             const clientData = await response.json();
             console.log('Client data from API:', clientData);
@@ -51,6 +52,8 @@ export function Sidebar({ version }: SidebarProps) {
             setImageLoaded(false); // Reset image loading state
           } else {
             console.log('Error fetching client:', response.status, response.statusText);
+            const errorText = await response.text();
+            console.log('Error response:', errorText);
             setClient(null);
           }
         } catch (error) {
@@ -131,7 +134,7 @@ export function Sidebar({ version }: SidebarProps) {
         {isSidebarOpen && (
           <>
             {/* sidebar header */}
-            <div id="sidebar-header" className="flex w-full justify-between items-center px-4 py-3 border-b-1 border-black ">
+            <div id="sidebar-header" className="flex w-full justify-between items-center px-4 py-3 border-b-2 border-gray-500">
               <div className="flex items-center gap-3">
 
                 {/* loggin */}
@@ -139,11 +142,12 @@ export function Sidebar({ version }: SidebarProps) {
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
                     <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
                   </div>
-                ) : typeof client?.image_url === 'string' && client.image_url.length > 0 ? (
+
+                ) : isAuthenticated ? (
                   <img
-                    src={client.image_url}
+                    src={client?.image_url || "/imgs/roza.webp"}
                     alt="avatar"
-                    className="w-10 h-10 rounded-full object-cover border"
+                    className="w-10 h-10 mt-3 ml-3 rounded-full object-cover border"
                     onLoad={() => setImageLoaded(true)}
                     onError={() => setImageLoaded(false)}
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -164,29 +168,33 @@ export function Sidebar({ version }: SidebarProps) {
                 )}
 
                 <div>
-                  <p className="text-xl font-bold">{user?.name}</p>
-                  <div id="link-account" className="hidden">
-                    <button
-                      onClick={() => signOut()}
-                      className="flex items-center justify-center gap-2 rounded-md transition-colors hover:bg-secondary/50 text-sm leading-none"
-                    >
-                      <div className="pt-1">
+                  {isAuthenticated && user && (
+                    <>
+                      <p className="text-xl font-bold">{user.name}</p>
+                      <div id="link-account" className="hidden">
+                        <button
+                          onClick={() => signOut()}
+                          className="flex items-center justify-center gap-2 rounded-md transition-colors hover:bg-secondary/50 text-sm leading-none"
+                        >
+                          <div className="pt-1">
 
 
 
+                          </div>
+                          <span className="flex items-center">Conta</span>
+                        </button>
                       </div>
-                      <span className="flex items-center">Conta</span>
-                    </button>
-                  </div>
 
-                  {isAuthenticated && client && (
-                    <button
-                      onClick={() => signOut()}
-                      className="flex items-center justify-center gap-2 rounded-md py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
-                    >
-                      <LogOut className="h-4 w-4 flex-shrink-0" />
-                      <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
-                    </button>
+                      {client && (
+                        <button
+                          onClick={() => signOut()}
+                          className="flex items-center justify-center gap-2 rounded-md py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
+                        >
+                          <LogOut className="h-4 w-4 flex-shrink-0" />
+                          <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
@@ -218,6 +226,7 @@ export function Sidebar({ version }: SidebarProps) {
               <div className="flex-1 h-full overflow-y-auto">
                 <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
 
+                  {/* sidebar about */}
                   <AccordionItem value="about" className="border-none">
                     <AccordionTrigger
                       className={burfordFontClass + " text-left flex items-center gap-2"}
@@ -236,6 +245,7 @@ export function Sidebar({ version }: SidebarProps) {
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* sidebar products */}
                   <AccordionItem value="products" className="border-none">
                     <AccordionTrigger
                       className={burfordFontClass + " text-left flex items-center gap-2"}
@@ -253,6 +263,7 @@ export function Sidebar({ version }: SidebarProps) {
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* sidebar contacts */}
                   <AccordionItem value="contactos" className="border-none">
                     <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                       <Mail className="h-4 w-4" />
@@ -266,10 +277,10 @@ export function Sidebar({ version }: SidebarProps) {
                     </AccordionContent>
                   </AccordionItem>
 
+                  {/* divider border */}
                   <div className="border-b border-gray-300 my-2" />
 
-
-
+                  {/* sidebar cart */}
                   <AccordionItem value="cart" className="border-none">
                     <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                       <ShoppingCart className="h-4 w-4" />
@@ -354,36 +365,40 @@ export function Sidebar({ version }: SidebarProps) {
                     </AccordionContent>
                   </AccordionItem>
 
-
-
                 </Accordion>
               </div>
 
               <div className={burfordFontClass + " text-left flex justify-between items-end gap-2"}>
 
-                <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
-                  <AccordionItem value="settings">
-                    <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
-                      <Settings className="h-5 w-5" />
+                {/* sidebar settings */}
+                <div className="w-full">
 
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <SettingsPanel />
-                    </AccordionContent>
-                  </AccordionItem>
+                  <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+                    <AccordionItem value="settings">
+                      <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2 pb-0"}>
+                        <Settings className="h-5 w-5" />
+                        {openSection === 'settings' && <span className="pb-1 text-[18px]">Configurações</span>}
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <SettingsPanel />
+                      </AccordionContent>
+                    </AccordionItem>
 
-                </Accordion>
-                <div className=" flex justify-center">
+                  </Accordion>
 
+                  <div className=" flex justify-center">
+                  </div>
                 </div>
-                <SocialNav className="flex-col" />
+
+                {/* sidebar social */}
+                <SocialNav className="flex-col mr-1" />
               </div>
             </div>
           </>
         )}
 
         {/* bottom (always visible) */}
-        <div className="flex w-full items-center justify-around h-16 border-t bg-background pb-1 pt-2 mt-auto">
+        <div className="flex w-full items-center justify-around h-16 border-t-2 border-gray-700 bg-background pb-1 pt-2 mt-auto">
           <Link
             href="/"
             className="flex flex-col items-center p-2 text-muted-foreground hover:text-primary"

@@ -124,9 +124,10 @@
     "proceedToCheckout": "Finalizar Compra"
   },
   "auth": {
-    "signIn": "Iniciar Sessão",
-    "signOut": "Terminar Sessão",
+    "signIn": "Login",
+    "signOut": "LOGOUT",
     "signInDescription": "Faça login para facilitar as suas compras",
-    "signInWith": "Entrar com"
+    "signInWith": "Login",
+    "account": "Gerir Conta"
   }
 } 

@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image"
 import { siGooglemaps, siInstagram } from "simple-icons"
 
 interface SocialNavProps {
@@ -9,72 +8,53 @@ interface SocialNavProps {
 
 export function SocialNav({ className = "" }: SocialNavProps) {
   return (
-    <nav className={`flex flex-wrap gap-x-4 gap-y-2 ${className}`}>
-      <div className="flex items-center space-x-4">
-        <button
-          className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 scale-75 invert hover:scale-80 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
-          onClick={() => window.open(
-            'https://reformaagraria.pt/perfis/10243/',
-            '_blank',
-            'noopener,noreferrer'
-          )}
-          title="Visit Reforma Agraria"
-        >
-          <span className="sr-only">Reforma Agraria</span>
-          <div className="w-5 h-10 flex items-center justify-center">
-            {/* Black logo for light theme */}
-            <Image
-              src="/reforma-agraria-logo-black.svg"
-              alt="Reforma Agraria"
-              width={33}
-              height={65}
-              className="block dark:hidden opacity-70 hover:opacity-100 transition-all duration-300"
-            />
-            {/* White logo for dark theme */}
-            <Image
-              src="/reforma-agraria-logo-white.png"
-              alt="Reforma Agraria"
-              width={33}
-              height={65}
-              className="hidden dark:block opacity-70 hover:opacity-100 transition-all duration-300"
-            />
-          </div>
-        </button>
-      </div>
+    <nav className={`flex justify-center items-center gap-x-4 gap-y-2 ${className}`}>
+      <button
+        className="text-muted-foreground hover:text-primary-foreground transition-all duration-300 scale-75 invert hover:scale-80 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
+        onClick={() => window.open(
+          'https://reformaagraria.pt/perfis/10243/',
+          '_blank',
+          'noopener,noreferrer'
+        )}
+        title="Visit Reforma Agraria"
+      >
+        <span className="sr-only">Reforma Agraria</span>
+        <svg className="w-8 h-8" viewBox="0 0 33 65" fill="currentColor">
+          <g transform="translate(0.000000,65.000000) scale(0.100000,-0.100000)">
+            <path d="M35 629 c-4 -6 2 -17 13 -25 22 -15 33 -56 21 -75 -4 -7 -2 -17 6 -23 13 -11 48 -117 40 -124 -5 -5 -36 55 -34 65 3 19 -2 34 -10 29 -9 -6 -23 19 -25 44 -1 19 -36 26 -36 8 0 -7 9 -22 21 -31 11 -10 18 -25 15 -33 -3 -8 -1 -14 4 -14 6 0 19 -14 30 -32 l19 -32 -24 -32 c-14 -18 -25 -36 -25 -41 0 -4 14 -77 31 -161 l32 -153 22 68 c12 37 39 112 58 166 l36 97 -24 16 c-26 17 -24 40 4 49 12 4 17 13 14 28 -2 14 5 32 21 48 14 15 23 29 20 32 -7 7 24 67 35 67 4 0 8 7 8 15 0 8 -8 15 -18 15 -9 0 -19 -7 -23 -15 -3 -8 -1 -15 5 -15 6 0 2 -13 -7 -29 -10 -17 -21 -28 -26 -25 -4 3 -9 -1 -9 -8 -4 -44 -17 -75 -34 -82 -8 -3 -15 -14 -15 -25 0 -11 -5 -23 -11 -27 -8 -5 -10 0 -6 17 3 13 11 50 17 82 6 31 15 57 20 57 4 0 6 9 3 20 -3 11 -2 28 2 37 15 34 13 43 -6 43 -11 0 -17 -4 -14 -10 3 -5 0 -10 -7 -10 -9 0 -9 -3 2 -10 13 -8 13 -13 -3 -39 -9 -16 -13 -31 -8 -33 6 -2 4 -28 -3 -63 -9 -43 -15 -55 -21 -43 -4 10 -4 26 1 35 11 26 11 37 0 45 -5 3 -9 20 -8 37 1 36 -11 47 -29 25 -10 -13 -10 -17 2 -24 8 -5 14 -24 15 -42 0 -18 3 -53 7 -78 l7 -45 -16 35 c-9 19 -17 54 -19 78 -2 24 -9 49 -14 56 -9 11 -16 42 -20 89 -1 11 -29 8 -36 -4z"/>
+          </g>
+        </svg>
+      </button>
 
-      <div className="flex items-center space-x-4">
-        <button
-          className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
-          onClick={() => window.open(
-            'https://www.instagram.com/opicodarosa/',
-            '_blank',
-            'noopener,noreferrer'
-          )}
-          title="Follow us on Instagram"
-        >
-          <span className="sr-only">Instagram</span>
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-            <path d={siInstagram.path} />
-          </svg>
-        </button>
-      </div>
+      <button
+        className="text-muted-foreground hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
+        onClick={() => window.open(
+          'https://www.instagram.com/opicodarosa/',
+          '_blank',
+          'noopener,noreferrer'
+        )}
+        title="Follow us on Instagram"
+      >
+        <span className="sr-only">Instagram</span>
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d={siInstagram.path} />
+        </svg>
+      </button>
       
-      <div className="flex items-center space-x-4">
-        <button
-          className="text-primary-foreground/70 hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
-          onClick={() => window.open(
-            'https://maps.app.goo.gl/nVRRADEmNuzbJLsz5',
-            '_blank',
-            'noopener,noreferrer'
-          )}
-          title="Find us on Google Maps"
-        >
-          <span className="sr-only">Google Maps</span>
-          <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-            <path d={siGooglemaps.path} />
-          </svg>
-        </button>
-      </div>
+      <button
+        className="text-muted-foreground hover:text-primary-foreground transition-all duration-300 hover:scale-110 hover:drop-shadow-lg focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 rounded-lg p-1"
+        onClick={() => window.open(
+          'https://maps.app.goo.gl/nVRRADEmNuzbJLsz5',
+          '_blank',
+          'noopener,noreferrer'
+        )}
+        title="Find us on Google Maps"
+      >
+        <span className="sr-only">Google Maps</span>
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d={siGooglemaps.path} />
+        </svg>
+      </button>
     </nav>
   )
 } 
