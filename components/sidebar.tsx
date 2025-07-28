@@ -9,10 +9,8 @@ import { useCart } from "@/contexts/cart-context"
 import { SettingsPanel } from "@/components/settings/settings-panel"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
-import "@/app/globals.css"
 import { useAuth } from "@/hooks/use-auth"
-import Modal from "@/components/ui/Modal";
-import { signIn } from "next-auth/react";
+
 import { Client } from '@/lib/clients';
 import { SocialNav } from "./SocialNav"
 
@@ -125,7 +123,7 @@ export function Sidebar({ version }: SidebarProps) {
   if (isMobile) {
     return (
       <div
-        className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-background  ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
+        className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-lavender  ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
           } flex flex-col`}
         style={{ willChange: 'height' }}
       >

@@ -21,7 +21,7 @@ export function Footer() {
         />
       </div>
 
-      <div className="bg-primary text-primary-foreground px-6 pt-7 w-full">
+      <div className="bg-white text-secondary-foreground px-6 pt-7 w-full">
         <div className="container mx-auto max-w-4xl">
           <div className="mt-2 mb-5">
 
@@ -49,19 +49,19 @@ export function Footer() {
             { /* contact info */}
             <div id="footer-text" className="px-2">
               <h2 className="text-2xl font-medium mb-2"></h2>
-              <p className="text-primary-foreground/90 max-w-2xl text-md">
+              <p className="text-secondary-foreground/90 max-w-2xl text-md">
                 <br></br><b>Rosa Américo - Fruta Miúda</b>
-                <span className="text-primary-foreground/80 max-w-2xl text-s">
+                <span className="text-secondary-foreground/80 max-w-2xl text-s">
                   <br></br>{t("footer.address")}
                   <br></br>{t("footer.city")}
 
                 </span>
               </p>
-              <p className="text-primary-foreground max-w-2xl text-s">
+              <p className="text-secondary-foreground max-w-2xl text-s">
                 <br></br><b>{t("footer.email")}</b>
               </p>
               <br></br>
-              <p className="text-primary-foreground max-w-2xl text-md">
+              <p className="text-secondary-foreground max-w-2xl text-md">
                 {t("footer.nif")}: <b>236 427 660</b><br></br>
                 {t("footer.iban")}: <b>PT50 0035 0085 00097819000 25</b>
               </p>
@@ -76,7 +76,7 @@ export function Footer() {
           <div className="border-t border-primary-foreground/20" />
 
           { /* copyright */ }
-          <div className="text-sm text-primary-foreground/70">
+          <div className="text-sm text-secondary-foreground/70">
             <div className="pb-4">{t("footer.published")}</div>
 
           </div>
