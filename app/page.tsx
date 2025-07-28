@@ -8,12 +8,14 @@ import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import AboutSection from "@/components/AboutSection";
 import { scrollToSection } from "@/lib/utils";
+import { useDevice } from "@/components/DeviceProvider";
 
 export default function HomePage() {
   const logoRef = useRef<HTMLDivElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
+  const { isMobile, isDesktop } = useDevice();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -57,30 +59,26 @@ export default function HomePage() {
 
   return (
     <div className="relative">
-      <div
-        className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
-    transition-opacity duration-500 ease-in-out
-    ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-      >
-
-
-        {/* topbar */}
-        <Link href="/">
-          <Image
-            className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
-              } pr-1`}
-            src="logo/logo_h.svg"
-            alt="PICO DA ROSA logo"
-            width={300}
-            height={73}
-            priority
-          />
-        </Link>
-{/*         <Link href="#products">
-          <Button className="bg-gray-400 text-black font-bold">Encomendar</Button>
-        </Link> */}
-      </div>
-
+      {/* Topbar fixa - apenas em desktop */}
+      {isDesktop && (
+        <div
+          className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+      transition-opacity duration-500 ease-in-out
+      ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        >
+          <Link href="/">
+            <Image
+              className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
+                } pr-1`}
+              src="logo/logo_h.svg"
+              alt="PICO DA ROSA logo"
+              width={300}
+              height={73}
+              priority
+            />
+          </Link>
+        </div>
+      )}
 
       <main className="relative m-0 p-0">
         {/* HERO SECTION */}
@@ -160,28 +158,30 @@ export default function HomePage() {
           </p>
         </section>
 
-
-        <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
-          <div 
-            className="absolute inset-0 w-screen"
-            style={{
-              transform: `translateY(${parallaxOffset}px)`,
-              transition: 'transform 0.05s ease-out',
-              aspectRatio: '4/3',
-              height: 'auto'
-            }}
-          >
-            <Image
-              src="imgs/PR-01.webp"
-              alt="Rosa Américo"
-              width={4032}
-              height={3024}
-              priority
-              className="w-full h-auto object-cover"
-              style={{ objectPosition: 'center 25%' }}
-            />
-          </div>
-        </section>
+        {/* Parallax section - apenas em desktop */}
+        {isDesktop && (
+          <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
+            <div 
+              className="absolute inset-0 w-screen"
+              style={{
+                transform: `translateY(${parallaxOffset}px)`,
+                transition: 'transform 0.05s ease-out',
+                aspectRatio: '4/3',
+                height: 'auto'
+              }}
+            >
+              <Image
+                src="imgs/PR-01.webp"
+                alt="Rosa Américo"
+                width={4032}
+                height={3024}
+                priority
+                className="w-full h-auto object-cover"
+                style={{ objectPosition: 'center 25%' }}
+              />
+            </div>
+          </section>
+        )}
 
         {/* Products */}
         <div className="px-10 pb-10" id="products">

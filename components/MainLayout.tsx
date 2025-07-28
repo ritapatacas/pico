@@ -2,22 +2,24 @@
 
 import { Footer } from "./footer";
 import { Sidebar } from "./sidebar";
-import { useEffect, useState } from "react";
+import { useDevice } from "./DeviceProvider";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
-  const [isMobile, setIsMobile] = useState(false);
+  const { isMobile, isLoading } = useDevice();
 
-  // Detectar se é mobile para aplicar layout correto
-  useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    checkIfMobile();
-    window.addEventListener("resize", checkIfMobile);
-    
-    return () => window.removeEventListener("resize", checkIfMobile);
-  }, []);
+  // Loading state para evitar layout shift
+  if (isLoading) {
+    return (
+      <div className="relative min-h-screen bg-gray-50/50">
+        <div className="flex flex-col min-h-screen">
+          <main className="flex-1 pb-16 w-full">
+            {children}
+          </main>
+          <Footer />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-gray-50/50">
