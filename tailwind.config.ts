@@ -52,7 +52,8 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        lavender: "hsl(240, 36%, 91%)",
+        lavender: "hsl(240, 34.80%, 91.00%)",
+        wine: "hsl(355, 43%, 34%)",
       },
       fontFamily: {
         burford: ['var(--font-burford)'],
