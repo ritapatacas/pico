@@ -182,7 +182,7 @@ export default function HomePage() {
         </section>
 
         {/* Products */}
-        <div className="px-10">
+        <div className="px-10 pb-10">
         <Products />
         </div>
 

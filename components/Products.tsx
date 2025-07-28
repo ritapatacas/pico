@@ -48,7 +48,7 @@ export default function Products() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-rotunda-regularyou text-center mt-10 mb-5">Encomendar</h1>
+      <h1 className="text-2xl font-rotunda-regular text-center mt-10 mb-5">Encomendar</h1>
       <input
         className="w-full mb-4 p-2 border rounded text-sm bg-white text-black"
         placeholder="Pesquisar produtos..."
