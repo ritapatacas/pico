@@ -225,6 +225,8 @@ export function Sidebar({ version }: SidebarProps) {
 
             {/* sidebar nav */}
             <div id="nav" className="flex flex-col flex-1 px-8 py-4 overflow-y-auto">
+
+              {/* sidebar content */}
               <div className="flex-1">
                 <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
 
@@ -370,6 +372,7 @@ export function Sidebar({ version }: SidebarProps) {
                 </Accordion>
               </div>
 
+              {/* sidebar footer */}
               <div className={burfordFontClass + " text-left flex justify-between items-end gap-2"}>
 
                 {/* sidebar settings */}
