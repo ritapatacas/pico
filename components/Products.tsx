@@ -73,7 +73,7 @@ export default function Products() {
                 {product.embaladoOptions && product.embaladoOptions[0] ? `desde ${product.embaladoOptions[0].price.toFixed(2).replace('.', ',')}€` : ""}
               </span>
               <Button
-                className=" font-burford m-1 bg-black text-white hover:bg-gray-900 pb-1"
+                className=" font-burford font-medium m-1 bg-black text-white hover:bg-gray-900 pb-1 px-2"
                 size="sm"
                 onClick={() => { setModalProduct(product); setModalOpen(true); }}
               >

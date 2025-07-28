@@ -54,7 +54,10 @@ export default function FreshFruitAddPopup({ open, onClose, product }: { open: b
       });
     }
     setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000);
+    setTimeout(() => {
+      setShowSuccess(false);
+      onClose();
+    }, 1500);
   };
 
   useEffect(() => {
