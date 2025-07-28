@@ -125,11 +125,13 @@ export function Sidebar({ version }: SidebarProps) {
 
   if (isMobile) {
     return (
-      <div
-        className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-lavender  ${isSidebarOpen ? 'bottom-0 h-full' : 'bottom-0 h-16'
+      <>
+        <div
+        className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-lavender  ${isSidebarOpen ? 'bottom-16 h-[calc(100%-64px)]' : 'bottom-0 h-16'
           } flex flex-col`}
         style={{ willChange: 'height' }}
       >
+
         {/* (only when open) */}
         {isSidebarOpen && (
           <>
@@ -147,7 +149,7 @@ export function Sidebar({ version }: SidebarProps) {
                   <img
                     src={client?.image_url || "/imgs/roza.webp"}
                     alt="avatar"
-                    className="w-10 h-10 mt-3 ml-3 rounded-full object-cover border"
+                    className="w-10 h-10 mt-3 ml-3 mb-1 rounded-full object-cover border"
                     onLoad={() => setImageLoaded(true)}
                     onError={() => setImageLoaded(false)}
                     style={{ display: imageLoaded ? 'block' : 'none' }}
@@ -222,8 +224,8 @@ export function Sidebar({ version }: SidebarProps) {
 
 
             {/* sidebar nav */}
-            <div id="nav" className="flex flex-col h-full px-8 py-4">
-              <div className="flex-1 h-full overflow-y-auto">
+            <div id="nav" className="flex flex-col flex-1 px-8 py-4 overflow-y-auto">
+              <div className="flex-1">
                 <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
 
                   {/* sidebar about */}
@@ -394,11 +396,13 @@ export function Sidebar({ version }: SidebarProps) {
                 <SocialNav className="flex-col mr-1" />
               </div>
             </div>
+
           </>
         )}
+        </div>
 
-        {/* bottom (always visible) */}
-        <div className="flex w-full items-center justify-around h-16 border-t-2 border-gray-700 bg-background pb-1 pt-2 mt-auto">
+        {/* bottom (always visible) - now outside the sidebar container */}
+        <div className="fixed bottom-0 left-0 z-[999] w-full flex items-center justify-around h-16 border-t-2 border-muted-foreground/50 bg-lavender  pb-1 pt-2">
           <Link
             href="/"
             className="flex flex-col items-center p-2 text-muted-foreground hover:text-primary"
@@ -447,7 +451,7 @@ export function Sidebar({ version }: SidebarProps) {
           </button>
 
         </div>
-      </div>
+      </>
     )
   }
 
