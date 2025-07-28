@@ -19,7 +19,7 @@ export default function AboutSection() {
           <Card className="bg-gray-300 opacity-60 text-black text-base overflow-hidden transition-all hover:shadow-lg w-[70vw] flex flex-col justify-between">
             <CardContent className="flex flex-col flex-grow font-semibold">
               <p className="text-lg leading-relaxed mb-2">
-                É num lugar no centro do país, no cabeço da aldeia dos Troviscais, em Pedrógão Grande, que o PICO DA ROSA cresce, naquelas que um dia foram as terras de sustento dos meus avós, Rosa e Américo.
+                É num lugar no cabeço da aldeia dos Troviscais, em Pedrógão Grande, que o PICO DA ROSA cresce, naquelas que um dia foram as terras de sustento dos meus avós, Rosa e Américo.
               </p>
               <p className="text-lg leading-relaxed">
                 Aqui, entre bagas coloridas e ainda jovens castanheiros, cultivamos também a memória do seu legado.
@@ -53,7 +53,7 @@ export default function AboutSection() {
           priority
         />
         <p className="text-lg leading-relaxed px-20 py-10 mb-20">
-          Vamos aprendido com os erros e os conselhos, e temos vindo a investir em <b>formação</b> focada em modos alternativos de produção como <b>permacultura</b> e <b>agroflorestas</b>.
+          Vamos aprendendo com os erros e os conselhos, e temos vindo a investir em <b>formação</b> focada em modos alternativos de produção como <b>permacultura</b> e <b>agroflorestas</b>.
           <br />
           Queremos tornar este um espaço cada vez mais sustentável, resiliente e saudável.
           <br />
