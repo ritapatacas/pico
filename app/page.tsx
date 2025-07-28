@@ -10,7 +10,9 @@ import AboutSection from "@/components/AboutSection";
 
 export default function HomePage() {
   const logoRef = useRef<HTMLDivElement>(null);
+  const parallaxRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
+  const [parallaxOffset, setParallaxOffset] = useState(0);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -31,6 +33,27 @@ export default function HomePage() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (parallaxRef.current) {
+        const rect = parallaxRef.current.getBoundingClientRect();
+        const scrolled = window.pageYOffset;
+        const sectionTop = rect.top + scrolled;
+        const sectionHeight = rect.height;
+        
+        // Calcula o offset baseado na posição da seção na tela
+        const progress = Math.max(0, Math.min(1, (scrolled - sectionTop + window.innerHeight) / (sectionHeight + window.innerHeight)));
+        const maxOffset = -(rect.height * 0.3); // Máximo 30% da altura da seção
+        const rate = progress * maxOffset;
+        
+        setParallaxOffset(rate);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className="relative">
       <div
@@ -43,7 +66,7 @@ export default function HomePage() {
         {/* topbar */}
         <Link href="/">
           <Image
-            className={`transition-all duration-250 ${isSticky ? "scale-80" : "scale-80 invert"
+            className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
               } pr-1`}
             src="logo/logo_h.svg"
             alt="PICO DA ROSA logo"
@@ -52,9 +75,9 @@ export default function HomePage() {
             priority
           />
         </Link>
-        <Link href="#products">
-          <Button className="bg-primary text-white font-bold">Encomendar</Button>
-        </Link>
+{/*         <Link href="#products">
+          <Button className="bg-gray-400 text-black font-bold">Encomendar</Button>
+        </Link> */}
       </div>
 
 
@@ -93,7 +116,7 @@ export default function HomePage() {
                 Mirtilos | Framboesas | groselhas
               </div>
               <Link href="#products" passHref>
-                <Button className="mt-2 rounded pt-1 px-4 bg-white text-primary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
+                <Button className="mt-2 rounded pt-1 px-4 bg-white text-secondary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
                   encomendar
                 </Button>
               </Link>
@@ -129,28 +152,33 @@ export default function HomePage() {
           </div>
         </div>
 
-
-
         <section>
-          <p className="text-lg leading-relaxed px-20 py-10">
-            Produção de frutos vermelhos no centro do país.
+          <p className="text-lg leading-relaxed px-20 py-10 !text-center">
+            Produção de <br /><b>frutos vermelhos</b><br />no centro do país.
           </p>
         </section>
 
-        {/* About */}
-        <div id="about">
-          <AboutSection />
-        </div>
 
-        <section>
-          <Image
-            src="imgs/PR-01.webp"
-            alt="PICO DA ROSA logo"
-            width={4032}
-            height={3024}
-            priority
-
-          />
+        <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
+          <div 
+            className="absolute inset-0 w-screen"
+            style={{
+              transform: `translateY(${parallaxOffset}px)`,
+              transition: 'transform 0.05s ease-out',
+              aspectRatio: '4/3',
+              height: 'auto'
+            }}
+          >
+            <Image
+              src="imgs/PR-01.webp"
+              alt="Rosa Américo"
+              width={4032}
+              height={3024}
+              priority
+              className="w-full h-auto object-cover"
+              style={{ objectPosition: 'center 25%' }}
+            />
+          </div>
         </section>
 
         {/* Products */}
@@ -158,6 +186,10 @@ export default function HomePage() {
         <Products />
         </div>
 
+        {/* About */}
+        <div id="about">
+          <AboutSection />
+        </div>
 
       </main>
 
