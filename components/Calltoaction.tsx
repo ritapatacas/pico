@@ -1,5 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button"; // Replace or remove if not using shadcn/ui
+import { scrollToSection } from "@/lib/utils";
 
 const CallToAction: React.FC = () => {
   return (
@@ -13,12 +14,12 @@ const CallToAction: React.FC = () => {
           Start building with our tools today. It's fast, free, and easy to set up.
         </p>
         <div className="mt-8 flex justify-center gap-4 flex-wrap">
-          <a
-            href="#products"
+          <button
+            onClick={() => scrollToSection('products')}
             className="inline-block px-6 py-3 text-base font-medium text-white bg-black rounded-md hover:bg-opacity-80 transition"
           >
             Encomendar
-          </a>
+          </button>
 {/*           <a
             href="/learn-more"
             className="inline-block px-6 py-3 text-base font-medium text-white border border-white rounded-md hover:bg-white hover:text-indigo-600 transition"

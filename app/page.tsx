@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
 import AboutSection from "@/components/AboutSection";
+import { scrollToSection } from "@/lib/utils";
 
 export default function HomePage() {
   const logoRef = useRef<HTMLDivElement>(null);
@@ -115,11 +116,12 @@ export default function HomePage() {
               <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-lg font-semibold font-burford">
                 Mirtilos | Framboesas | groselhas
               </div>
-              <Link href="#products" passHref>
-                <Button className="mt-2 rounded pt-1 px-4 bg-white text-secondary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford">
-                  encomendar
-                </Button>
-              </Link>
+              <Button 
+                onClick={() => scrollToSection('products')}
+                className="mt-2 rounded pt-1 px-4 bg-white text-secondary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford"
+              >
+                encomendar
+              </Button>
 
             </div>
           </div>

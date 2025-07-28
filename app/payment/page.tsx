@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/cart-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useLanguageSettings } from "@/hooks/use-settings-store";
+import { scrollToSection } from "@/lib/utils";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -65,7 +66,12 @@ export default function PaymentPage() {
 
   // Redirect if cart is empty or no shipping info
   if (cartItems.length === 0) {
-    router.push('#products');
+    // Navigate to home page and scroll to products section
+    router.push('/');
+    // Use setTimeout to ensure navigation completes before scrolling
+    setTimeout(() => {
+      scrollToSection('products');
+    }, 100);
     return (
       <div className="max-w-xl mx-auto py-12 px-4">
         <div className="text-center">

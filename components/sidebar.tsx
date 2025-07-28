@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/use-auth"
 
 import { Client } from '@/lib/clients';
 import { SocialNav } from "./SocialNav"
+import { scrollToSection } from '@/lib/utils';
 
 
 
@@ -236,7 +237,7 @@ export function Sidebar({ version }: SidebarProps) {
                       className={burfordFontClass + " text-left flex items-center gap-2"}
                       onClick={() => {
                         setIsSidebarOpen(false);
-                        router.push('#about');
+                        scrollToSection('about');
                       }}
                     >
                       <Users className="h-4 w-4" />
@@ -255,7 +256,7 @@ export function Sidebar({ version }: SidebarProps) {
                       className={burfordFontClass + " text-left flex items-center gap-2"}
                       onClick={() => {
                         setIsSidebarOpen(false);
-                        router.push('#products');
+                        scrollToSection('products');
                       }}
                     >
                       <Store className="h-4 w-4" />
@@ -296,9 +297,15 @@ export function Sidebar({ version }: SidebarProps) {
                         <p className="text-muted-foreground">
                           {t("sidebar.emptyCart")} <br />
                           {t("sidebar.visitProducts")}{' '}
-                          <Link href="#products" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
+                          <button 
+                            className="underline hover:text-primary" 
+                            onClick={() => {
+                              setIsSidebarOpen(false);
+                              scrollToSection('products');
+                            }}
+                          >
                             {t("sidebar.products")}
-                          </Link>{' '}
+                          </button>{' '}
                           {t("sidebar.or")}{' '}
                           <Link href="/info" className="underline hover:text-primary" onClick={() => setIsSidebarOpen(false)}>
                             {t("sidebar.contactUs")}
