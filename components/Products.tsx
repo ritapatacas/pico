@@ -48,8 +48,9 @@ export default function Products() {
 
   return (
     <div className="p-4 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-rotunda-regularyou text-center">Encomendar</h1>
       <input
-        className="w-full mb-4 p-2 border rounded text-sm"
+        className="w-full mb-4 p-2 border rounded text-sm bg-white text-black"
         placeholder="Pesquisar produtos..."
         value={search}
         onChange={e => setSearch(e.target.value)}
@@ -72,7 +73,7 @@ export default function Products() {
                 {product.embaladoOptions && product.embaladoOptions[0] ? `desde ${product.embaladoOptions[0].price.toFixed(2).replace('.', ',')}€` : ""}
               </span>
               <Button
-                className="textbutton font-burford m-1 bg-black text-white hover:bg-gray-900 pb-1"
+                className=" font-burford m-1 bg-black text-white hover:bg-gray-900 pb-1"
                 size="sm"
                 onClick={() => { setModalProduct(product); setModalOpen(true); }}
               >

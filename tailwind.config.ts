@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss"
 
-const config = {
-  darkMode: ["class"],
+const config: Config = {
+  darkMode: "class",
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -9,7 +9,6 @@ const config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -53,9 +52,16 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        lavender: "hsl(240, 36%, 91%)",
       },
       fontFamily: {
-        rotunda: ['"Rotunda"', 'sans-serif'],
+        burford: ['var(--font-burford)'],
+        rotunda: ['var(--font-rotunda-regular)'],
+        'rotunda-hairline': ['var(--font-rotunda-hairline)'],
+        'rotunda-thin': ['var(--font-rotunda-thin)'],
+        'rotunda-light': ['var(--font-rotunda-light)'],
+        'rotunda-regular': ['var(--font-rotunda-regular)'],
+        'rotunda-variable': ['var(--font-rotunda-variable)'],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -79,6 +85,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config
+}
 
 export default config

@@ -1,22 +1,94 @@
 "use client";
 
-import HeaderWithPathname from "@/app/HeaderWithPathname";
 import { Footer } from "./footer";
 import { Sidebar } from "./sidebar";
+import { useEffect, useState } from "react";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Detectar se é mobile para aplicar layout correto
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener("resize", checkIfMobile);
+    
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
+
   return (
     <div className="relative min-h-screen bg-gray-50/50">
-      {/* Main content area with proper sidebar spacing */}
-      <div className="flex flex-col min-h-screen transition-all duration-300 md:pr-64">
+      {/* Layout principal com responsividade melhorada */}
+      <div className="flex flex-col min-h-screen transition-all duration-300">
+        {/* Header - apenas em desktop se necessário */}
         {/* <HeaderWithPathname /> */}
-        <main className="flex-1">{children}</main>
+        
+        {/* Container principal do conteúdo */}
+        <div className="flex flex-1">
+          {/* Área do conteúdo principal */}
+          <main 
+            className={`
+              flex-1 
+              transition-all 
+              duration-300 
+              ease-in-out
+              ${isMobile 
+                ? 'pb-16 w-full' // Mobile: espaço para bottom navigation
+                : 'pr-64 w-full' // Desktop: espaço para sidebar direita
+              }
+            `}
+          >
+            {children}
+          </main>
+
+          {/* Desktop Sidebar - fixa à direita */}
+          <aside 
+            className={`
+              fixed 
+              right-0 
+              top-0 
+              h-full 
+              w-64 
+              bg-background 
+              border-l 
+              border-border 
+              transition-all 
+              duration-300 
+              ease-in-out 
+              z-[120]
+              ${isMobile ? 'hidden' : 'block'}
+            `}
+          >
+            <Sidebar version="0.1.0" />
+          </aside>
+        </div>
+
+        {/* Footer */}
+        <Footer />
       </div>
-      <Footer />
-      {/* Sidebar always rendered, width controlled by VerticalHeader */}
-      <div className="fixed right-0 top-0 h-full transition-all z-[120] duration-300 ease-in-out">
+
+      {/* Mobile Sidebar - bottom navigation */}
+      <div 
+        className={`
+          md:hidden 
+          fixed 
+          bottom-0 
+          left-0 
+          right-0 
+          z-[120] 
+          bg-background 
+          border-t 
+          border-border
+          transition-all 
+          duration-300 
+          ease-in-out
+        `}
+      >
         <Sidebar version="0.1.0" />
       </div>
     </div>
   );
-} 
+}
