@@ -109,7 +109,7 @@ export function generateScheduleAvailability(options: ScheduleOptions): Delivery
   
   return availableDates.map(date => ({
     date,
-    slot: createAfternoonSlot(true)
+    slots: [createAfternoonSlot(true)]
   }));
 }
 
