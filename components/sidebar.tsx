@@ -133,14 +133,14 @@ export function Sidebar({ version }: SidebarProps) {
         style={{ willChange: 'height' }}
       >
 
-        {/* (only when open) */}
+        { /* (only when open) */ }
         {isSidebarOpen && (
           <>
-            {/* sidebar header */}
+            { /* sidebar header */ }
             <div id="sidebar-header" className="flex w-full justify-between items-center px-4 py-3 border-b-2 border-gray-500">
               <div className="flex items-center gap-3">
 
-                {/* loggin */}
+                { /* loggin */ }
                 {isClientLoading ? (
                   <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
                     <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
@@ -202,7 +202,7 @@ export function Sidebar({ version }: SidebarProps) {
                 </div>
               </div>
 
-              {/* logout */}
+              { /* logout */ }
               <div className=" flex justify-right pt-2">
 
                 {isAuthenticated && client && (
@@ -224,14 +224,14 @@ export function Sidebar({ version }: SidebarProps) {
             </div>
 
 
-            {/* sidebar nav */}
+            { /* sidebar nav */ }
             <div id="nav" className="flex flex-col flex-1 px-8 py-4 overflow-y-auto">
 
-              {/* sidebar content */}
+              { /* sidebar content */ }
               <div className="flex-1">
                 <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
 
-                  {/* sidebar about */}
+                  { /* sidebar about */ }
                   <AccordionItem value="about" className="border-none">
                     <AccordionTrigger
                       className={burfordFontClass + " text-left flex items-center gap-2"}
@@ -246,11 +246,11 @@ export function Sidebar({ version }: SidebarProps) {
                       </span>
                     </AccordionTrigger>
                     <AccordionContent>
-                      {/* Conteúdo vazio - apenas para navegação */}
+                      { /* Empty content - only for navigation */ }
                     </AccordionContent>
                   </AccordionItem>
 
-                  {/* sidebar products */}
+                  { /* sidebar products */ }
                   <AccordionItem value="products" className="border-none">
                     <AccordionTrigger
                       className={burfordFontClass + " text-left flex items-center gap-2"}
@@ -264,11 +264,11 @@ export function Sidebar({ version }: SidebarProps) {
                       </span>
                     </AccordionTrigger>
                     <AccordionContent>
-                      {/* Conteúdo vazio - apenas para navegação */}
+                      { /* Empty content - only for navigation */ }
                     </AccordionContent>
                   </AccordionItem>
 
-                  {/* sidebar contacts */}
+                  { /* sidebar contacts */ }
                   <AccordionItem value="contactos" className="border-none">
                     <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                       <Mail className="h-4 w-4" />
@@ -282,10 +282,10 @@ export function Sidebar({ version }: SidebarProps) {
                     </AccordionContent>
                   </AccordionItem>
 
-                  {/* divider border */}
+                  { /* divider border */ }
                   <div className="border-b border-gray-300 my-2" />
 
-                  {/* sidebar cart */}
+                  { /* sidebar cart */ }
                   <AccordionItem value="cart" className="border-none">
                     <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
                       <ShoppingCart className="h-4 w-4" />
@@ -379,10 +379,10 @@ export function Sidebar({ version }: SidebarProps) {
                 </Accordion>
               </div>
 
-              {/* sidebar footer */}
+              { /* sidebar footer */ }
               <div className={burfordFontClass + " text-left flex justify-between items-end gap-2"}>
 
-                {/* sidebar settings */}
+                { /* sidebar settings */ }
                 <div className="w-full">
 
                   <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
@@ -402,7 +402,7 @@ export function Sidebar({ version }: SidebarProps) {
                   </div>
                 </div>
 
-                {/* sidebar social */}
+                { /* sidebar social */ }
                 <SocialNav className="flex-col mr-1" />
               </div>
             </div>
@@ -411,7 +411,7 @@ export function Sidebar({ version }: SidebarProps) {
         )}
         </div>
 
-        {/* bottom (always visible) - now outside the sidebar container */}
+        { /* bottom (always visible) - now outside the sidebar container */ }
         <div className="fixed bottom-0 left-0 z-[999] w-full flex items-center justify-around h-16 border-t-2 border-muted-foreground/50 bg-lavender  pb-1 pt-2">
           <Link
             href="/"
@@ -492,7 +492,7 @@ export function Sidebar({ version }: SidebarProps) {
                 <span>{item.name}</span>
               </Link>
             ))}
-            {/* Auth block for desktop */}
+            { /* Auth block for desktop */ }
             {!isAuthenticated ? (
               <button
                 onClick={() => signIn()}
@@ -532,7 +532,7 @@ export function Sidebar({ version }: SidebarProps) {
         </div>
       </div>
 
-      {/* Desktop Settings Panel */}
+      { /* Desktop Settings Panel */ }
       {isSidebarOpen && (
         <div className="absolute left-full top-0 h-full w-80 border-l bg-background">
           <div className="flex h-16 items-center justify-between border-b px-4">

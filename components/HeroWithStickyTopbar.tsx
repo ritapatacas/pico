@@ -27,7 +27,7 @@ export default function HeroWithStickyTopbar() {
           </Link>
         </div>
       </div>
-      {/* Fade-in animation keyframes */}
+      { /* Fade-in animation keyframes */ }
       <style jsx global>{`
         @keyframes fadein {
           from {

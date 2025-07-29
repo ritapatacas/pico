@@ -31,8 +31,8 @@ export default function CheckoutClient() {
     name: "",
     email: "",
     phone: "",
-    deliveryType: "pickup", // 'pickup' ou 'delivery'
-    pickupStation: "",      // ← Começar vazio
+    deliveryType: "pickup", // 'pickup' or 'delivery'
+    pickupStation: "",
     address: "",
   });
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +56,7 @@ export default function CheckoutClient() {
     };
   } | null>(null);
 
-  // Carregar opções de agendamento baseado no tipo de entrega
+  // load scheduling options based on delivery type
   useEffect(() => {
     const loadScheduleOptions = async () => {
       if (form.deliveryType === 'pickup' && form.pickupStation) {
@@ -73,8 +73,8 @@ export default function CheckoutClient() {
       } else if (form.deliveryType === 'delivery' && form.address && form.address.length > 5) {
         setLoadingOptions(true);
         try {
-          // TODO: Implementar geocodificação real
-          // Por agora, usar coordenadas mock para Lisboa centro
+          // TODO: Implement real geocoding
+          // For now, use mock coordinates for Lisbon center
           const mockCoords = { lat: 38.7223, lon: -9.1393 };
           const options = await getScheduleOptions('delivery', undefined, form.address, mockCoords);
           setScheduleOptions(options);
@@ -92,7 +92,6 @@ export default function CheckoutClient() {
     loadScheduleOptions();
   }, [form.deliveryType, form.pickupStation, form.address]);
 
-  // Opções para o calendário
   const calendarOptions = scheduleOptions.map(opt => ({
     date: opt.date,
     slot: 1 as const,
@@ -100,7 +99,7 @@ export default function CheckoutClient() {
     available: opt.available
   }));
 
-  // Buscar dados do cliente quando o usuário estiver autenticado
+  // fetch client data when user is authenticated
   useEffect(() => {
     const fetchClientData = async () => {
       if (isAuthenticated && user?.email) {
@@ -112,7 +111,7 @@ export default function CheckoutClient() {
               ...prev,
               name: clientData.name || "",
               email: clientData.email || "",
-              phone: clientData.mobile || "", // Usar o campo mobile da tabela clients
+              phone: clientData.mobile || "",
             }));
           }
         } catch (error) {
@@ -138,7 +137,6 @@ export default function CheckoutClient() {
     }
   }, [shouldRedirect, router]);
 
-  // Helper function to get delivery info from form
   const getDeliveryInfo = () => {
     if (!selectedDate) return undefined;
 
@@ -151,7 +149,7 @@ export default function CheckoutClient() {
     };
   };
 
-  // Check for success parameters from payment redirect
+  // check for success params from payment redirect
   useEffect(() => {
     const sessionId = searchParams.get('session_id');
     const success = searchParams.get('success');
@@ -165,7 +163,7 @@ export default function CheckoutClient() {
       const deliveryInfo = getDeliveryInfo();
       console.log('Delivery info:', deliveryInfo);
 
-      // Show success modal for Stripe payment
+      // show success modal for stripe payment
       setSuccessModalData({
         sessionId,
         paymentMethod: 'stripe',
@@ -250,16 +248,17 @@ export default function CheckoutClient() {
   }
 
   async function handlePayNow() {
-    // Validar se tem data selecionada
+
+    // validate if there is a date selected
     if (!selectedDate) {
       alert("Por favor, selecione uma data para agendamento");
       return;
     }
 
-    // Salvar dados do cliente se estiver logado
+    // save client data if logged in
     await saveClientData();
 
-    // Guardar dados incluindo horário preferencial
+    // save data (including preferred time)
     const shippingData = {
       ...form,
       selectedDate,
@@ -271,16 +270,16 @@ export default function CheckoutClient() {
   }
 
   async function handleCashOnDelivery() {
-    // Validar se tem data selecionada
+    // validate if there is a date selected
     if (!selectedDate) {
       alert("Por favor, selecione uma data para agendamento");
       return;
     }
 
-    // Salvar dados do cliente se estiver logado
+    // save client data if logged in
     await saveClientData();
 
-    // Mostrar modal de sucesso para contra-reembolso
+    // show success modal for cash on delivery
     const shippingData = {
       ...form,
       selectedDate,
@@ -300,7 +299,7 @@ export default function CheckoutClient() {
       <h1 className="text-2xl font-bold px-1 mb-4">{t("checkout.title")}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Shipping Form */}
+        { /* Shipping Form */ }
         <div>
           <form className="space-y-3 bg-white p-6 rounded shadow" onSubmit={e => e.preventDefault()}>
             {isAuthenticated ? (
@@ -424,7 +423,7 @@ export default function CheckoutClient() {
 
 
 
-            {/* Mostrar calendário de agendamento */}
+            { /* Show calendar */ }
 
             {((form.deliveryType === "pickup" && form.pickupStation && form.pickupStation !== "") || (form.deliveryType === "delivery" && form.address)) && (
 
@@ -440,14 +439,15 @@ export default function CheckoutClient() {
                       options={calendarOptions}
                       onSelect={(date) => {
                         setSelectedDate(date);
-                        setSelectedSlot(1); // Sempre slot 1
+                        setSelectedSlot(1); // Always slot 1
                       }}
                     />
 
-                    {/* Mostrar campos após selecionar data */}
+                    { /* Show fields after selecting date */ }
                     {selectedDate && (
                       <div className="mt-4 space-y-4">
-                        {/* Campo de horário preferencial */}
+
+                        { /* Preferred time */ }
                         <div>
                           <label className="block text-sm font-medium mb-1">Horário Preferencial</label>
                           <input
@@ -459,7 +459,7 @@ export default function CheckoutClient() {
                           <p className="text-xs text-gray-500 mt-1">Opcional - ajuda-nos a planear melhor a entrega</p>
                         </div>
 
-                        {/* Informação do agendamento */}
+                        { /* Information about the appointment */ }
                         <div className="p-3 border border-gray-300 rounded bg-gray-50">
                           <p className="text-gray-800">
                             <strong>Agendado para:</strong> {new Date(selectedDate).toLocaleDateString('pt-PT', {
@@ -472,7 +472,7 @@ export default function CheckoutClient() {
                           </p>
                         </div>
 
-                        {/* Botões de pagamento */}
+                        { /* Payment buttons */ }
                         <div className="flex gap-2 font-bold">
                           <Button
                             type="button"
@@ -500,7 +500,7 @@ export default function CheckoutClient() {
           </form>
         </div>
 
-        {/* Order Summary */}
+        { /* Order Summary */ }
         <div>
           <h2 className="text-xl font-semibold mb-4">{t("checkout.orderSummary")}</h2>
           <Card>
@@ -520,7 +520,7 @@ export default function CheckoutClient() {
                   </div>
                 ))}
 
-                {/* Mostrar custo de entrega se aplicável */}
+                { /* Show delivery cost if applicable */ }
                 {form.deliveryType === "delivery" && selectedDate && scheduleOptions.length > 0 && (
                   <div className="flex justify-between items-center text-sm">
                     <span>Custo de entrega:</span>
@@ -543,7 +543,7 @@ export default function CheckoutClient() {
         </div>
       </div>
 
-      {/* Success Modal */}
+      { /* Success Modal */ }
       {successModalData && (
         <SuccessModal
           open={showSuccessModal}
@@ -558,7 +558,7 @@ export default function CheckoutClient() {
         />
       )}
 
-      {/* Test Modal */}
+      { /* Test Modal */ }
       <TestModal
         open={showTestModal}
         onClose={() => {

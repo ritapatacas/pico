@@ -178,7 +178,7 @@ export default function DeliveryOptions({
 
   return (
     <div className="space-y-6">
-      {/* Address Input */}
+      { /* Address Input */ }
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -214,19 +214,19 @@ export default function DeliveryOptions({
         </CardContent>
       </Card>
 
-      {/* Delivery Options */}
+      { /* Delivery Options */ }
       {data && (
         <Card>
           <CardHeader>
             <CardTitle>Opções de Entrega</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Delivery Type Selection */}
+            { /* Delivery Type Selection */ }
             <RadioGroup 
               value={selectedType} 
               onValueChange={(value) => setSelectedType(value as 'pickup' | 'delivery')}
             >
-              {/* Pickup Option */}
+              { /* Pickup Option */ }
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="pickup" id="pickup" />
                 <label htmlFor="pickup" className="flex items-center gap-2 cursor-pointer">
@@ -236,7 +236,7 @@ export default function DeliveryOptions({
                 </label>
               </div>
 
-              {/* Delivery Option */}
+              { /* Delivery Option */ }
               {data.delivery_options && (
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="delivery" id="delivery" />
@@ -257,7 +257,7 @@ export default function DeliveryOptions({
               )}
             </RadioGroup>
 
-            {/* Pickup Stations */}
+            { /* Pickup Stations */ }
             {selectedType === 'pickup' && (
               <div className="space-y-4">
                 <h3 className="font-semibold">Escolha uma estação:</h3>
@@ -279,7 +279,7 @@ export default function DeliveryOptions({
               </div>
             )}
 
-            {/* Date Selection */}
+            { /* Date Selection */ }
             {((selectedType === 'delivery' && data.delivery_options) || 
               (selectedType === 'pickup' && selectedStation)) && (
               <div className="space-y-4">
@@ -308,7 +308,7 @@ export default function DeliveryOptions({
               </div>
             )}
 
-            {/* Time Slot Selection */}
+            { /* Time Slot Selection */ }
             {selectedDate && (
               <div className="space-y-4">
                 <h3 className="font-semibold flex items-center gap-2">
@@ -360,7 +360,7 @@ export default function DeliveryOptions({
               </div>
             )}
 
-            {/* Confirm Button */}
+            { /* Confirm Button */ }
             {getSelectedDeliveryDetails() && (
               <div className="pt-4 border-t">
                 <Button 

@@ -49,10 +49,10 @@ export function SettingsPanel() {
   return (
     <div className="space-y-2 px-5 pl-8">
 
-      {/* divider border */}
+      { /* divider border */ }
       <div className="border-b border-gray-300 my-2 mb-5" />
       
-      {/* sidebar settings theme */}
+      { /* sidebar settings theme */ }
       <div className="flex items-center justify-between h-6">
         <h3 className="text-sm font-rotunda-regular mr-5">{t("theme")}</h3>
         <ToggleGroup type="single" value={theme || "system"} onValueChange={handleThemeChange} className=" h-6 p-0 w-18">
@@ -65,7 +65,7 @@ export function SettingsPanel() {
         </ToggleGroup>
       </div>
 
-      {/* sidebar settings language */}
+      { /* sidebar settings language */ }
       <div className="flex items-center justify-between h-6">
         <h3 className="text-sm font-rotunda-regular mr-5">{t("language")}</h3>
         <ToggleGroup type="single" value={language} onValueChange={handleLanguageChange} className=" h-6 p-0 w-18">
@@ -80,16 +80,16 @@ export function SettingsPanel() {
 
       {isAuthenticated && user && (
         <>
-          {/* sidebar settings account */}
+          { /* sidebar settings account */ }
           <div className="flex items-center justify-between h-6">
             <h3 className="text-sm font-rotunda-regular self-center">{t("auth.account")}</h3>
-            {/*             <Button variant="ghost" size="sm" className="px-2 text-xs self-start h-6">
+            { /*             <Button variant="ghost" size="sm" className="px-2 text-xs self-start h-6">
               <User className="mr-1 h-3 w-3 " />
               <span>{user.name}</span>
-            </Button> */}
+            </Button> */ }
           </div>
 
-          {/* sidebar settings logout */}
+          { /* sidebar settings logout */ }
           <div className="flex items-center h-6">
             <Button
               variant="ghost"

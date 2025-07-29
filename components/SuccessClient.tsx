@@ -103,7 +103,7 @@ export default function SuccessClient() {
 
         {paymentDetails && (
           <div className="space-y-6">
-            {/* Order Summary */}
+            { /* Order Summary */ }
             <div className="bg-gray-50 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Package className="h-5 w-5" />
@@ -131,7 +131,7 @@ export default function SuccessClient() {
               </div>
             </div>
 
-            {/* Order Details */}
+            { /* Order Details */ }
             <div className="bg-blue-50 rounded-lg p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Mail className="h-5 w-5" />
@@ -147,7 +147,7 @@ export default function SuccessClient() {
               </div>
             </div>
 
-            {/* Session ID */}
+            { /* Session ID */ }
             {sessionId && (
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-sm text-gray-600">

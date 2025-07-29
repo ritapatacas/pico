@@ -133,7 +133,7 @@ export default function PaymentStep({ onBack }: { onBack: () => void }) {
           Voltar
         </Button>
         
-        {/* Stripe Button */}
+        { /* Stripe Button */ }
         <Button
           className="flex-1 bg-blue-600 text-white hover:bg-blue-700 py-2 text-sm font-medium disabled:opacity-50"
           onClick={handleStripePayment}
@@ -142,7 +142,7 @@ export default function PaymentStep({ onBack }: { onBack: () => void }) {
           {isProcessing ? "Processando..." : "Pagar com Cartão / MB WAY"}
         </Button>
         
-        {/* PayPal Button */}
+        { /* PayPal Button */ }
         <div className="flex-1">
           <Script 
             src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" 

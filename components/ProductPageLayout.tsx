@@ -78,7 +78,7 @@ export default function ProductPageLayout({
         size: selectedOption.size,
         product_key: selectedOption.product_key,
       });
-    } else { // granel
+    } else { // bulk
       addToCart({
         name: `${t(`product.${productKey}`)} ${t("product.bulk")}`,
         price: precoGranelPorKg,

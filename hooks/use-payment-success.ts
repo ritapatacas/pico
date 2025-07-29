@@ -24,7 +24,7 @@ export function usePaymentSuccess() {
         console.error('Error clearing shipping data:', error);
       }
 
-      // 🧹 Remove query string from URL
+      // Remove query string from URL
       router.replace(window.location.pathname);
     }
   }, [searchParams, clearCart, router]);

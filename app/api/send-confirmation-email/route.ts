@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const PRODUCER_EMAIL = 'opicodarosa@gmail.com';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'info@picodarosa.pt'; // sandbox para testes
+const FROM_EMAIL = process.env.FROM_EMAIL || 'info@picodarosa.pt'; // sandbox for tests
 
 function getBaseUrl() {
   if (process.env.NODE_ENV === 'production') {

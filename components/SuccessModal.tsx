@@ -176,7 +176,7 @@ export default function SuccessModal({
         }),
       });
 
-      // Enviar email ao produtor
+      // Send email to producer
       if (order.id && order.admin_token) {
         const orderSummary = cartItems.map(item =>
           `${item.quantity} x ${item.name} (${(item.price * item.quantity).toFixed(2)}€)`
@@ -194,7 +194,7 @@ export default function SuccessModal({
         } catch (err) {
           console.error('Erro ao enviar email ao produtor:', err);
         }
-        // Enviar email ao cliente
+        // Send email to client
         try {
           await fetch('/api/send-client-confirmation-email', {
             method: 'POST',
@@ -342,14 +342,14 @@ export default function SuccessModal({
         </div>
 
         <div className="space-y-6">
-          {/* Combined Order Information */}
+          { /* Combined Order Information */ }
           <div className="bg-gray-50 rounded-lg p-6">
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Package className="h-5 w-5" />
               Detalhes do Pedido
             </h2>
 
-            {/* Order Items */}
+            { /* Order Items */ }
             <div className="mb-4">
 
               {paymentDetails?.items && paymentDetails.items.length > 0 ? (
@@ -376,7 +376,7 @@ export default function SuccessModal({
                 </div>
               )}
 
-              {/* Total */}
+              { /* Total */ }
               <div className="border-t border-gray-100 pt-2 mt-4 space-y-2">
                 {deliveryFee > 0 && (
                   <div className="flex justify-between items-center text-sm">
@@ -393,7 +393,7 @@ export default function SuccessModal({
               </div>
             </div>
 
-            {/* Payment Method */}
+            { /* Payment Method */ }
             <div className="mb-2 pb-2 border-b border-gray-100">
               <p className="font-bold text-lg mb-2 text-gray-600 uppercase tracking-wide">
                 Pagamento
@@ -406,7 +406,7 @@ export default function SuccessModal({
               </div>
             </div>
 
-            {/* Delivery Information */}
+            { /* Delivery Information */ }
             {deliveryInfo && (
               <div className="mb-2 pb-2">
                 <p className="font-bold text-lg mb-2 text-gray-600 uppercase tracking-wide">
@@ -435,7 +435,7 @@ export default function SuccessModal({
 
           </div>
 
-          {/* Session ID for Stripe payments */}
+          { /* Session ID for Stripe payments */ }
           {sessionId && paymentMethod === 'stripe' && (
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-600">
@@ -444,7 +444,7 @@ export default function SuccessModal({
             </div>
           )}
 
-          {/* Order ID for cash payments */}
+          { /* Order ID for cash payments */ }
           {paymentDetails?.order_id && paymentMethod === 'cash' && (
             <div className="bg-gray-50 rounded-lg p-4">
               <p className="text-sm text-gray-600">

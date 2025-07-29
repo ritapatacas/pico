@@ -20,7 +20,7 @@ export default function HomePage() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsSticky(entry.intersectionRatio < 1); // sticky quando cola ao topo
+        setIsSticky(entry.intersectionRatio < 1); // sticky when it sticks to the top
       },
       {
         threshold: [1],
@@ -44,9 +44,9 @@ export default function HomePage() {
         const sectionTop = rect.top + scrolled;
         const sectionHeight = rect.height;
 
-        // Calcula o offset baseado na posição da seção na tela
+        // Calculate offset based on section position on screen
         const progress = Math.max(0, Math.min(1, (scrolled - sectionTop + window.innerHeight) / (sectionHeight + window.innerHeight)));
-        const maxOffset = -(rect.height * 0.3); // Máximo 30% da altura da seção
+        const maxOffset = -(rect.height * 0.3); // Maximum 30% of section height
         const rate = progress * maxOffset;
 
         setParallaxOffset(rate);
@@ -60,7 +60,7 @@ export default function HomePage() {
   return (
     <div className="relative">
 
-      {/* Topbar */}
+      { /* Topbar */ }
       <div
         className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
     transition-opacity duration-500 ease-in-out
@@ -81,12 +81,13 @@ export default function HomePage() {
 
 
       <main className="relative m-0 p-0">
-        {/* HERO SECTION */}
+        { /* HERO SECTION */ }
         <div className="relative w-screen h-screen">
-          {/* hero content */}
+
+          { /* hero content */ }
           <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center w-full h-full z-20 animate-fadein">
 
-            {/* HERO logo (sticky dentro da hero) */}
+            { /* HERO logo */ }
             <div
               ref={logoRef}
               className={`
@@ -106,7 +107,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Texto */}
+            { /* Text */ }
             <div className="flex flex-col items-end justify-center text-right w-full md:w-auto pr-10 z-20">
               <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-white font-burford">
                 Fruta Miúda
@@ -124,7 +125,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* imagem de fundo */}
+          { /* background image */ }
           <div className="flex w-screen bg-white -z-40">
             <Image
               className="w-full h-full object-cover object-top"
@@ -136,10 +137,10 @@ export default function HomePage() {
             />
           </div>
 
-          {/* overlay */}
+          { /* overlay */ }
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
 
-          {/* blur effect */}
+          { /* blur effect */ }
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center mb-50">
             <div
               className="w-[300vw] h-[150vw] max-w-600 max-h-500 rounded-full"
@@ -158,7 +159,7 @@ export default function HomePage() {
           </p>
         </section>
 
-        {/* Parallax section - apenas em desktop */}
+        { /* Parallax section */ }
         {isMobile && (
           <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
             <div
@@ -183,19 +184,19 @@ export default function HomePage() {
           </section>
         )}
 
-        {/* Products */}
+        { /* Products */ }
         <div className="px-10 pb-10" id="products">
           <Products />
         </div>
 
-        {/* About */}
+        { /* About */ }
         <div id="about">
           <AboutSection />
         </div>
 
       </main>
 
-      {/* Fade-in animation keyframes */}
+      { /* Fade-in animation keyframes */ }
       <style jsx global>{`
         @keyframes fadein {
           from {

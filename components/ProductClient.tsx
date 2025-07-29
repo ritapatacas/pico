@@ -42,10 +42,10 @@ const embaladoOptions = [
   { size: "700g", price: 4.2, kgPrice: 6, product_key: "BLU_700" },
 ];
 
-// Preço por kg para granel
+// Price per kg for bulk
 const precoGranelPorKg = 6;
 
-// Função para obter o objeto da opção selecionada
+// Function to get the selected option object
 function getSelectedEmbaladoOption(selectedSize: string) {
   return embaladoOptions.find(opt => opt.size === selectedSize) || embaladoOptions[0];
 }
@@ -84,7 +84,7 @@ export default function ProductClient() {
     },
   ]
 
-  // Sempre mostrar todos os thumbnails
+  // Always show all thumbnails
   const selectedIndex = imageOptions.findIndex(img => img.src === selectedImage)
 
   const nextImage = () => {
@@ -120,7 +120,7 @@ export default function ProductClient() {
         size: selectedOption.size,
         product_key: selectedOption.product_key,
       });
-    } else { // granel
+    } else { // bulk
       addToCart({
         name: 'Mirtilos a Granel',
         price: precoGranelPorKg,
@@ -144,7 +144,7 @@ export default function ProductClient() {
       <main className="flex-grow flex flex-col justify-between py-12">
         <div className="pt-28 w-[90%] lg:w-[80%] mx-auto">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-12 lg:gap-16">
-            {/* Product Image */}
+            { /* Product Image */ }
             <div className="lg:w-1/2 order-1 lg:order-1 sticky top-24">
               <div className="relative aspect-square">
                 <Button
@@ -202,7 +202,7 @@ export default function ProductClient() {
               </div>
             </div>
 
-            {/* Product Info */}
+            { /* Product Info */ }
             <div className="lg:w-1/2 space-y-8 order-2 lg:order-2">
               <div>
                 <h1 className="text-4xl sm:text-4xl font-bold tracking-tight mb-4">
@@ -223,11 +223,11 @@ export default function ProductClient() {
                 </span>
               </div>
 
-              {/* formato */}
+              { /* format */ }
               <div className="space-y-4">
                 <h2 className="text-md font-semibold">{t("product.format")}</h2>
                 <div className="flex flex-wrap gap-3">
-                  {/* embalado */}
+                  { /* embalado */ }
                   <label
                     className={`cursor-pointer px-4 py-1 rounded flex items-center justify-center border-2 text-m font-semibold transition-all ${
                       packagingType === "embalado"
@@ -246,7 +246,7 @@ export default function ProductClient() {
                     {t("product.packaged")}
                   </label>
 
-                  {/* granel */}
+                  { /* bulk */ }
                   <label
                     className={`cursor-pointer px-4 py-2 rounded flex items-center justify-center border-2 text-m font-semibold transition-all ${
                       packagingType === "granel"
@@ -330,9 +330,9 @@ export default function ProductClient() {
                 </div>
               )}
 
-              {/* quantity - add - fav */}
+              { /* quantity - add - fav */ }
               <div className="flex items-center gap-4">
-                {/* quantity */}
+                { /* quantity */ }
                 <div className="flex items-center border rounded-full">
                   <Button
                     variant="ghost"
@@ -353,7 +353,7 @@ export default function ProductClient() {
                   </Button>
                 </div>
 
-                {/* add to cart */}
+                { /* add to cart */ }
                 <Button
                   className="textbutton flex-grow bg-black text-white hover:bg-gray-900 py-6 text-lg font-medium"
                   onClick={handleAddToCart}
@@ -371,7 +371,7 @@ export default function ProductClient() {
                         .replace(".", ",")}€)`}
                 </Button>
 
-                {/* fav */}
+                { /* fav */ }
                 <Button
                   variant="outline"
                   className="p-3"
@@ -388,7 +388,7 @@ export default function ProductClient() {
             </div>
           </div>
 
-          {/* Product Details Tabs */}
+          { /* Product Details Tabs */ }
           <div className="mt-16">
             <Tabs defaultValue="details">
               <TabsList className="w-full justify-start border-b">
@@ -506,7 +506,7 @@ export default function ProductClient() {
             </Tabs>
           </div>
 
-          {/* Related Products */}
+          { /* Related Products */ }
           <div className="mt-16">
             <h2 className="text-2xl font-bold mb-6">{t("product.youMayAlsoLike")}</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">

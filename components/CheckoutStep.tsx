@@ -34,14 +34,14 @@ export default function CheckoutStep({ onNext, onBack }: { onNext: () => void, o
 
   async function handleCustomerInfoSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // Avançar para o passo de entrega
+    // Advance to delivery step
     setStep('delivery');
   }
 
   async function handleFinalSubmit() {
     setSubmitting(true);
     
-    // Guardar dados do cliente e entrega
+    // Save client and delivery data
     const checkoutData = {
       customer: form,
       delivery: deliverySelection,
@@ -59,7 +59,7 @@ export default function CheckoutStep({ onNext, onBack }: { onNext: () => void, o
   }
 
   function handleAddressChange(newAddress: string) {
-    // Atualizar o campo address quando a morada é alterada no DeliveryOptions
+    // Update address field when address is changed in DeliveryOptions
     setForm(prev => ({ ...prev, address: newAddress }));
   }
 
@@ -201,7 +201,7 @@ export default function CheckoutStep({ onNext, onBack }: { onNext: () => void, o
         </Button>
       </div>
       
-      {/* Resumo da seleção */}
+      { /* Summary of the selection */ }
       {deliverySelection && (
         <div className="mt-4 p-3 bg-gray-50 rounded border-l-4 border-black">
           <h3 className="font-semibold text-sm">Resumo da Entrega:</h3>

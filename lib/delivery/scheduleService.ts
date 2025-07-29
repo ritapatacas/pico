@@ -10,21 +10,21 @@ import type {
 } from './types';
 
 /**
- * Calcula as datas disponíveis baseado no tipo de entrega
+ * Calculate available dates based on delivery type
  */
 function getAvailableDates(deliveryType: 'pickup' | 'delivery', station?: string): string[] {
   const today = new Date();
   const dates: string[] = [];
   
   let startDays: number;
-  let maxDays = 15; // Até 15 dias depois
+  let maxDays = 15; // Up to 15 days after
   
-  // Determinar quantos dias depois começar
+  // Determine how many days after to start
   if (deliveryType === 'pickup') {
     if (station === 'PG') {
-      startDays = 1; // D+1 para Pedrógão Grande
+      startDays = 1; // D+1 (tomorrow) for Pedrógão Grande
     } else {
-      startDays = 2; // D+2 para Lisboa e Amadora
+      startDays = 2; // D+2 (2 days after) for Lisboa and Amadora
     }
   } else {
     startDays = 4; // D+4 para delivery
@@ -34,10 +34,10 @@ function getAvailableDates(deliveryType: 'pickup' | 'delivery', station?: string
     const date = new Date(today);
     date.setDate(today.getDate() + i);
     
-    // Para delivery, excluir fins de semana
+    // For delivery, exclude weekends
     if (deliveryType === 'delivery') {
       const dayOfWeek = date.getDay();
-      if (dayOfWeek === 0 || dayOfWeek === 6) { // Domingo ou Sábado
+      if (dayOfWeek === 0 || dayOfWeek === 6) { // Sunday or Saturday
         continue;
       }
     }
@@ -49,20 +49,20 @@ function getAvailableDates(deliveryType: 'pickup' | 'delivery', station?: string
 }
 
 /**
- * Cria um slot "tarde" para uma data
+ * Create an afternoon slot for a date
  */
 function createAfternoonSlot(available: boolean = true): DeliverySlot {
   return {
     slot: 1,
     label: 'tarde',
     available,
-    maxCapacity: 10, // Capacidade padrão
-    currentBookings: 0 // Por agora, assumir disponibilidade total
+    maxCapacity: 10,
+    currentBookings: 0 // For now, assume total availability
   };
 }
 
 /**
- * Gera opções de agendamento para pickup
+ * Generate pickup options
  */
 export function generatePickupOptions(station: string): DeliveryOption[] {
   const availableDates = getAvailableDates('pickup', station);
@@ -72,14 +72,14 @@ export function generatePickupOptions(station: string): DeliveryOption[] {
     station,
     date,
     slot: 1 as const,
-    price: 0, // Pickup é sempre gratuito
+    price: 0, // Pickup is always free
     description: `Pickup em ${station}`,
     available: true
   }));
 }
 
 /**
- * Gera opções de agendamento para delivery
+ * Generate delivery options
  */
 export async function generateDeliveryOptions(
   address: string,
@@ -87,7 +87,7 @@ export async function generateDeliveryOptions(
 ): Promise<DeliveryOption[]> {
   const availableDates = getAvailableDates('delivery');
   
-  // Calcular preço usando a lógica existente
+  // Calculate price using existing logic
   const { nearestStation, distanceMeters, deviation } = findNearestStationAndDeviation(coordinates);
   const price = calculateDeliveryPrice(distanceMeters, deviation);
   
@@ -102,7 +102,7 @@ export async function generateDeliveryOptions(
 }
 
 /**
- * Gera disponibilidade detalhada para o calendário
+ * Generate detailed availability for the calendar
  */
 export function generateScheduleAvailability(options: ScheduleOptions): DeliveryAvailability[] {
   const availableDates = getAvailableDates(options.deliveryType, options.station);
@@ -114,8 +114,8 @@ export function generateScheduleAvailability(options: ScheduleOptions): Delivery
 }
 
 /**
- * Função principal para obter opções de agendamento
- * Compatível com o formato esperado pelo componente DeliveryCalendar
+ * Main function to get scheduling options
+ * Compatible with the format expected by the DeliveryCalendar component
  */
 export async function getScheduleOptions(
   deliveryType: 'pickup' | 'delivery',
@@ -135,7 +135,7 @@ export async function getScheduleOptions(
 }
 
 /**
- * Valida se uma data é válida para agendamento
+ * Validate if a date is valid for scheduling
  */
 export function isValidScheduleDate(
   date: string,
@@ -147,7 +147,7 @@ export function isValidScheduleDate(
 }
 
 /**
- * Obter próxima data disponível
+ * Get next available date
  */
 export function getNextAvailableDate(
   deliveryType: 'pickup' | 'delivery',
@@ -158,7 +158,7 @@ export function getNextAvailableDate(
 }
 
 /**
- * Formatar data para exibição
+ * Format date for display
  */
 export function formatScheduleDate(dateString: string): string {
   const date = new Date(dateString);

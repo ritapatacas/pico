@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
   }
 
-  // Buscar encomenda e validar token
+  // Fetch order and validate token
   const { data: order, error } = await supabase
     .from('orders')
     .select('id, admin_token, status')
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid token' }, { status: 403 });
   }
 
-  // Só permite aprovar se estiver pending
+  // Only allow approving if pending
   if (order.status !== 'pending') {
     return NextResponse.json({ error: 'Order is not pending' }, { status: 400 });
   }
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
   }
 
-  // Atualizar status
+  // Update status
   const { error: updateError } = await supabase
     .from('orders')
     .update({ status: newStatus })
@@ -52,6 +52,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
   }
 
-  // Resposta simples (pode ser HTML ou JSON)
+  // Simple response (can be HTML or JSON)
   return NextResponse.json({ success: true, status: newStatus });
 } 

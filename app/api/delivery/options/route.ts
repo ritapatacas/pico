@@ -11,7 +11,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Missing coordinates" }, { status: 400 });
   }
 
-  // Simula opções de entrega (devs ajusta aqui conforme a lógica real)
+  // Simulate delivery options (devs adjust here according to real logic)
   const slots = [
     { date: "2025-07-12", slot: 1, price: 0, available: true },
     { date: "2025-07-13", slot: 2, price: 1.5, available: true },

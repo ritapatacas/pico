@@ -62,7 +62,7 @@ export default function Card09({
       )}
     >
       <div className="p-6 space-y-6">
-        {/* Order Summary Header */}
+        { /* Order Summary Header */ }
         <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
           <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{t("cart.orderSummary")}</h3>
           <span className="text-sm text-zinc-500 dark:text-zinc-400">
@@ -70,7 +70,7 @@ export default function Card09({
           </span>
         </div>
 
-        {/* Order Items */}
+        { /* Order Items */ }
         <div className="space-y-4">
           {orderDetails.map((item, index) => (
             <div key={index} className="flex justify-between items-start">
@@ -87,7 +87,7 @@ export default function Card09({
           ))}
         </div>
 
-        {/* Price Breakdown */}
+        { /* Price Breakdown */ }
         <div className="space-y-3 pt-4 border-t border-zinc-200 dark:border-zinc-800">
           <div className="flex justify-between text-sm">
             <span className="text-zinc-600 dark:text-zinc-400">{t("cart.subtotal")}</span>
@@ -116,13 +116,13 @@ export default function Card09({
           )}
         </div>
 
-        {/* Total */}
+        { /* Total */ }
         <div className="flex justify-between items-center pt-4 border-t border-zinc-200 dark:border-zinc-800">
           <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">{t("cart.total")}</span>
           <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">{formatPrice(total)}</span>
         </div>
 
-        {/* Checkout Button */}
+        { /* Checkout Button */ }
         <button
           type="button"
           className={cn(

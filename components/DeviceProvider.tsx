@@ -31,12 +31,12 @@ export function DeviceProvider({ children, initialDeviceInfo }: {
   const clientDeviceInfo = useClientDeviceDetection();
 
   useEffect(() => {
-    // Se temos info inicial do servidor, use ela
+    // If we have initial server info, use it
     if (initialDeviceInfo) {
       setDeviceInfo(initialDeviceInfo);
       setIsLoading(false);
     } else {
-      // Senão, use a detecção do cliente
+      // Otherwise, use client detection
       if (clientDeviceInfo.userAgent) {
         setDeviceInfo(clientDeviceInfo);
         setIsLoading(false);

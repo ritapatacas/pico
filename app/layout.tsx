@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   description: "Loja Online de Frutos Vermelhos",
 };
 
-// Função para detectar dispositivo no servidor
+// Function to detect device on server
 async function detectDeviceServerSide(): Promise<DeviceInfo> {
   const headersList = await headers();
   const userAgent = headersList.get('user-agent') || '';
@@ -59,7 +59,6 @@ async function detectDeviceServerSide(): Promise<DeviceInfo> {
 }
 
 async function AppProviders({ children }: { children: React.ReactNode }) {
-  // Detectar dispositivo no servidor
   const deviceInfo = await detectDeviceServerSide();
   
   return (
@@ -94,7 +93,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="pt" suppressHydrationWarning>
       <body className="antialiased">
-        {/* AppProviders will be skipped for 404.tsx automatically by Next.js */}
+        { /* AppProviders will be skipped for 404.tsx automatically by Next.js */ }
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

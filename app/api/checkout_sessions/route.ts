@@ -7,7 +7,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
+  apiVersion: '2025-06-30.basil',
 });
 
 // Helper function to convert relative image paths to absolute URLs
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Criar a sessão de checkout do Stripe
+    // Create Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: items.map((item: any) => ({
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
               product_key: item.product_key || '',
             },
           },
-          unit_amount: Math.round(item.price * 100), // Stripe usa centavos
+          unit_amount: Math.round(item.price * 100), // Stripe use cents
         },
         quantity: item.quantity,
       })),

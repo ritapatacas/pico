@@ -14,7 +14,7 @@ export default function ProductPage() {
       <Header />
       <main className="container mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-12">
-          {/* Product Images */}
+          { /* Product Images */ }
           <div className="space-y-4">
             <Carousel className="w-full">
               <CarouselContent>
@@ -53,7 +53,7 @@ export default function ProductPage() {
             </div>
           </div>
 
-          {/* Product Details */}
+          { /* Product Details */ }
           <div className="space-y-8">
             <div>
               <h1 className="text-5xl font-bold mb-2 tracking-tight">Essential Cotton T-Shirt</h1>
@@ -76,7 +76,7 @@ export default function ProductPage() {
               it's soft, breathable, and designed to last. An everyday staple that elevates your casual wardrobe.
             </p>
 
-            {/* Color Selection */}
+            { /* Color Selection */ }
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Color</h3>
               <RadioGroup defaultValue="white" className="flex gap-3">
@@ -91,7 +91,7 @@ export default function ProductPage() {
               </RadioGroup>
             </div>
 
-            {/* Size Selection */}
+            { /* Size Selection */ }
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Size</h3>
               <Select>
@@ -108,7 +108,7 @@ export default function ProductPage() {
               </Select>
             </div>
 
-            {/* Quantity */}
+            { /* Quantity */ }
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Quantity</h3>
               <div className="flex items-center space-x-4">
@@ -122,7 +122,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Add to Cart and Wishlist */}
+            { /* Add to Cart and Wishlist */ }
             <div className="flex space-x-4">
               <Button className="flex-1 bg-black hover:bg-gray-800 text-white py-8 text-xl font-semibold">
                 Add to Bag
@@ -137,7 +137,7 @@ export default function ProductPage() {
               </Button>
             </div>
 
-            {/* Shipping and Returns */}
+            { /* Shipping and Returns */ }
             <div className="flex items-center space-x-8 text-lg font-medium">
               <div className="flex items-center">
                 <Truck className="w-6 h-6 mr-2" />
@@ -149,7 +149,7 @@ export default function ProductPage() {
               </div>
             </div>
 
-            {/* Additional Information */}
+            { /* Additional Information */ }
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="details">
                 <AccordionTrigger className="text-xl font-semibold">Product Details</AccordionTrigger>
@@ -187,7 +187,7 @@ export default function ProductPage() {
           </div>
         </div>
 
-        {/* Product Recommendations */}
+        { /* Product Recommendations */ }
         <div className="mt-24">
           <h2 className="text-4xl font-bold mb-8">You May Also Like</h2>
           <Carousel className="w-full">
@@ -215,7 +215,7 @@ export default function ProductPage() {
           </Carousel>
         </div>
 
-        {/* Call to Action */}
+        { /* Call to Action */ }
         <div className="mt-24 text-center">
           <h2 className="text-5xl font-bold mb-6">Explore the Collection</h2>
           <Button variant="outline" size="lg" className="text-xl py-8 px-12 font-semibold">

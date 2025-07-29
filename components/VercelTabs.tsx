@@ -61,7 +61,7 @@ export default function Frame({ tabs }: VercelTabsProps) {
       <Card className="w-full max-w-[1200px] h-[100px] border-none shadow-none relative flex items-center justify-center">
         <CardContent className="p-0">
           <div className="relative">
-            {/* Hover Highlight */}
+            { /* Hover Highlight */ }
             <div
               className="absolute h-[30px] transition-all duration-300 ease-out bg-secondary/50 rounded-[6px] flex items-center"
               style={{
@@ -70,13 +70,13 @@ export default function Frame({ tabs }: VercelTabsProps) {
               }}
             />
 
-            {/* Active Indicator */}
+            { /* Active Indicator */ }
             <div
               className="absolute bottom-[-6px] h-[2px] bg-primary transition-all duration-300 ease-out"
               style={activeStyle}
             />
 
-            {/* Tabs */}
+            { /* Tabs */ }
             <div className="relative flex space-x-[6px] items-">
               {tabs.map((tab, index) => (
                 <div

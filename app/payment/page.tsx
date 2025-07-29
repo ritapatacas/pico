@@ -97,11 +97,11 @@ export default function PaymentPage() {
       <h1 className="text-2xl font-bold mb-6">{t("payment.title")}</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Payment Methods */}
+        { /* Payment Methods */ }
         <div>
           <h2 className="text-xl font-semibold mb-4">{t("payment.paymentMethod")}</h2>
           <div className="space-y-4">
-            {/* Stripe Button */}
+            { /* Stripe Button */ }
             <Card>
               <CardContent className="p-6">
                 {paymentError && (
@@ -164,7 +164,7 @@ export default function PaymentPage() {
               </CardContent>
             </Card>
 
-            {/* PayPal Button */}
+            { /* PayPal Button */ }
             <Card>
               <CardContent className="p-6">
                 <Script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=EUR" strategy="afterInteractive" />
@@ -174,11 +174,11 @@ export default function PaymentPage() {
           </div>
         </div>
 
-        {/* Order Summary */}
+        { /* Order Summary */ }
         <div>
           <h2 className="text-xl font-semibold mb-4">{t("payment.orderSummary")}</h2>
           
-          {/* Shipping Info */}
+          { /* Shipping Info */ }
           <Card className="mb-4">
             <CardContent className="p-6">
               <h3 className="font-semibold mb-2">{t("payment.shippingAddress")}</h3>
@@ -191,7 +191,7 @@ export default function PaymentPage() {
             </CardContent>
           </Card>
 
-          {/* Cart Items */}
+          { /* Cart Items */ }
           <Card>
             <CardContent className="p-6">
               <h3 className="font-semibold mb-4">{t("payment.orderItems")}</h3>

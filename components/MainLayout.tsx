@@ -23,14 +23,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="relative min-h-screen bg-gray-50/50">
-      {/* Layout principal com responsividade melhorada */}
       <div className="flex flex-col min-h-screen transition-all duration-300">
-        {/* Header - apenas em desktop se necessário */}
-        {/* <HeaderWithPathname /> */}
-        
-        {/* Container principal do conteúdo */}
+
         <div className="flex flex-1">
-          {/* Área do conteúdo principal */}
+
+          { /* Main content area */ }
           <main 
             className={`
               flex-1 
@@ -38,15 +35,15 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               duration-300 
               ease-in-out
               ${isMobile 
-                ? 'pb-16 w-full' // Mobile: espaço para bottom navigation
-                : 'pr-64 w-full' // Desktop: espaço para sidebar direita
+                ? 'pb-16 w-full' // Mobile: space for bottom navigation
+                : 'pr-64 w-full' // Desktop: space for right sidebar
               }
             `}
           >
             {children}
           </main>
 
-          {/* Desktop Sidebar - fixa à direita */}
+          { /* Desktop Sidebar - fixed to the right */ }
           <aside 
             className={`
               fixed 
@@ -68,11 +65,11 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
           </aside>
         </div>
 
-        {/* Footer */}
+        { /* Footer */ }
         <Footer />
       </div>
 
-      {/* Mobile Sidebar - bottom navigation */}
+      { /* Mobile Sidebar - bottom navigation */ }
       <div 
         className={`
           md:hidden 

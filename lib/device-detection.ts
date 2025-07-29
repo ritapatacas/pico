@@ -7,10 +7,10 @@ export interface DeviceInfo {
   userAgent: string;
 }
 
-// Função para detecção server-side (usar apenas em Server Components)
+// Function for server-side detection (use only in Server Components)
 export function detectDeviceServerSide(): DeviceInfo {
-  // Esta função deve ser chamada apenas em Server Components
-  // O User-Agent será obtido via headers() no layout.tsx
+  // This function should only be called in Server Components
+  // The User-Agent will be obtained via headers() in layout.tsx
   return {
     isMobile: true, // Default mobile-first
     isTablet: false,
@@ -19,7 +19,7 @@ export function detectDeviceServerSide(): DeviceInfo {
   };
 }
 
-// Hook para uso no cliente (fallback)
+// Hook for client-side use (fallback)
 export function useClientDeviceDetection() {
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>({
     isMobile: true, // Default mobile-first

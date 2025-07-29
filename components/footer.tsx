@@ -25,7 +25,7 @@ export function Footer() {
         <div className="container mx-auto max-w-4xl">
           <div className="mt-2 mb-5">
 
-            { /* logo */}
+            { /* logo */ }
             <div className="flex items-center space-x-2">
               <Image
                 className=""
@@ -46,7 +46,7 @@ export function Footer() {
 
             </div>
 
-            { /* contact info */}
+            { /* contact info */ }
             <div id="footer-text" className="px-2">
               <h2 className="text-2xl font-medium mb-2"></h2>
               <p className="text-secondary-foreground/90 max-w-2xl text-md">
@@ -69,10 +69,10 @@ export function Footer() {
 
           </div>
 
-          {/* social */}
+          { /* social */ }
             <SocialNav className="mb-4 px-2"/>
 
-          { /* divider */}
+          { /* divider */ }
           <div className="border-t border-primary-foreground/20" />
 
           { /* copyright */ }

@@ -41,17 +41,17 @@ export function VerticalHeader() {
     >
       <div className={`content flex flex-col h-full ${sidebarWidth} bg-red-100`}>
         <div className="flex-1 flex flex-col min-h-5">
-          {/* Top icons */}
+          { /* Top icons */ }
           <div className={`flex flex-col w-full space-y-2 md:space-y-4 border-b border-gray-200 items-start px-4 md:px-6`}>
-            {/* Hamburger */}
+            { /* Hamburger */ }
             <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(true)} className="mb-2 mt-4 md:hidden">
               <Menu className="h-5 w-5" />
             </Button>
-            {/* Dark Mode */}
+            { /* Dark Mode */ }
             <Button variant="ghost" size="icon" onClick={toggleDarkMode}>
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            {/* Cart */}
+            { /* Cart */ }
             <Button variant="ghost" size="icon" className="relative" onClick={handleToggleCart}>
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
@@ -62,10 +62,10 @@ export function VerticalHeader() {
             </Button>
           </div>
 
-          {/* Content */}
+          { /* Content */ }
           {sidebarOpen && (
             <div className="flex-1 flex flex-col overflow-y-auto p-4">
-              {/* Chevron */}
+              { /* Chevron */ }
               <Button
                 variant="ghost"
                 size="icon"
@@ -79,30 +79,30 @@ export function VerticalHeader() {
                 <ChevronRight className="h-6 w-6" />
               </Button>
 
-              {/* Checkout */}
+              { /* Checkout */ }
               {isCartOpen && (
                 <>
                   <h2 className="text-xl font-bold mb-4 capitalize">
                     {step === 'cart' ? 'Carrinho' : step === 'checkout' ? 'Checkout' : 'Pagamento'}
                   </h2>
                   <div className="flex-1 flex flex-col">
-                    {/* {step === 'cart' && <CartStep onNext={() => setStep('checkout')} />} */}
-                    {/* {step === 'checkout' && <CheckoutStep onNext={() => setStep('payment')} onBack={() => setStep('cart')} />} */}
-                    {/* {step === 'payment' && <PaymentStep onBack={() => setStep('checkout')} />} */}
+                    { /* {step === 'cart' && <CartStep onNext={() => setStep('checkout')} />} */ }
+                    { /* {step === 'checkout' && <CheckoutStep onNext={() => setStep('payment')} onBack={() => setStep('cart')} />} */ }
+                    { /* {step === 'payment' && <PaymentStep onBack={() => setStep('checkout')} />} */ }
                     <p>Cart content placeholder</p>
                   </div>
                 </>
               )}
 
-              {/* Menu */}
+              { /* Menu */ }
               {isMenuOpen && (
                 <>
                   <h2 className="text-xl font-bold mb-4">Menu</h2>
                   <nav className="flex flex-col gap-4">
-                    {/* {step === 'cart' && <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Início</Link>} */}
-                    {/* {step === 'checkout' && <Link href="/product" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Produtos</Link>} */}
-                    {/* {step === 'payment' && <Link href="/sobre" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Sobre</Link>} */}
-                    {/* {step === 'payment' && <Link href="/settings" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Definições</Link>} */}
+                    { /* {step === 'cart' && <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Início</Link>} */ }
+                    { /* {step === 'checkout' && <Link href="/product" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Produtos</Link>} */ }
+                    { /* {step === 'payment' && <Link href="/sobre" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Sobre</Link>} */ }
+                    { /* {step === 'payment' && <Link href="/settings" onClick={() => setIsMenuOpen(false)} className="text-lg font-medium">Definições</Link>} */ }
                     <p>Menu content placeholder</p>
                   </nav>
                 </>
@@ -110,7 +110,7 @@ export function VerticalHeader() {
             </div>
           )}
         </div>
-        {/* Logo */}
+        { /* Logo */ }
         <div className="flex justify-start items-end pl-2 pt-10 pb-6 mt-auto md:pt-0">
           <Image
             className="dark:invert"

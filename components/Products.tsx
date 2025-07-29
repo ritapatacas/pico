@@ -19,7 +19,7 @@ export default function Products() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalProduct, setModalProduct] = useState<Product | null>(null)
 
-  // Extrair todas as frutas e tipos únicos
+  // Extract all unique fruits and types
   const allFruits = Array.from(
     new Set(productsData.flatMap(p => p.tagsFruits ?? []))
   ).sort()
@@ -28,7 +28,7 @@ export default function Products() {
     new Set(productsData.flatMap(p => p.tagsTypes ?? []))
   ).sort()
 
-  // Aplica os filtros combinados: texto, frutas e tipos
+  // Apply combined filters: text, fruits and types
   const filtered = productsData.filter(p => {
     const q = search.toLowerCase()
 
@@ -69,10 +69,10 @@ export default function Products() {
     <div className="p-4 max-w-3xl mx-auto">
       <h1 className="text-2xl font-rotunda-regular text-center mt-10 mb-1">Encomendar</h1>
 
-      {/* divider border */}
+      { /* divider border */ }
       <div className="border-t border-gray-300 mb-4 mx-4" />
 
-      { /* SEARCH BAR */}
+      { /* SEARCH BAR */ }
       { /*
         <input
           className="w-full mb-4 p-2 border rounded text-sm bg-white text-black"
@@ -80,10 +80,10 @@ export default function Products() {
           value={search}
           onChange={e => setSearch(e.target.value)}
         />
-      */}
+      */ }
 
 
-      { /* FILTERS */}
+      { /* FILTERS */ }
       <Accordion type="single" collapsible defaultValue="filters" className="">
         <AccordionItem value="filters">
           <AccordionTrigger className="title-rotunda-light text-xs pb-1 gap-2">
@@ -93,7 +93,7 @@ export default function Products() {
           <AccordionContent>
             <div className="flex flex-row items-center justify-between mx-3 ml-5">
 
-              {/* Filtro por fruta */}
+              { /* Fruit filter */ }
               <div className="mb-4">
                 <TagFilterCloud
                   allTags={allFruits}
@@ -102,7 +102,7 @@ export default function Products() {
                 />
               </div>
 
-              {/* Filtro por tipo */}
+              { /* Type filter */ }
               <div className="mb-4">
                 <TagFilterCloud
                   allTags={allTypes}
@@ -112,7 +112,7 @@ export default function Products() {
               </div>
             </div>
 
-            {/* Chips de filtros ativos */}
+            { /* Active filters chips */ }
             {(activeFruits.length > 0 || activeTypes.length > 0) && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {[...activeFruits.map(tag => ({ tag, type: "fruit" })), ...activeTypes.map(tag => ({ tag, type: "type" }))].map(({ tag, type }) => (
@@ -138,7 +138,7 @@ export default function Products() {
         </AccordionItem>
       </Accordion>
 
-      {/* Resultados */}
+      { /* Results */ }
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {filtered.slice(0, displayed).map(product => (
           <div key={product.key} className="bg-white rounded shadow p-2 flex flex-col">

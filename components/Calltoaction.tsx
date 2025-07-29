@@ -20,12 +20,12 @@ const CallToAction: React.FC = () => {
           >
             Encomendar
           </button>
-{/*           <a
+{ /*           <a
             href="/learn-more"
             className="inline-block px-6 py-3 text-base font-medium text-white border border-white rounded-md hover:bg-white hover:text-indigo-600 transition"
           >
             Marcar entrega
-          </a> */}
+          </a> */ }
         </div>
       </div>
     </section>

@@ -42,7 +42,7 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
     <header
       className={`sticky top-0 flex items-center justify-between px-2 md:px-6 z-30 transition-all duration-300 ${bgClass}`}
     >
-      {/* Logo */}
+      { /* Logo */ }
       <div className="flex items-center space-x-1 transition-all duration-300">
         <Link href="/">
           <Image
@@ -66,13 +66,13 @@ export function Header({ isHomePage = false }: { isHomePage?: boolean }) {
         </Link>
       </div>
 
-      {/* desktop menu*/}
+      { /* desktop menu*/}
       <nav className="hidden md:block">
         <VercelTabs tabs={tabs} />
       </nav>
 
-      {/* cart sidebar*/}
-      {/* <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} /> */}
+      { /* cart sidebar*/}
+      { /* <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} /> */ }
     </header>
   );
 }

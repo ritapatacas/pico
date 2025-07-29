@@ -48,9 +48,9 @@ export interface DeliveryAvailability {
 
 export interface ScheduleOptions {
   deliveryType: 'pickup' | 'delivery';
-  station?: string; // Para pickup: PG, LIS, AMA
-  address?: string; // Para delivery
-  preferredTime?: string; // Campo livre para horário preferencial
+  station?: string; // For pickup: PG, LIS, AMA
+  address?: string; // For delivery
+  preferredTime?: string; // Free field for preferred time
 }
 
 // Database types (updated for new structure)
