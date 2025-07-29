@@ -43,12 +43,12 @@ export default function HomePage() {
         const scrolled = window.pageYOffset;
         const sectionTop = rect.top + scrolled;
         const sectionHeight = rect.height;
-        
+
         // Calcula o offset baseado na posição da seção na tela
         const progress = Math.max(0, Math.min(1, (scrolled - sectionTop + window.innerHeight) / (sectionHeight + window.innerHeight)));
         const maxOffset = -(rect.height * 0.3); // Máximo 30% da altura da seção
         const rate = progress * maxOffset;
-        
+
         setParallaxOffset(rate);
       }
     };
@@ -59,26 +59,26 @@ export default function HomePage() {
 
   return (
     <div className="relative">
-      {/* Topbar fixa - apenas em desktop */}
-      {isDesktop && (
-        <div
-          className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
-      transition-opacity duration-500 ease-in-out
-      ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-        >
-          <Link href="/">
-            <Image
-              className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
-                } pr-1`}
-              src="logo/logo_h.svg"
-              alt="PICO DA ROSA logo"
-              width={300}
-              height={73}
-              priority
-            />
-          </Link>
-        </div>
-      )}
+
+      {/* Topbar */}
+      <div
+        className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+    transition-opacity duration-500 ease-in-out
+    ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      >
+        <Link href="/">
+          <Image
+            className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
+              } pr-1`}
+            src="logo/logo_h.svg"
+            alt="PICO DA ROSA logo"
+            width={300}
+            height={73}
+            priority
+          />
+        </Link>
+      </div>
+
 
       <main className="relative m-0 p-0">
         {/* HERO SECTION */}
@@ -114,7 +114,7 @@ export default function HomePage() {
               <div className="text-white text-opacity-90 text-base sm:text-3xl md:text-3xl drop-shadow-lg font-semibold font-burford">
                 Mirtilos | Framboesas | groselhas
               </div>
-              <Button 
+              <Button
                 onClick={() => scrollToSection('products')}
                 className="mt-2 rounded pt-1 px-4 bg-white text-secondary-foreground/70 font-rotunda font-bold text-lg hover:text-primary-foreground transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary-foreground/20 font-burford"
               >
@@ -159,9 +159,9 @@ export default function HomePage() {
         </section>
 
         {/* Parallax section - apenas em desktop */}
-        {isDesktop && (
+        {isMobile && (
           <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
-            <div 
+            <div
               className="absolute inset-0 w-screen"
               style={{
                 transform: `translateY(${parallaxOffset}px)`,
@@ -185,7 +185,7 @@ export default function HomePage() {
 
         {/* Products */}
         <div className="px-10 pb-10" id="products">
-        <Products />
+          <Products />
         </div>
 
         {/* About */}
