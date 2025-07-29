@@ -14,6 +14,8 @@
     "packagedImage": "/imgs/mirtilo_embalagem.webp",
     "bulkImage": "/imgs/mirtilo_granel.webp",
     "bulkProductKey": "BLU_1000",
+    "tagsFruits": ["mirtilos"],
+    "tagsTypes": ["frescos"],
     "detailsContent": {
       "varieties": "Duke, Emerald",
       "location": "Pedrógão Grande",
@@ -44,6 +46,8 @@
     "packagedImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
     "bulkImage": "https://viveirosvalter.com/wp-content/uploads/2019/04/Viveiros_Valter_Framboesa.jpg",
     "bulkProductKey": "RASP_1000",
+    "tagsFruits": ["framboesas"],
+    "tagsTypes": ["frescos"],
     "detailsContent": {
       "varieties": "Heritage, Kweli",
       "location": "Pedrógão Grande",

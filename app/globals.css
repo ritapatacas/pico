@@ -48,13 +48,13 @@
 }
 
 /* Rotunda - Variable (Optional, use only if needed) */
-@font-face {
+/* @font-face {
   font-family: "Rotunda";
   src: url("/fonts/Rotunda_VariableRegular.woff2") format("woff2");
   font-weight: 100 400;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 /* Base Layer - Override Tailwind defaults */
 @layer base {
