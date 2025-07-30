@@ -62,6 +62,7 @@ export default function HomePage() {
 
       { /* Topbar */ }
       <div
+        data-topbar
         className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
     transition-opacity duration-500 ease-in-out
     ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
@@ -85,7 +86,7 @@ export default function HomePage() {
         <div className="relative w-screen h-screen">
 
           { /* hero content */ }
-          <div className="absolute inset-0 flex flex-col md:flex-row items-center justify-center w-full h-full z-20 animate-fadein">
+          <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full z-20 animate-fadein md:px-[15vw]">
 
             { /* HERO logo */ }
             <div
@@ -108,7 +109,7 @@ export default function HomePage() {
             </div>
 
             { /* Text */ }
-            <div className="flex flex-col items-end justify-center text-right w-full md:w-auto pr-10 z-20">
+            <div className="flex flex-col items-end text-right w-full pr-10 z-20">
               <h2 className="text-3xl md:text-4xl font-bold drop-shadow-md text-white font-burford">
                 Fruta Miúda
               </h2>
@@ -160,7 +161,6 @@ export default function HomePage() {
         </section>
 
         { /* Parallax section */ }
-        {isMobile && (
           <section ref={parallaxRef} className="relative overflow-hidden h-[25vh]">
             <div
               className="absolute inset-0 w-screen"
@@ -182,7 +182,7 @@ export default function HomePage() {
               />
             </div>
           </section>
-        )}
+        
 
         { /* Products */ }
         <div className="px-10 pb-10" id="products">

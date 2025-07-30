@@ -124,13 +124,14 @@ export function Sidebar({ version }: SidebarProps) {
     }
   };
 
+  // Mobile layout
   if (isMobile) {
     return (
       <>
         <div
         className={`fixed left-0 z-[120] w-full transition-all duration-300 bg-lavender  ${isSidebarOpen ? 'bottom-16 h-[calc(100%-64px)]' : 'bottom-0 h-16'
           } flex flex-col`}
-        style={{ willChange: 'height' }}
+        style={{ willChange: 'height', backgroundColor: 'hsl(240, 34.80%, 91.00%)' }}
       >
 
         { /* (only when open) */ }
@@ -412,7 +413,7 @@ export function Sidebar({ version }: SidebarProps) {
         </div>
 
         { /* bottom (always visible) - now outside the sidebar container */ }
-        <div className="fixed bottom-0 left-0 z-[999] w-full flex items-center justify-around h-16 border-t-2 border-muted-foreground/50 bg-lavender  pb-1 pt-2">
+        <div className="fixed bottom-0 left-0 z-[999] w-full flex items-center justify-around h-16 border-t-2 border-muted-foreground/50 bg-lavender  pb-1 pt-2" style={{ backgroundColor: 'hsl(240, 34.80%, 91.00%)' }}>
           <Link
             href="/"
             className="flex flex-col items-center p-2 text-muted-foreground hover:text-primary"
@@ -465,90 +466,274 @@ export function Sidebar({ version }: SidebarProps) {
     )
   }
 
+  // Desktop layout - now using the same structure as mobile
   return (
-    <div className="hidden w-64 border-r bg-background md:block">
-      <div className="flex h-16 items-center border-b px-4">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex aspect-square size-10 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <GalleryVerticalEnd className="size-5" />
-          </div>
-          <div className="flex flex-col gap-0.5 leading-none">
-            <span className="text-base font-semibold">PICO DA ROSA</span>
-            <span className="text-xs text-muted-foreground">v{version}</span>
-          </div>
-        </Link>
-      </div>
-      <div className="flex flex-col justify-between h-[calc(100%-4rem)]">
-        <div className="p-4">
-          <nav className="space-y-2">
-            {mainNavigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`flex items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${item.current ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
-                  }`}
-              >
-                <item.icon className="h-5 w-5" />
-                <span>{item.name}</span>
-              </Link>
-            ))}
-            { /* Auth block for desktop */ }
-            {!isAuthenticated ? (
-              <button
-                onClick={() => signIn()}
-                className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left"
-              >
-                <LogIn className="h-4 w-4" />
-                {t("sidebar.signIn")}
-              </button>
-            ) : (
-              <div className="space-y-2">
-                <div className="px-3 py-2 text-sm">
-                  <p className="font-medium">{user?.name}</p>
-                  <p className="text-muted-foreground">{user?.email}</p>
-                </div>
-                <button
-                  onClick={() => signOut()}
-                  className="flex items-center gap-2 rounded-md px-3 py-4 transition-colors hover:bg-secondary/50 text-left w-full"
-                >
-                  <LogOut className="h-4 w-4" />
-                  {t("sidebar.signOut")}
-                </button>
-              </div>
-            )}
-          </nav>
-        </div>
-        <div className="p-4 ">
-          <nav className="space-y-2">
-            <button
-              onClick={handleSettingsClick}
-              className={`flex w-full items-center gap-3 rounded-md px-3 py-3 text-base transition-colors ${isSidebarOpen ? "bg-secondary text-secondary-foreground" : "text-foreground hover:bg-secondary/50"
-                }`}
-            >
-              <Settings className="h-5 w-5" />
-              <span>{t("settings")}</span>
-            </button>
-          </nav>
-        </div>
-      </div>
+    <>
+      <div
+        className="fixed right-0 z-[120] w-64 h-full bg-lavender flex flex-col"
+        style={{ backgroundColor: 'hsl(240, 34.80%, 91.00%)' }}
+      >
+        { /* sidebar header */ }
+        <div id="sidebar-header" className="flex w-full justify-between items-center px-4 py-3 border-b-2 border-gray-500">
+          <div className="flex items-center gap-3">
 
-      { /* Desktop Settings Panel */ }
-      {isSidebarOpen && (
-        <div className="absolute left-full top-0 h-full w-80 border-l bg-background">
-          <div className="flex h-16 items-center justify-between border-b px-4">
-            <h2 className="text-lg font-semibold">{t("settings")}</h2>
-            <button
-              onClick={() => setIsSidebarOpen(false)}
-              className="flex h-8 w-8 items-center justify-center rounded-md hover:bg-secondary"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            { /* loggin */ }
+            {isClientLoading ? (
+              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center animate-pulse">
+                <div className="w-6 h-6 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+
+            ) : isAuthenticated ? (
+              <img
+                src={client?.image_url || "/imgs/roza.webp"}
+                alt="avatar"
+                className="w-10 h-10 mt-3 ml-3 mb-1 rounded-full object-cover border"
+                onLoad={() => setImageLoaded(true)}
+                onError={() => setImageLoaded(false)}
+                style={{ display: imageLoaded ? 'block' : 'none' }}
+              />
+            ) : (
+              <button
+                onClick={handleGoogleSignIn}
+                className="flex items-center justify-center gap-1 rounded-md py-1 transition-colors hover:bg-secondary/100 text-lg leading-none"
+              >
+
+                <div className="w-7 h-7 flex items-center justify-center">
+                  <LogIn className="h-4 w-4 flex-shrink-0" />
+                </div>
+                <span className="pb-1 hover:font-bold transition-all">
+                  Login
+                </span>
+              </button>
+            )}
+
+            <div>
+              {isAuthenticated && user && (
+                <>
+                  <p className="text-xl font-bold">{user.name}</p>
+                  <div id="link-account" className="hidden">
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center justify-center gap-2 rounded-md transition-colors hover:bg-secondary/50 text-sm leading-none"
+                    >
+                      <div className="pt-1">
+
+
+
+                      </div>
+                      <span className="flex items-center">Conta</span>
+                    </button>
+                  </div>
+
+                  {client && (
+                    <button
+                      onClick={() => signOut()}
+                      className="flex items-center justify-center gap-2 rounded-md py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
+                    >
+                      <LogOut className="h-4 w-4 flex-shrink-0" />
+                      <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-          <div className="p-4 overflow-y-auto h-[calc(100%-4rem)]">
-            <SettingsPanel />
+
+          { /* logout */ }
+          <div className=" flex justify-right pt-2">
+
+            {isAuthenticated && client && (
+              <button
+                onClick={() => signOut()}
+                className="hidden flex items-center justify-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-secondary/50 text-sm leading-none"
+              >
+                <span className="flex items-center pb-1">{t("sidebar.signOut")}</span>
+                <LogOut className="h-4 w-4 flex-shrink-0" />
+              </button>
+            )}
           </div>
         </div>
-      )}
-    </div>
+
+        { /* sidebar nav */ }
+        <div id="nav" className="flex flex-col flex-1 px-8 py-4 overflow-y-auto">
+
+          { /* sidebar content */ }
+          <div className="flex-1">
+            <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+
+              { /* sidebar about */ }
+              <AccordionItem value="about" className="border-none">
+                <AccordionTrigger
+                  className={burfordFontClass + " text-left flex items-center gap-2"}
+                  onClick={() => {
+                    scrollToSection('about');
+                  }}
+                >
+                  <Users className="h-4 w-4" />
+                  <span className="pb-1 text-[18px]">
+                    {t("sidebar.about")}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  { /* Empty content - only for navigation */ }
+                </AccordionContent>
+              </AccordionItem>
+
+              { /* sidebar products */ }
+              <AccordionItem value="products" className="border-none">
+                <AccordionTrigger
+                  className={burfordFontClass + " text-left flex items-center gap-2"}
+                  onClick={() => {
+                    scrollToSection('products');
+                  }}
+                >
+                  <Store className="h-4 w-4" />
+                  <span className="pb-1 text-[18px]">                        {t("sidebar.products")}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  { /* Empty content - only for navigation */ }
+                </AccordionContent>
+              </AccordionItem>
+
+              { /* sidebar contacts */ }
+              <AccordionItem value="contactos" className="border-none">
+                <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                  <Mail className="h-4 w-4" />
+                  <span className="pb-1 text-[18px]">                        {t("sidebar.contacts")}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-2">
+                    <p className="text-base">{t("sidebar.contactInfo")} <a href="mailto:info@picodarosa.pt" className="underline">info@picodarosa.pt</a> {t("sidebar.orPhone")} <a href="tel:+351912345678" className="underline">+351 912 345 678</a>.</p>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              { /* divider border */ }
+              <div className="border-b border-gray-300 my-2" />
+
+              { /* sidebar cart */ }
+              <AccordionItem value="cart" className="border-none">
+                <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2"}>
+                  <ShoppingCart className="h-4 w-4" />
+                  <span className="pb-2 pl-1 text-[18px]">                          {t("sidebar.cart")} {cartCount > 0 && `(${cartCount})`}
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  {cartItems.length === 0 ? (
+                    <p className="text-muted-foreground">
+                      {t("sidebar.emptyCart")} <br />
+                      {t("sidebar.visitProducts")}{' '}
+                      <button 
+                        className="underline hover:text-primary" 
+                        onClick={() => {
+                          scrollToSection('products');
+                        }}
+                      >
+                        {t("sidebar.products")}
+                      </button>{' '}
+                      {t("sidebar.or")}{' '}
+                      <Link href="/info" className="underline hover:text-primary">
+                        {t("sidebar.contactUs")}
+                      </Link>{' '}
+                      {t("sidebar.ifProblem")}
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {cartItems.map((item) => (
+                        <div key={item.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                          <div className="flex-1">
+                            <h4 className="font-medium text-sm">{item.name}</h4>
+                            <p className="text-xs text-muted-foreground">
+                              {item.price.toFixed(2).replace(".", ",")}€ × {item.quantity}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                            >
+                              <Minus className="h-3 w-3" />
+                            </Button>
+                            <span className="text-sm font-medium w-6 text-center">{item.quantity}</span>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6"
+                              onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                            >
+                              <Plus className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-6 w-6 text-destructive hover:text-destructive/80"
+                              onClick={() => removeFromCart(item.id)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                      <div className="mt-8 mx-8 border-t border-border border-gray-400" />
+                      <div className="flex justify-between items-center m-4 text-lg ">
+                        <span className="font-semibold">{t("sidebar.total")}:</span>
+                        <span className="font-bold">{cartTotal.toFixed(2).replace(".", ",")}€</span>
+                      </div>
+                      <div className="mx-10 my-5">
+
+
+
+
+                        <Button
+                          className="px-8 w-full bg-primary bg-black hover:bg-gray-900 text-md font-semibold text-white hover:bg-gray-700"
+                          onClick={() => {
+                            router.push('/checkout');
+                          }}
+                        >
+                          {t("sidebar.buy")}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+
+            </Accordion>
+          </div>
+
+          { /* sidebar footer */ }
+          <div className={burfordFontClass + " text-left flex justify-between items-end gap-2"}>
+
+            { /* sidebar settings */ }
+            <div className="w-full">
+
+              <Accordion type="single" value={openSection ?? undefined} onValueChange={v => setOpenSection(v as typeof openSection)} collapsible>
+                <AccordionItem value="settings">
+                  <AccordionTrigger className={burfordFontClass + " text-left flex items-center gap-2 pb-0"}>
+                    <Settings className="h-5 w-5" />
+                    {openSection === 'settings' && <span className="pb-1 text-[18px]">Configurações</span>}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <SettingsPanel />
+                  </AccordionContent>
+                </AccordionItem>
+
+              </Accordion>
+
+              <div className=" flex justify-center">
+              </div>
+            </div>
+
+            { /* sidebar social */ }
+            <SocialNav className="flex-col mr-1" />
+          </div>
+        </div>
+
+      </div>
+    </>
   )
 }
