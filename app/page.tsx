@@ -6,16 +6,22 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useRef, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import AboutSection from "@/components/AboutSection";
 import { scrollToSection } from "@/lib/utils";
 import { useDevice } from "@/components/DeviceProvider";
+import StickyLogo from "@/components/StickyLogo";
 
 export default function HomePage() {
-  const logoRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLImageElement>(null);
   const parallaxRef = useRef<HTMLDivElement>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [parallaxOffset, setParallaxOffset] = useState(0);
   const { isMobile, isDesktop } = useDevice();
+  const [heroLogoStyle, setHeroLogoStyle] = useState({});
+
+  const [viewportContainer, setViewportContainer] = useState<HTMLElement | null>(null);
+
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -36,8 +42,16 @@ export default function HomePage() {
     };
   }, []);
 
+  // Capture viewport container when it's available
+  useEffect(() => {
+    const container = document.getElementById('logo-viewport-container');
+    setViewportContainer(container);
+  }, []);
+
+  // Parallax scroll effect
   useEffect(() => {
     const handleScroll = () => {
+      // Existing parallax logic
       if (parallaxRef.current) {
         const rect = parallaxRef.current.getBoundingClientRect();
         const scrolled = window.pageYOffset;
@@ -54,23 +68,83 @@ export default function HomePage() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // Container query effect to detect hero logo position and size
+  useEffect(() => {
+    const updateHeroLogoStyle = () => {
+      const heroLogo = document.querySelector('[data-hero-logo]');
+      if (heroLogo) {
+        const rect = heroLogo.getBoundingClientRect();
+        const computedStyle = window.getComputedStyle(heroLogo);
+        
+        setHeroLogoStyle({
+          width: rect.width,
+          height: rect.height,
+          transform: computedStyle.transform,
+          padding: computedStyle.padding,
+          margin: computedStyle.margin,
+          position: 'relative',
+          left: rect.left
+        });
+      }
+    };
+
+    // Initial update
+    updateHeroLogoStyle();
+    
+    // Update on resize
+    window.addEventListener('resize', updateHeroLogoStyle);
+    
+    // Update on scroll (for responsive changes)
+    window.addEventListener('scroll', updateHeroLogoStyle);
+
+    return () => {
+      window.removeEventListener('resize', updateHeroLogoStyle);
+      window.removeEventListener('scroll', updateHeroLogoStyle);
+    };
   }, []);
 
   return (
     <div className="relative">
 
-      { /* Topbar */ }
+      { /* Viewport Container - Contains logo always */ }
+      <div 
+        id="logo-viewport-container"
+        className="fixed top-0 left-0 w-screen h-screen z-[400] pointer-events-none overflow-hidden"
+      >
+        {/* Debug line to show viewport boundary */}
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-red-500 opacity-75" />
+        
+
+
+      </div>
+
+      {/* StickyLogo Component - handles its own positioning */}
+      {viewportContainer && (
+        <StickyLogo
+          logoSrc="logo/logo_h.svg"
+          fixedTop={80}
+          width={300}
+          height={73}
+        />
+      )}
+
+      { /* Topbar - Mobile Only */ }
       <div
         data-topbar
-        className={`fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
+        className={`md:hidden fixed top-0 left-0 w-full h-20 z-[100] bg-white shadow-md flex items-center
     transition-opacity duration-500 ease-in-out
     ${isSticky ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
-        <Link href="/">
+        <Link href="/" className="flex items-center">
           <Image
-            className={`transition-all duration-250 ${isSticky ? "scale-76 " : "scale-80 invert"
-              } pr-1`}
+            className={`transition-all duration-250`}
+            style={heroLogoStyle}
             src="logo/logo_h.svg"
             alt="PICO DA ROSA logo"
             width={300}
@@ -80,24 +154,46 @@ export default function HomePage() {
         </Link>
       </div>
 
+      { /* Fixed Background Image - Desktop Only */ }
+      <div className="hidden md:block fixed inset-0 w-full h-full -z-190">
+        <Image
+          className="w-full h-full object-cover object-top -z-190"
+          src="/imgs/f.jpeg"
+          alt="Fruta Miúda em Pedrógão Grande"
+          fill
+          priority
+          style={{ objectFit: "cover", objectPosition: "top" }}
+        />
+        { /* overlay - Desktop */ }
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+        { /* blur effect - Desktop */ }
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center mb-50">
+          <div
+            className="w-[300vw] h-[150vw] max-w-600 max-h-500 rounded-full"
+            style={{
+              background:
+                "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 1%, rgba(0,0,0,0.0) 100%)",
+              filter: "blur(30px)",
+            }}
+          />
+        </div>
+      </div>
 
       <main className="relative m-0 p-0">
         { /* HERO SECTION */ }
-        <div className="relative w-screen h-screen">
+        <div data-hero-section className="relative w-screen h-screen">
 
           { /* hero content */ }
           <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full z-20 animate-fadein md:px-[15vw]">
 
-            { /* HERO logo */ }
-            <div
-              ref={logoRef}
-              className={`
-                 top-0 z-50 w-full flex transition-all duration-200 bg-transparent py-0`}
-            >
+            { /* HERO logo - stays here as reference */ }
+            <div className="w-full flex">
               <div className="flex items-center">
                 <Link href="/">
                   <Image
-                    className={`transition-all duration-200 scale-80 invert pr-2 pt-3 pb-10`}
+                    ref={logoRef}
+                    data-hero-logo
+                    className="scale-80 invert pr-2 pt-3 pb-10 opacity-0"
                     src="logo/logo_h.svg"
                     alt="PICO DA ROSA logo"
                     width={300}
@@ -126,8 +222,8 @@ export default function HomePage() {
             </div>
           </div>
 
-          { /* background image */ }
-          <div className="flex w-screen bg-white -z-40">
+          { /* background image - Mobile Only */ }
+          <div className="md:hidden flex w-screen bg-white -z-40">
             <Image
               className="w-full h-full object-cover object-top"
               src="/imgs/f.jpeg"
@@ -136,24 +232,23 @@ export default function HomePage() {
               priority
               style={{ objectFit: "cover", objectPosition: "top" }}
             />
-          </div>
-
-          { /* overlay */ }
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
-
-          { /* blur effect */ }
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center mb-50">
-            <div
-              className="w-[300vw] h-[150vw] max-w-600 max-h-500 rounded-full"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 1%, rgba(0,0,0,0.0) 100%)",
-                filter: "blur(30px)",
-              }}
-            />
+            { /* overlay - Mobile */ }
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/25 to-transparent" />
+            { /* blur effect - Mobile */ }
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center mb-50">
+              <div
+                className="w-[300vw] h-[150vw] max-w-600 max-h-500 rounded-full"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at center, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.45) 1%, rgba(0,0,0,0.0) 100%)",
+                  filter: "blur(30px)",
+                }}
+              />
+            </div>
           </div>
         </div>
 
+<div className="bg-white w-screen">
         <section>
           <p className="text-lg leading-relaxed px-20 py-10 !text-center">
             Produção de <br /><b>frutos vermelhos</b><br />no centro do país.
@@ -193,7 +288,7 @@ export default function HomePage() {
         <div id="about">
           <AboutSection />
         </div>
-
+</div>
       </main>
 
       { /* Fade-in animation keyframes */ }

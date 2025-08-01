@@ -11,69 +11,47 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
   useEffect(() => {
-    const checkTopbarVisibility = () => {
-      const topbar = document.querySelector('[data-topbar]');
-      if (topbar) {
-        // Check if topbar is visible (has opacity-100 class)
-        const hasOpacity100 = topbar.classList.contains('opacity-100');
-        const isVisible = hasOpacity100 && window.scrollY > 50;
+    const checkHeroVisibility = () => {
+      const heroSection = document.querySelector('[data-hero-section]');
+      if (heroSection) {
+        const rect = heroSection.getBoundingClientRect();
+        const isHeroVisible = rect.bottom > 0; // Hero is visible when bottom is in viewport
+        const isVisible = !isHeroVisible && window.scrollY > 100; // Show sidebar when hero is out of view
         
         setIsTopbarVisible(isVisible);
         
-        // Animate sidebar when topbar becomes visible
-        if (isVisible && !isSidebarVisible) {
+        // Animate sidebar when hero disappears (desktop only)
+        if (isVisible && !isSidebarVisible && !isMobile) {
           setTimeout(() => {
             setIsSidebarVisible(true);
           }, 300); // Shorter delay for better responsiveness
         }
         
-        // Hide sidebar when topbar becomes invisible
-        if (!isVisible && isSidebarVisible) {
+        // Hide sidebar when hero becomes visible again (desktop only)
+        if (!isVisible && isSidebarVisible && !isMobile) {
           setIsSidebarVisible(false);
         }
       }
     };
 
-    // MutationObserver to watch for class changes on topbar
-    const topbar = document.querySelector('[data-topbar]');
-    let observer: MutationObserver | null = null;
-    
-    if (topbar) {
-      observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-            checkTopbarVisibility();
-          }
-        });
-      });
-      
-      observer.observe(topbar, {
-        attributes: true,
-        attributeFilter: ['class']
-      });
-    }
-
-    // Check if user is already scrolled down on page load
+    // Check if user is already scrolled down on page load (desktop only)
     const isAlreadyScrolled = window.scrollY > 100;
-    if (isAlreadyScrolled) {
+    if (isAlreadyScrolled && !isMobile) {
       setTimeout(() => {
         setIsSidebarVisible(true);
       }, 800); // Show sidebar after page load if already scrolled
     }
 
     // Check on scroll
-    window.addEventListener('scroll', checkTopbarVisibility);
+    window.addEventListener('scroll', checkHeroVisibility);
     
     // Initial check after a small delay to ensure DOM is ready
-    setTimeout(checkTopbarVisibility, 200);
+    setTimeout(checkHeroVisibility, 200);
 
     return () => {
-      window.removeEventListener('scroll', checkTopbarVisibility);
-      if (observer) {
-        observer.disconnect();
-      }
+      window.removeEventListener('scroll', checkHeroVisibility);
     };
-  }, [isSidebarVisible]);
+  }, [isSidebarVisible, isMobile]);
 
   // Loading state para evitar layout shift
   if (isLoading) {
@@ -104,7 +82,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               ease-in-out
               ${isMobile 
                 ? 'pb-16 w-full' // Mobile: space for bottom navigation
-                : 'pr-64 w-full' // Desktop: space for right sidebar (256px)
+                : 'pr-16 w-full' // Desktop: space for right sidebar (64px)
               }
             `}
           >

@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Simple CSS-only logo positioning */
+.logo-scroll-responsive {
+  /* Start positioned in the middle of viewport */
+  top: 30vh;
+  left: 10%;
+  transition: transform 0.1s ease-out;
+}
+
 /* Font Face Definitions - mantém no topo */
 @font-face {
   font-family: "Burford Rustic Line";
